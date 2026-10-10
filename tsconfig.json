@@ -1,0 +1,3 @@
+{
+  "extends": "@halmahera/config/tsconfig.base.json"
+}
