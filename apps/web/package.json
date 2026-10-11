@@ -12,10 +12,11 @@
   },
   "dependencies": {
     "@halmahera/ui": "workspace:*",
+    "@hugeicons/core-free-icons": "catalog:",
+    "@hugeicons/react": "catalog:",
     "@opennextjs/cloudflare": "^1.20.6",
     "@swc/helpers": "^0.5.23",
     "babel-plugin-react-compiler": "^1.0.0",
-    "lucide-react": "catalog:",
     "next": "^16.3.4",
     "next-themes": "catalog:",
     "react": "catalog:",
