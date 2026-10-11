@@ -9,6 +9,7 @@
     "destroy": "alchemy destroy"
   },
   "dependencies": {
+    "@t3-oss/env-core": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -17,7 +18,6 @@
     "@halmahera/config": "workspace:*",
     "alchemy": "2.0.0-beta.80",
     "effect": "4.0.0",
-    "typescript": "catalog:",
-    "varlock": "catalog:"
+    "typescript": "catalog:"
   }
 }

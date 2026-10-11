@@ -55,15 +55,13 @@ If you want to add app-specific blocks instead of shared primitives, run the sha
 
 ## Environment Configuration
 
-Each app owns its environment schema in `.env.schema`. Varlock generates `src/env.ts` during installation; run `bun run env:generate` after changing a schema. Commit schemas, and keep secrets in ignored env files or your deployment platform.
+Environment variables are validated with [t3-env](https://env.t3.gg). Keep values in ignored `.env` files or your deployment platform, and commit only `.env.example`.
 
-Import the generated `ENV` accessor in application code. Shared database and auth packages receive configuration or initialized clients from the application. See [Varlock's monorepo guide](https://varlock.dev/guides/monorepos/).
+The web app's schema is `apps/web/src/env.ts`. Add secrets under `server` and `NEXT_PUBLIC_*` values under `client`, then list every client key in `experimental__runtimeEnv`. Import `env` from `@/env` in application code. `next.config.ts` imports the schema, so `next dev` and builds fail when a variable is missing. Next inlines client values at build time, so they must be set wherever the build runs, including `alchemy deploy`.
 
-For Cloudflare, Alchemy loads and validates deployment inputs with `varlock/auto-load` in its Node/Bun deployment process. Worker code reads native bindings; web clients use the framework's public env API through `src/env.public.ts` where needed. Alchemy supplies resource URLs and managed database credentials. In-Worker Varlock protections are deferred until an official Alchemy integration is available; see [the non-Wrangler deployment guidance](https://varlock.dev/integrations/cloudflare/#non-wrangler-deploy-tools-alchemy-sst-pulumi).
+In the deployed Worker, OpenNext copies string Worker vars onto `process.env`, so the same `env` object works there. Cloudflare bindings such as `IMAGES` are runtime objects, not env vars. Read them with `getCloudflareContext().env` from `@opennextjs/cloudflare`.
 
-Bun's automatic env loading is disabled in `bunfig.toml`; the framework integration or server bootstrap loads Varlock. Node deployments must include Varlock and its dependencies alongside the app schema.
-
-Run standalone Node/Bun tools that use Varlock from the owning app directory so they load that app's schema and env files. `env:generate` only generates TypeScript files; it does not initialize environment values in a subsequent command.
+The infra schema is `packages/infra/env.ts`. It loads `packages/infra/.env` with `util.parseEnv`, which works under both Bun and Node, and validates the Cloudflare credentials before Alchemy runs. Copy `packages/infra/.env.example` to start. Bun's automatic env loading is disabled in `bunfig.toml`, so each process loads its own env file.
 
 ## Deployment
 

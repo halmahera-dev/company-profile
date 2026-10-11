@@ -1,7 +1,8 @@
 import * as Alchemy from "alchemy";
 import * as Cloudflare from "alchemy/Cloudflare";
 import * as Effect from "effect/Effect";
-import "varlock/auto-load";
+
+import "./env";
 
 export const web = Cloudflare.Website.StaticSite("web", {
   cwd: "../../apps/web",
