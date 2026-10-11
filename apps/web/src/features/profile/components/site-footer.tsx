@@ -12,7 +12,7 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t">
-      <div className="mx-auto grid max-w-5xl gap-10 px-4 py-12 sm:grid-cols-3 sm:px-6">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-3 sm:px-8">
         <div className="grid content-start gap-2">
           <p className="flex items-center gap-2 font-heading text-sm font-bold">
             <span aria-hidden className="size-2.5 rounded-full bg-brand" />
@@ -49,7 +49,7 @@ export function SiteFooter() {
           <p className="text-sm text-muted-foreground">Indonesia</p>
         </div>
       </div>
-      <div className="mx-auto max-w-5xl px-4 pb-8 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 pb-8 sm:px-8">
         <p className="text-xs text-muted-foreground">© 2026 Halmahera. All rights reserved.</p>
       </div>
     </footer>

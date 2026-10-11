@@ -48,7 +48,7 @@ export function TeamCarousel({ members }: { members: Member[] }) {
 
   return (
     <div
-      className="mx-auto max-w-5xl"
+      className="mx-auto max-w-6xl"
       onFocusCapture={() => setIsFocusInside(true)}
       onBlurCapture={function resumeWhenFocusLeaves(event) {
         if (!event.currentTarget.contains(event.relatedTarget)) setIsFocusInside(false);
@@ -58,7 +58,7 @@ export function TeamCarousel({ members }: { members: Member[] }) {
         ref={listRef}
         onPointerEnter={() => setIsPointerInside(true)}
         onPointerLeave={() => setIsPointerInside(false)}
-        className="flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-4 sm:scroll-px-6 sm:px-6 lg:h-112 lg:overflow-visible lg:pb-0"
+        className="flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-4 sm:scroll-px-8 sm:px-8 lg:h-112 lg:overflow-visible lg:pb-0"
       >
         {members.map(function renderMember(member, index) {
           return (

@@ -63,7 +63,7 @@ function Hero() {
       <div className="absolute inset-0 -z-10 bg-linear-to-r from-deep-wine/85 via-deep-wine/55 to-transparent" />
       <div className="absolute inset-0 -z-10 bg-linear-to-b from-transparent from-60% to-background" />
 
-      <div className="mx-auto w-full max-w-5xl px-4 pt-28 pb-12 sm:px-6 sm:pt-32 sm:pb-24">
+      <div className="mx-auto w-full max-w-6xl px-4 pt-28 pb-12 sm:px-8 sm:pt-32 sm:pb-24">
         <div className="rise-in">
           <Badge variant="blur">AI product team from Indonesia</Badge>
         </div>
@@ -108,7 +108,7 @@ function Hero() {
 function Work() {
   return (
     <section id="work" className="scroll-mt-24 py-14 sm:py-20 lg:py-24">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-8">
         <SectionHeading eyebrow="Our work" title="Built under pressure.">
           Weekend deadlines, national juries, real problems. Two products, three podiums.
         </SectionHeading>
@@ -194,7 +194,7 @@ function Services() {
 
   return (
     <section id="services" className="scroll-mt-24 bg-muted/50 py-14 sm:py-20 lg:py-24">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-8">
         <SectionHeading eyebrow="Services" title="Three ways to work with us." />
         <ul className="mt-8 grid gap-4 sm:mt-10 md:grid-cols-3">
           {services.map(function renderService(service) {
@@ -233,7 +233,7 @@ function Services() {
 function Sprint() {
   return (
     <section id="sprint" className="scroll-mt-24 py-14 sm:py-20 lg:py-24">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-8">
         <SectionHeading eyebrow="The sprint" title="Fourteen days, idea to demo.">
           This is how a Prototype Sprint runs. Pick a phase to see what happens in it.
         </SectionHeading>
@@ -256,7 +256,7 @@ function WhyUs() {
 
   return (
     <section className="bg-muted/50 py-14 sm:py-20 lg:py-24">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-8">
         <SectionHeading eyebrow="Why us" title="Why not a big agency?">
           Big agencies are good at big programs. When you need to know fast if an AI idea works,
           they are slow.
@@ -309,7 +309,7 @@ function WhyUs() {
 function Team() {
   return (
     <section className="py-14 sm:py-20 lg:py-24">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-8">
         <SectionHeading eyebrow="The team" title="Five builders. Three podiums.">
           Two of us won with the reading classroom. Three of us won with disaster detection. Now we
           build together.
@@ -318,7 +318,7 @@ function Team() {
       <div className="mt-10 reveal-on-scroll">
         <TeamCarousel members={members} />
       </div>
-      <div className="mx-auto mt-6 flex max-w-5xl justify-center px-4 sm:px-6">
+      <div className="mx-auto mt-6 flex max-w-6xl justify-center px-4 sm:px-8">
         <Button variant="outline" nativeButton={false} render={<Link href="/team" />}>
           Meet the team
           <HugeiconsIcon icon={ArrowRight01Icon} data-icon="inline-end" />
@@ -340,7 +340,7 @@ function Closing() {
         className="-z-10 object-cover object-bottom opacity-40 dark:opacity-25"
       />
       <div className="absolute inset-0 -z-10 bg-linear-to-b from-background via-background/70 to-background/40" />
-      <div className="mx-auto max-w-5xl px-4 py-20 sm:px-6 sm:py-28 lg:py-32">
+      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-8 sm:py-28 lg:py-32">
         <SectionHeading eyebrow="Let’s talk" title="Got an AI idea collecting dust?">
           Tell us what it should do. We will tell you honestly if two weeks is enough.
         </SectionHeading>

@@ -13,7 +13,7 @@ export function TeamContent() {
   return (
     <div data-page="profile" className="min-h-svh overflow-x-clip bg-background text-foreground">
       <SiteHeader />
-      <main className="mx-auto max-w-5xl px-4 pt-32 pb-20 sm:px-6 sm:pt-40 sm:pb-28">
+      <main className="mx-auto max-w-6xl px-4 pt-32 pb-20 sm:px-8 sm:pt-40 sm:pb-28">
         <SectionHeading eyebrow="The team" title="The people you will actually talk to.">
           No account managers. When you email us, one of these five replies, and the same five build
           your product.
