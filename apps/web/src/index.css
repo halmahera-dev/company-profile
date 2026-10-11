@@ -15,3 +15,9 @@
 }
 @custom-variant focus-visible (&:focus-visible, &[data-preview~="focus"]);
 @custom-variant active (&:active, &[data-preview~="active"]);
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has([data-page="profile"]) {
+    scroll-behavior: smooth;
+  }
+}
