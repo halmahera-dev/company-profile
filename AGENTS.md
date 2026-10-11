@@ -1,0 +1,31 @@
+<!-- BEGIN:turborepo-agent-rules -->
+
+# This is NOT the Turborepo you know
+
+Turborepo configuration, task behavior, and CLI commands can vary between installed versions and may differ from your training data. Resolve the `turbo` package from this file's directory or relevant workspace; in monorepos, it may not be visible from the repository root. For example, run `node -p "require.resolve('turbo/package.json')"` from a workspace that depends on `turbo`.
+
+Read `docs/README.md` inside that installed package first, then read the relevant pages from its `docs/` directory before changing Turborepo configuration or commands. Heed deprecation notices. These bundled docs match the installed package version and are available without network access.
+
+This block is written and re-added by `turbo` before repository-scoped commands when an AI agent is detected. In the Turborepo source repository, its template is defined in `crates/turborepo-cli/src/cli/agent_guidance.rs`. Removing the managed block while updates are enabled means a later qualifying invocation will add it again. Set `"agentGuidance": false` in the root `turbo.json` or `turbo.jsonc` to opt out; this does not remove an existing block. Keep the block committed with your work to avoid an uncommitted change on the next agent invocation.
+<!-- END:turborepo-agent-rules -->
+
+## Engineering Preferences
+
+- Pragmatic over perfect. Solve the problem at hand.
+- Choose the simplest implementation that fully meets the current requirements. Avoid speculative abstractions, configuration, and indirection.
+- Grow the system in layers. Start from the smallest version that works end-to-end, and add each new capability on top of a product that already works. Never trade a working product for unfinished complexity.
+- Keep components modular and concerns clearly separated.
+- Minimal abstractions. Extract only when a pattern appears 3+ times.
+- Explicit over clever. Prefer clear names over comments. Avoid long comments that explain what the code does.
+- Write expressive, readable code in React and backend code. Prefer clear names and explicit control flow over shorthand expressions.
+- DRY in data-fetching and shared components. Not in one-off pages.
+- No unnecessary files. Only create helpers/utils if used in 2+ places.
+- Prefer regular functions over arrow functions. Use arrow functions only when passed as an argument.
+- Keep comments short and limited to intent that clear code cannot express.
+- Keep values in the narrowest scope that uses them. Promote a value to a module constant only when it is shared, configurable, or a stable domain concept.
+- Do not add `Co-authored-by` trailers to commit messages.
+
+## Talking to Human
+
+- When speaking English, always talk in ASD-STE100 Simplified Technical English.
+- Constraint yourself not to use C1-C2 sentences and vocabularies. Keep your responses in plain English.
