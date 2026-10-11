@@ -8,6 +8,7 @@ import { RecipesSection } from "@/features/design-system/components/recipes-sect
 
 export const metadata: Metadata = {
   title: "Design System",
+  robots: { index: false, follow: false },
 };
 
 const sectionLinks = [
