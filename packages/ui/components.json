@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "base-lyra",
-  "rsc": true,
+  "style": "base-luma",
+  "rsc": false,
   "tsx": true,
   "tailwind": {
     "config": "",
@@ -10,7 +10,7 @@
     "cssVariables": true,
     "prefix": ""
   },
-  "iconLibrary": "lucide",
+  "iconLibrary": "hugeicons",
   "aliases": {
     "components": "@halmahera/ui/components",
     "utils": "@halmahera/ui/lib/utils",
@@ -18,7 +18,7 @@
     "lib": "@halmahera/ui/lib",
     "ui": "@halmahera/ui/components"
   },
-  "menuColor": "default",
+  "menuColor": "default-translucent",
   "menuAccent": "subtle",
   "registries": {}
 }
