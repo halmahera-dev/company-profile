@@ -17,7 +17,14 @@
       "cache": false,
       "persistent": true
     },
+    "build:cloudflare": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".open-next/**"],
+      "cache": false
+    },
     "deploy": {
+      "dependsOn": ["build:cloudflare"],
       "cache": false,
       "passThroughEnv": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"]
     }

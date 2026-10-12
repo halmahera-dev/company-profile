@@ -7,7 +7,8 @@
     "check-types": "next typegen && tsc --noEmit",
     "start": "next start",
     "dev": "next dev --port 3001",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
+    "build:cloudflare": "opennextjs-cloudflare build",
+    "deploy": "opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "@halmahera/ui": "workspace:*",
