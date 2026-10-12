@@ -284,6 +284,34 @@
   }
 }
 
+@keyframes marquee {
+  to {
+    translate: -50% 0;
+  }
+}
+
+/* Put the items in twice so the loop has no seam. */
+@utility marquee {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: marquee 40s linear infinite;
+  }
+}
+
+/* An image chip that sits inside a line of display text. */
+@utility inline-swatch {
+  display: inline-block;
+  height: 0.8em;
+  width: 1.6em;
+  vertical-align: -0.05em;
+}
+
+/* A dot field that fades out at the edges, like a map of islands. */
+@utility dot-field {
+  background-image: radial-gradient(currentColor 1.2px, transparent 1.6px);
+  background-size: 14px 14px;
+  mask-image: radial-gradient(ellipse 70% 45% at 55% 40%, black, transparent);
+}
+
 @utility caption-blur {
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
