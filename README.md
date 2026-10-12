@@ -69,6 +69,20 @@ Web deploys to Cloudflare Workers with [OpenNext](https://opennext.js.org/cloudf
 - Deploy: `bun run deploy`. It builds with OpenNext, then runs `wrangler deploy`.
 - Auth: run `bunx wrangler login` locally. CI uses `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
 
+### Temporary OpenNext patch
+
+Next.js 16.4 writes `.next/server/preview-props.json`. `@opennextjs/cloudflare` 1.20.10 does not copy it into the Worker, so every server-rendered page returns error 1101. `patches/@opennextjs%2Fcloudflare@1.20.10.patch` adds `preview-props` to the file list. It is wired up by `patchedDependencies` in the root `package.json`.
+
+Remove the patch when [opennextjs-cloudflare#1356](https://github.com/opennextjs/opennextjs-cloudflare/pull/1356) is released:
+
+1. Check that a release newer than 1.20.10 includes the fix. Read its changelog.
+2. Bump `@opennextjs/cloudflare` in `apps/web/package.json`.
+3. Delete the `patchedDependencies` entry in `package.json` and the file in `patches/`.
+4. Run `bun install`.
+5. Run `bunx opennextjs-cloudflare build` in `apps/web`, then `bunx wrangler dev`. The home page must return 200.
+
+Bun only applies the patch to the exact version 1.20.10. A bump without step 3 leaves a stale entry.
+
 ## Git Hooks and Formatting
 
 - Run checks: `bun run check`
