@@ -6,8 +6,8 @@
     "build": "next build",
     "check-types": "next typegen && tsc --noEmit",
     "start": "next start",
-    "dev:bare": "next dev --port 3001",
-    "build:cloudflare": "opennextjs-cloudflare build"
+    "dev": "next dev --port 3001",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "@halmahera/ui": "workspace:*",
@@ -27,7 +27,6 @@
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
     "@halmahera/config": "workspace:*",
-    "@halmahera/infra": "workspace:*",
     "@tailwindcss/postcss": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

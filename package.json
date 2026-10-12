@@ -31,9 +31,8 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "check-types": "turbo run check-types",
-    "dev:web": "turbo run dev:bare -F web --",
-    "deploy": "turbo run deploy -F @halmahera/infra --",
-    "destroy": "turbo run destroy -F @halmahera/infra --",
+    "dev:web": "turbo run dev -F web",
+    "deploy": "turbo run deploy -F web",
     "check": "oxlint && oxfmt --write"
   },
   "dependencies": {

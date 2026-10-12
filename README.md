@@ -57,29 +57,17 @@ If you want to add app-specific blocks instead of shared primitives, run the sha
 
 Environment variables are validated with [t3-env](https://env.t3.gg). Keep values in ignored `.env` files or your deployment platform, and commit only `.env.example`.
 
-The web app's schema is `apps/web/src/env.ts`. Add secrets under `server` and `NEXT_PUBLIC_*` values under `client`, then list every client key in `experimental__runtimeEnv`. Import `env` from `@/env` in application code. `next.config.ts` imports the schema, so `next dev` and builds fail when a variable is missing. Next inlines client values at build time, so they must be set wherever the build runs, including `alchemy deploy`.
+The web app's schema is `apps/web/src/env.ts`. Add secrets under `server` and `NEXT_PUBLIC_*` values under `client`, then list every client key in `experimental__runtimeEnv`. Import `env` from `@/env` in application code. `next.config.ts` imports the schema, so `next dev` and builds fail when a variable is missing. Next inlines client values at build time, so they must be set wherever the build runs, including `bun run deploy`.
 
 In the deployed Worker, OpenNext copies string Worker vars onto `process.env`, so the same `env` object works there. Cloudflare bindings such as `IMAGES` are runtime objects, not env vars. Read them with `getCloudflareContext().env` from `@opennextjs/cloudflare`.
 
-The infra schema is `packages/infra/env.ts`. It loads `packages/infra/.env` with `util.parseEnv`, which works under both Bun and Node, and validates the Cloudflare credentials before Alchemy runs. Copy `packages/infra/.env.example` to start. Bun's automatic env loading is disabled in `bunfig.toml`, so each process loads its own env file.
-
 ## Deployment
 
-### Alchemy
+Web deploys to Cloudflare Workers with [OpenNext](https://opennext.js.org/cloudflare). The Worker config is `apps/web/wrangler.jsonc`.
 
-- Target: web on Cloudflare
-- Configure provider accounts: `cd packages/infra && bunx alchemy profile edit`
-- Dev: bun run dev
-- Deploy: bun run deploy
-- Destroy: bun run destroy
-
-`alchemy profile edit` stores the selected Axiom, Cloudflare, Neon, PlanetScale, and/or Prisma provider profiles under `~/.alchemy`; no provider-specific setup command is required by this scaffold.
-
-Deploys are staged and default to a personal `dev_<username>` stage. For production, run the deploy with an explicit stage from `packages/infra`:
-
-```bash
-cd packages/infra && bunx alchemy deploy --stage production
-```
+- Dev: `bun run dev`
+- Deploy: `bun run deploy`. It builds with OpenNext, then runs `wrangler deploy`.
+- Auth: run `bunx wrangler login` locally. CI uses `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
 
 ## Git Hooks and Formatting
 

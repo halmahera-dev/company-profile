@@ -18,12 +18,7 @@
       "persistent": true
     },
     "deploy": {
-      "cache": false,
-      "interactive": true
-    },
-    "destroy": {
-      "cache": false,
-      "interactive": true
+      "cache": false
     }
   },
   "globalEnv": [
