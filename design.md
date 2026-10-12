@@ -148,15 +148,16 @@ No borders on cards. Depth comes from soft shadows.
 
 - **Glass:** the `glass` utility (in `packages/ui/src/styles/globals.css`): background at 70%, `blur(20px) saturate(170%)`, a 15% white inset top highlight, and a `0 8px 24px` black 12% drop shadow. It turns solid for `prefers-reduced-transparency` and `prefers-contrast: more`. Bars (navbar) add a hairline `border border-black/6`. Buttons never get a border.
 - **Sunken panel:** `bg-surface-sand rounded-[2rem] shadow-inset`. Use to group a carousel or a section.
-  | Token | Use |
-  | --- | --- |
-  | `shadow-inset` | Sunken sand panel |
-  | `shadow-sm` | Buttons at rest |
-  | `shadow-card` | Cards |
-  | `glass` | Navbars, outline buttons |
-  | `shadow-card-lg` | Media cards |
-  | `shadow-lg` | Popovers, menus, select lists |
-  | `shadow-xl` | Dialogs, hover lift |
+
+  | Token            | Use                           |
+  | ---------------- | ----------------------------- |
+  | `shadow-inset`   | Sunken sand panel             |
+  | `shadow-sm`      | Buttons at rest               |
+  | `shadow-card`    | Cards                         |
+  | `glass`          | Navbars, outline buttons      |
+  | `shadow-card-lg` | Media cards                   |
+  | `shadow-lg`      | Popovers, menus, select lists |
+  | `shadow-xl`      | Dialogs, hover lift           |
 
 - **Floating layers** (popovers, menus, select lists, dialogs): `ring-1 ring-foreground/5` (`/10` in dark) instead of a border. Menus and select lists are frosted: `bg-popover/70` with `backdrop-blur` and `backdrop-saturate-150`. Focused items get `bg-foreground/10`.
 - **Dark mode:** cards drop the shadow and use `ring-1 ring-foreground/10`.
