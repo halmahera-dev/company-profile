@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { ModeToggle } from "@/components/mode-toggle";
 
-export const contactEmail = "hello@halmahera.site";
+export const contactEmail = "support@halmahera.site";
 
 export function SiteHeader() {
   return (
