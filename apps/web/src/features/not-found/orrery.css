@@ -1,0 +1,119 @@
+.orrery-stage {
+  cursor: grab;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  border-radius: 1.5rem;
+}
+
+.orrery-stage:active {
+  cursor: grabbing;
+}
+
+.orrery-stage:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 6px;
+}
+
+.orrery-shadow {
+  filter: blur(2.5px);
+  opacity: 0.3;
+  transform: none;
+}
+
+.iso-line.orrery-ghost {
+  stroke-dasharray: 1.6 3.4;
+  stroke-width: 1.1px;
+}
+
+.orrery-sun {
+  --body: oklch(88% 0.17 95);
+  --body-end: oklch(70% 0.19 50);
+}
+
+.orrery-hue-0 {
+  --body: oklch(82% 0.2 130);
+  --body-end: oklch(66% 0.16 165);
+}
+
+.orrery-hue-1 {
+  --body: oklch(65% 0.2 250);
+  --body-end: oklch(75% 0.12 195);
+}
+
+.orrery-hue-3 {
+  --body: oklch(72% 0.2 350);
+  --body-end: oklch(55% 0.22 295);
+}
+
+.orrery-hue-4 {
+  --body: oklch(62% 0.24 25);
+  --body-end: oklch(55% 0.25 340);
+}
+
+.orrery-orb-lit {
+  stop-color: color-mix(in oklab, var(--body) 55%, white);
+}
+
+.orrery-orb-mid {
+  stop-color: var(--body);
+}
+
+.orrery-orb-dark {
+  stop-color: var(--body-end);
+}
+
+.orrery-body {
+  filter: drop-shadow(0 0 3px var(--body)) drop-shadow(0 0 12px var(--body));
+}
+
+.orrery-glow-hot {
+  stop-color: color-mix(in oklab, var(--body) 35%, white);
+  stop-opacity: 0.95;
+}
+
+.orrery-glow-core {
+  stop-color: var(--body);
+  stop-opacity: 0.7;
+}
+
+.orrery-glow-mid {
+  stop-color: var(--body-end);
+  stop-opacity: 0.28;
+}
+
+.orrery-glow-edge {
+  stop-color: var(--body-end);
+  stop-opacity: 0;
+}
+
+.dark .orrery-glow {
+  mix-blend-mode: screen;
+}
+
+.dark .orrery-glow-core {
+  stop-opacity: 0.9;
+}
+
+.dark .orrery-glow-mid {
+  stop-opacity: 0.4;
+}
+
+.orrery-sun .orrery-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .orrery-sun .orrery-glow {
+    animation: orrery-breathe 4.5s ease-in-out infinite;
+  }
+}
+
+@keyframes orrery-breathe {
+  50% {
+    opacity: 0.7;
+    transform: scale(1.08);
+  }
+}

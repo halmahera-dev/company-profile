@@ -51,7 +51,7 @@
       }
     },
     {
-      "files": ["apps/web/src/features/design-system/**"],
+      "files": ["apps/web/src/features/design-system/**", "apps/web/src/features/not-found/**"],
       "rules": {
         "shadcn/no-restyle": "off",
         "shadcn/no-raw-colors": "off",
@@ -65,5 +65,5 @@
   "env": {
     "builtin": true
   },
-  "ignorePatterns": [".agents/**", ".claude/**"]
+  "ignorePatterns": [".agents/**", ".claude/**", "apps/web/src/components/iso/**"]
 }
