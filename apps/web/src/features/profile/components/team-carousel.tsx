@@ -65,7 +65,7 @@ export function TeamCarousel({ members }: { members: Member[] }) {
             <li
               key={member.name}
               data-active={index === activeIndex}
-              className="group relative h-88 w-72 max-w-3/4 shrink-0 snap-start overflow-hidden rounded-4xl bg-muted transition-all duration-700 ease-out motion-reduce:transition-none lg:h-auto lg:w-auto lg:max-w-none lg:min-w-0 lg:shrink lg:grow lg:data-[active=true]:grow-3"
+              className="group relative h-88 w-72 max-w-3/4 shrink-0 snap-start overflow-hidden rounded-4xl bg-muted transition-[flex-grow,transform] duration-500 ease-out motion-reduce:transition-none lg:h-auto lg:w-auto lg:max-w-none lg:min-w-0 lg:shrink lg:grow lg:data-[active=true]:grow-3"
             >
               <button
                 type="button"
@@ -81,7 +81,7 @@ export function TeamCarousel({ members }: { members: Member[] }) {
                   placeholder="blur"
                   quality={90}
                   sizes="(min-width: 1024px) 24rem, (min-width: 400px) 18rem, 72vw"
-                  className="object-cover object-top transition-transform duration-700 ease-out group-data-[active=true]:scale-105 motion-reduce:transition-none"
+                  className="object-cover object-top transition-transform duration-500 ease-out group-data-[active=true]:scale-105 motion-reduce:transition-none"
                 />
                 <div aria-hidden className="absolute inset-x-0 bottom-0 h-44 caption-blur" />
                 <div className="absolute inset-x-0 bottom-0 min-h-25 bg-linear-to-t from-black/60 to-transparent p-4">
