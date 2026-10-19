@@ -14,9 +14,8 @@ export function TeamContent() {
     <div data-page="profile" className="min-h-svh overflow-x-clip bg-background text-foreground">
       <SiteHeader />
       <main className="mx-auto max-w-6xl px-4 pt-32 pb-20 sm:px-8 sm:pt-40 sm:pb-28">
-        <SectionHeading eyebrow="The team" title="The people you will actually talk to.">
-          No account managers. When you email us, one of these five replies, and the same five build
-          your product.
+        <SectionHeading eyebrow="The team" title="You will talk to these five.">
+          Email us and one of these five writes back. The same five build the product.
         </SectionHeading>
 
         <ul className="mt-12 grid gap-x-4 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">

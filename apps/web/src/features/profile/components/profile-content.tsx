@@ -88,8 +88,8 @@ function Hero() {
       <div className="mt-10 grid items-center gap-12 lg:grid-cols-3">
         <div className="rise-in lg:col-span-2">
           <p className="max-w-lg type-lead text-muted-foreground">
-            <strong className="text-foreground">Five award-winning builders.</strong> Hackathons
-            taught us to ship under pressure. Now we do it for you. 🚀
+            <strong className="text-foreground">Five of us.</strong> We met on hackathon weekends.
+            You hire that same group.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <EmailButton>Email us</EmailButton>
@@ -147,7 +147,6 @@ function Ticker() {
     "Workflow automation",
     "Early warning systems",
     "AI storybooks",
-    "Working demos, not decks",
   ];
   const loop = [...items, ...items];
 
@@ -175,8 +174,8 @@ function Work() {
   return (
     <section id="work" className="scroll-mt-24 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-8">
-        <SectionHeading eyebrow="Our work" title="Built under pressure.">
-          Weekend deadlines, national juries, real problems. Two products, three podiums.
+        <SectionHeading eyebrow="Our work" title="Built on weekend deadlines.">
+          Two products. A national jury placed them three times.
         </SectionHeading>
 
         <div className="mt-12 grid gap-10 md:grid-cols-2 md:gap-6">
@@ -199,7 +198,7 @@ function Work() {
                     className="object-cover object-right"
                   />
                   <span className="absolute bottom-2 left-2 rounded-full bg-background/70 px-2 py-0.5 text-xs font-semibold backdrop-blur">
-                    ✨ Painted by AI
+                    Painted by AI
                   </span>
                 </div>
               </div>
@@ -268,7 +267,7 @@ function Services() {
     {
       name: "Prototype Sprint",
       pitch: "Idea on Monday. Demo in two weeks.",
-      body: "One sharp use case, built end to end, in your hands. No slide decks.",
+      body: "One use case, from your data to a screen you can click.",
       terms: "Fixed scope · 2 weeks",
       tilt: "md:rotate-0 md:-translate-y-4",
       featured: true,
@@ -286,7 +285,10 @@ function Services() {
     <section id="services" className="scroll-mt-24 px-4 sm:px-8">
       <div className="mx-auto max-w-7xl rounded-4xl bg-surface-sand px-4 py-16 shadow-inset sm:px-8 sm:py-24">
         <div className="mx-auto max-w-6xl">
-          <SectionHeading eyebrow="Services" title="Pick a card. Any card." />
+          <SectionHeading eyebrow="Services" title="Three ways to start.">
+            Most people begin with a two-week demo. The other two cover a product you already run,
+            or one you want launched.
+          </SectionHeading>
           <ul className="mt-12 grid gap-4 md:grid-cols-3 md:gap-6">
             {services.map(function renderService(service) {
               return (
@@ -375,7 +377,7 @@ function Sprint() {
                 <span className="grid gap-1.5">
                   {isPhaseStart ? (
                     <span className="hidden truncate text-xs font-semibold sm:block">
-                      {isDemoDay ? "Demo 🎉" : phase.name}
+                      {isDemoDay ? "Demo" : phase.name}
                     </span>
                   ) : null}
                   <span
@@ -410,19 +412,19 @@ function Sprint() {
 
 function WhyUs() {
   const comparisons = [
-    { usual: "A discovery deck", ours: "A working demo" },
-    { usual: "A few months", ours: "Two weeks" },
-    { usual: "An account manager", ours: "The people who build it" },
-    { usual: "Many teams, many handoffs", ours: "Five builders, no handoffs" },
-    { usual: "AI added at the end", ours: "AI from day one" },
+    { usual: "A slide deck first", ours: "A demo you can click" },
+    { usual: "Months before you see it", ours: "Two weeks" },
+    { usual: "You meet a manager", ours: "You meet the builders" },
+    { usual: "The work moves between teams", ours: "Five people stay on it" },
+    { usual: "The model comes last", ours: "The model is in the first build" },
   ];
 
   return (
-    <section className="bg-muted/50 py-20 sm:py-28">
+    <section className="bg-muted py-20 sm:py-28">
       <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-8 lg:grid-cols-2 lg:items-center">
-        <SectionHeading eyebrow="Why us" title="Why not a big agency?">
-          Big agencies are good at big programs. When you need to know fast if an AI idea works,
-          they are slow.
+        <SectionHeading eyebrow="Why us" title="You talk to the people who build it.">
+          A big agency fits a long program. When you need to know if an AI idea works, we use two
+          weeks.
         </SectionHeading>
 
         <ul className="grid gap-3">
@@ -430,17 +432,10 @@ function WhyUs() {
             return (
               <li
                 key={row.ours}
-                className="group flex reveal-on-scroll flex-wrap items-baseline gap-x-4 gap-y-1 rounded-3xl bg-card px-5 py-4 shadow-card transition-transform duration-300 ease-out hover:translate-x-1.5 dark:ring-1 dark:ring-foreground/10"
+                className="grid reveal-on-scroll gap-1 rounded-3xl bg-card px-5 py-4 shadow-card transition-transform duration-300 ease-out hover:translate-x-1.5 dark:ring-1 dark:ring-foreground/10"
               >
-                <span className="text-muted-foreground line-through decoration-brand decoration-2">
-                  {row.usual}
-                </span>
-                <span className="font-heading text-lg font-bold tracking-tight">
-                  <span aria-hidden className="mr-2 text-brand-text">
-                    →
-                  </span>
-                  {row.ours}
-                </span>
+                <p className="text-xs text-muted-foreground">{row.usual}</p>
+                <p className="font-heading text-lg font-bold tracking-tight">{row.ours}</p>
               </li>
             );
           })}
@@ -454,9 +449,9 @@ function Team() {
   return (
     <section className="py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-8">
-        <SectionHeading eyebrow="The team" title="Five builders. Three podiums.">
-          Two of us won with the reading classroom. Three of us won with disaster detection. Now we
-          build together.
+        <SectionHeading eyebrow="The team" title="The five people on the work.">
+          Two of us built the reading classroom. Three of us built the disaster alerts. We work as
+          one group now.
         </SectionHeading>
       </div>
       <div className="mt-10 reveal-on-scroll">
@@ -485,8 +480,8 @@ function Closing() {
       />
       <div className="absolute inset-0 -z-10 bg-linear-to-b from-background via-background/70 to-background/40" />
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-8 sm:py-28 lg:py-32">
-        <SectionHeading eyebrow="Let’s talk" title="Got an AI idea collecting dust?">
-          Tell us what it should do. We will tell you honestly if two weeks is enough.
+        <SectionHeading eyebrow="Let’s talk" title="Send the idea.">
+          Say what it should do. We will say if two weeks is enough.
         </SectionHeading>
         <div className="mt-10 flex reveal-on-scroll flex-col items-start gap-4 sm:flex-row sm:items-center">
           <EmailButton>Email us</EmailButton>

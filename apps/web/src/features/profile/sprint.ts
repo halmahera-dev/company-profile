@@ -38,7 +38,7 @@ export const phases = [
     firstDay: 14,
     lastDay: 14,
     name: "Demo",
-    pitch: "You get a working thing, not a deck.",
+    pitch: "You leave with a demo you can click, and the code.",
     tasks: ["Live demo for your team", "Source code", "A plan for what comes next"],
   },
 ];

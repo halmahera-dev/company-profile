@@ -22,14 +22,14 @@ export const members = [
     name: "Ariq",
     title: "Product Design Engineer",
     photo: ariqPhoto,
-    bio: "Designs the interface and builds it too. Cares about the details most people only feel.",
+    bio: "Designs the screens and writes the code for them.",
     awards: [awards.lidm, awards.llama],
   },
   {
     name: "Zaki",
     title: "Research Lead",
     photo: zakiPhoto,
-    bio: "Reads the papers so the product does not guess. Checks that every model does what we claim.",
+    bio: "Reads the papers, then checks that the model does what we said.",
     awards: [awards.gemastik],
   },
   {

@@ -11,7 +11,7 @@ export function SiteFooter() {
   ] as const;
 
   return (
-    <footer className="border-t">
+    <footer className="bg-muted">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-3 sm:px-8">
         <div className="grid content-start gap-2">
           <p className="flex items-center gap-2 font-heading text-sm font-bold">
@@ -19,12 +19,12 @@ export function SiteFooter() {
             Halmahera
           </p>
           <p className="text-sm text-muted-foreground">
-            Award-winning AI builders from Indonesia. Working prototypes in two weeks.
+            Five builders in Indonesia. A working prototype in two weeks.
           </p>
         </div>
 
         <nav aria-label="Footer" className="grid content-start gap-2">
-          <p className="text-xs font-semibold text-muted-foreground">EXPLORE</p>
+          <p className="text-xs font-semibold text-muted-foreground">Pages</p>
           {links.map(function renderLink(link) {
             return (
               <Link
@@ -39,7 +39,7 @@ export function SiteFooter() {
         </nav>
 
         <div className="grid content-start gap-2">
-          <p className="text-xs font-semibold text-muted-foreground">GET IN TOUCH</p>
+          <p className="text-xs font-semibold text-muted-foreground">Email</p>
           <a
             href={`mailto:${contactEmail}`}
             className="w-fit text-sm transition-colors duration-150 ease-out hover:text-brand-text"
@@ -50,7 +50,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="mx-auto max-w-6xl px-4 pb-8 sm:px-8">
-        <p className="text-xs text-muted-foreground">© 2026 Halmahera. All rights reserved.</p>
+        <p className="text-xs text-muted-foreground">© 2026 Halmahera</p>
       </div>
     </footer>
   );
