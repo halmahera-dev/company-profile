@@ -7,6 +7,7 @@ import Link from "next/link";
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 
+import { GlowBorder } from "@/features/home/glow-border";
 import { SectionHeading } from "@/features/profile/components/section-heading";
 
 import planetImage from "../../../public/planet.webp";
@@ -116,36 +117,40 @@ export function Showcase() {
             {builds.map(function renderChoice(build, index) {
               const isActive = index === activeIndex;
               return (
-                <button
+                <GlowBorder
                   key={build.label}
-                  type="button"
-                  aria-pressed={isActive}
-                  onClick={function chooseBuild() {
-                    setActiveIndex(index);
-                    setIsAutoplaying(false);
-                  }}
-                  className={cn(
-                    "group relative pressable cursor-pointer overflow-hidden rounded-full px-4 py-1 text-sm font-medium text-muted-foreground transition hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-pressed:bg-surface-raised aria-pressed:text-foreground",
-                    "lg:col-span-2 lg:flex lg:flex-col lg:items-start lg:gap-3 lg:rounded-4xl lg:p-6 lg:pb-10 lg:text-left",
-                    build.placement,
-                  )}
+                  isActive={isActive}
+                  className={cn("rounded-full lg:col-span-2 lg:rounded-4xl", build.placement)}
                 >
-                  <span className="lg:type-label-mono">{build.label}</span>
-                  <span className="hidden type-title text-foreground lg:block">
-                    {build.capability}
-                  </span>
-                  <span className="hidden text-base font-normal text-muted-foreground group-aria-pressed:text-foreground lg:block">
-                    {build.body}
-                  </span>
-                  {isActive && isAutoplaying ? (
-                    <span
-                      key={activeIndex}
-                      aria-hidden
-                      onAnimationEnd={showNextBuild}
-                      className="absolute inset-x-3 bottom-0.5 h-0.5 origin-left autoplay-progress rounded-full bg-brand lg:inset-x-6 lg:bottom-4"
-                    />
-                  ) : null}
-                </button>
+                  <button
+                    type="button"
+                    aria-pressed={isActive}
+                    onClick={function chooseBuild() {
+                      setActiveIndex(index);
+                      setIsAutoplaying(false);
+                    }}
+                    className={cn(
+                      "group relative size-full pressable cursor-pointer overflow-hidden rounded-full px-4 py-1 text-sm font-medium text-muted-foreground transition hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-pressed:bg-surface-raised aria-pressed:text-foreground",
+                      "lg:flex lg:flex-col lg:items-start lg:gap-3 lg:rounded-4xl lg:p-6 lg:pb-10 lg:text-left",
+                    )}
+                  >
+                    <span className="lg:type-label-mono">{build.label}</span>
+                    <span className="hidden type-title text-foreground lg:block">
+                      {build.capability}
+                    </span>
+                    <span className="hidden text-base font-normal text-muted-foreground group-aria-pressed:text-foreground lg:block">
+                      {build.body}
+                    </span>
+                    {isActive && isAutoplaying ? (
+                      <span
+                        key={activeIndex}
+                        aria-hidden
+                        onAnimationEnd={showNextBuild}
+                        className="absolute inset-x-3 bottom-0.5 h-0.5 origin-left autoplay-progress rounded-full bg-brand lg:inset-x-6 lg:bottom-4"
+                      />
+                    ) : null}
+                  </button>
+                </GlowBorder>
               );
             })}
           </div>
@@ -271,7 +276,11 @@ function AskScreen() {
                         "block h-2 w-(--bar-width) rounded-full",
                         day.isDrop ? "bg-brand" : "bg-muted-foreground/40",
                       )}
-                      style={{ "--bar-width": `${(day.sales / 42) * 100}%` } as React.CSSProperties}
+                      style={
+                        {
+                          "--bar-width": `${(day.sales / 42) * 100}%`,
+                        } as React.CSSProperties
+                      }
                     />
                   </span>
                   <span
@@ -431,7 +440,11 @@ function AlertScreen() {
                 <span
                   key={index}
                   className="h-(--level) flex-1 rounded-sm bg-brand/70"
-                  style={{ "--level": `${(level / threshold) * 100}%` } as React.CSSProperties}
+                  style={
+                    {
+                      "--level": `${(level / threshold) * 100}%`,
+                    } as React.CSSProperties
+                  }
                 />
               );
             })}

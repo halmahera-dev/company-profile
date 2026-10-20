@@ -1,3 +1,4 @@
+import { GlowBorder } from "@/features/home/glow-border";
 import {
   AbacusFigure,
   ConveyorFigure,
@@ -88,7 +89,7 @@ export function WhatWeBuild() {
           {functions.map((item) => {
             return (
               <li key={item.name} className="flex list-disc">
-                <div className="flex w-full flex-col gap-4 rounded-4xl bg-card p-6 shadow-card">
+                <GlowBorder className="flex w-full flex-col gap-4 rounded-4xl bg-card p-6 shadow-card">
                   <item.Figure />
                   <p className="text-sm font-medium text-muted-foreground">{item.name}</p>
                   <p className="text-2xl leading-tight font-medium tracking-tight text-balance">
@@ -99,7 +100,7 @@ export function WhatWeBuild() {
                       return <li key={bullet}>{bullet}</li>;
                     })}
                   </ul>
-                </div>
+                </GlowBorder>
               </li>
             );
           })}
