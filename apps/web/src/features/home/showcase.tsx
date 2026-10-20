@@ -100,7 +100,7 @@ export function Showcase() {
         if (!event.currentTarget.contains(event.relatedTarget)) setIsFocusInside(false);
       }}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-8">
         <SectionHeading title="AI your team uses every day.">
           Four things we build most. Pick one to see an example screen.
         </SectionHeading>
