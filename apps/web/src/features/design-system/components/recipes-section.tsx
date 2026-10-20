@@ -80,7 +80,10 @@ export function RecipesSection() {
         description="The rules that are easiest to break."
       >
         <div className="grid gap-6 md:grid-cols-2">
-          <GuidelineExample kind="Do" rule="Use the light pill for the main action. Rose marks state.">
+          <GuidelineExample
+            kind="Do"
+            rule="Use the light pill for the main action. Rose marks state."
+          >
             <Button>Save plan</Button>
             <Badge variant="brand">Saved</Badge>
           </GuidelineExample>
@@ -127,9 +130,7 @@ export function RecipesSection() {
               </Button>
               <Button variant="ghost">Briefing</Button>
             </div>
-            <Button>
-              Get started
-            </Button>
+            <Button>Get started</Button>
           </nav>
         </ShowcaseBlock>
 
@@ -219,12 +220,7 @@ export function RecipesSection() {
                 className="group w-64 shrink-0 rounded-3xl bg-card p-3 shadow-card transition-colors hover:bg-surface-raised"
               >
                 <div className="aspect-4/3 overflow-hidden rounded-2xl">
-                  <div
-                    className={cn(
-                      "size-full bg-linear-to-br",
-                      photo.tone,
-                    )}
-                  />
+                  <div className={cn("size-full bg-linear-to-br", photo.tone)} />
                 </div>
                 <p className="px-1 pt-4 pb-1 type-title">{photo.title}</p>
               </div>

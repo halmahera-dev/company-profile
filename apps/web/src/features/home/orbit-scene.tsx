@@ -1,7 +1,6 @@
 "use client";
 
 import "@/components/iso/iso.css";
-
 import { cn } from "@halmahera/ui/lib/utils";
 import * as React from "react";
 
@@ -79,7 +78,7 @@ const HOVER_BLUR = 8;
 // Same lightness as --brand, so the hover gradient reads as one light.
 const HOVER_PURPLE = "oklch(64.5% 0.24 305)";
 // motion's default spring, { bounce: 0, duration: 0.4 }, as stiffness and damping.
-const TURN_STIFFNESS = (2 * Math.PI / 0.4) ** 2;
+const TURN_STIFFNESS = ((2 * Math.PI) / 0.4) ** 2;
 const TURN_DAMPING = 2 * Math.sqrt(TURN_STIFFNESS);
 const CAMERA_DISTANCE = 7;
 const PAD_HALF_SPAN = 0.32;
@@ -121,7 +120,11 @@ export function OrbitScene({ className }: { className?: string }) {
     const landingTarget = current.landed ? LANDING_SECONDS : 0;
 
     if (calm) {
-      current.crossfade = approach(current.crossfade, current.landed ? 1 : 0, dt / CROSSFADE_SECONDS);
+      current.crossfade = approach(
+        current.crossfade,
+        current.landed ? 1 : 0,
+        dt / CROSSFADE_SECONDS,
+      );
       current.landing = landingTarget;
     } else {
       current.clock += dt;
@@ -136,7 +139,12 @@ export function OrbitScene({ className }: { className?: string }) {
       if (current.holdLeft <= 0) current.landed = false;
     }
     current.padLight = follow(current.padLight, touchedDown ? 1 : 0, dt, COLOR_FADE_SECONDS);
-    current.pointer.glow = follow(current.pointer.glow, current.pointer.inside ? 1 : 0, dt, COLOR_FADE_SECONDS);
+    current.pointer.glow = follow(
+      current.pointer.glow,
+      current.pointer.inside ? 1 : 0,
+      dt,
+      COLOR_FADE_SECONDS,
+    );
     const turnSettled = turnMoon(current, dt, calm);
     warmGlyphs(current, dt);
     draw();
@@ -177,7 +185,8 @@ export function OrbitScene({ className }: { className?: string }) {
         canvasNode!.height = Math.round(height * current.dpr);
 
         const glyphShare = wide.matches ? 1 : 0.6;
-        if (current.glyphs.length !== countGlyphs(glyphShare)) current.glyphs = buildGlyphs(glyphShare);
+        if (current.glyphs.length !== countGlyphs(glyphShare))
+          current.glyphs = buildGlyphs(glyphShare);
         const extent = measureExtent();
 
         if (wide.matches) {
@@ -253,7 +262,7 @@ export function OrbitScene({ className }: { className?: string }) {
         type="button"
         aria-label="Land the orbit"
         onClick={toggleLanding}
-        className="pressable absolute cursor-pointer rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="absolute pressable cursor-pointer rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
       />
     </div>
   );
@@ -292,7 +301,9 @@ function buildGlyphs(share: number) {
     for (let slot = 0; slot < slots; slot++) {
       const offsetAcross = ((slot % columns) - (columns - 1) / 2) * spacing;
       const offsetUp = (Math.floor(slot / columns) - (columns - 1) / 2) * spacing;
-      const cell = normalize(add(PAD_NORMAL, add(scaleVec(across, offsetAcross), scaleVec(up, offsetUp))));
+      const cell = normalize(
+        add(PAD_NORMAL, add(scaleVec(across, offsetAcross), scaleVec(up, offsetUp))),
+      );
       glyphs.push({
         ring: ringIndex,
         slot: slot / slots,
@@ -359,7 +370,10 @@ function glyphPosition(current: Scene, glyph: Glyph): Vec3 {
   const progress = flightProgress(current, glyph);
   const start = orbitPosition(current, glyph);
   if (progress === 0 || !glyph.cell) return start;
-  const straight = add(scaleVec(start, 1 - progress), scaleVec(onMoon(current, glyph.cell), progress));
+  const straight = add(
+    scaleVec(start, 1 - progress),
+    scaleVec(onMoon(current, glyph.cell), progress),
+  );
   const swirl = progress * (1 - progress) * 4 * 1.4;
   return rotateY(straight, swirl);
 }
@@ -383,7 +397,12 @@ function drawScene(context: CanvasRenderingContext2D, current: Scene, palette: P
     const progress = flightProgress(current, glyph);
     if (current.crossfade > 0 && glyph.cell) {
       return [
-        { glyph, point: orbitPosition(current, glyph), alpha: 1 - current.crossfade, landedness: 0 },
+        {
+          glyph,
+          point: orbitPosition(current, glyph),
+          alpha: 1 - current.crossfade,
+          landedness: 0,
+        },
         { glyph, point: onMoon(current, glyph.cell), alpha: current.crossfade, landedness: 1 },
       ];
     }
@@ -419,7 +438,8 @@ function drawGlyph(
   context.fillStyle = palette.glyph;
   context.fillText(item.glyph.character, x, y);
   if (lit > 0) {
-    const glow = landed >= hovered ? solidGlow(palette.brand) : hoverGlow(context, current, palette, x, y);
+    const glow =
+      landed >= hovered ? solidGlow(palette.brand) : hoverGlow(context, current, palette, x, y);
     context.globalAlpha = alpha * lit;
     context.fillStyle = glow.paint;
     context.shadowColor = glow.shadow;
@@ -545,7 +565,11 @@ function drawWireframe(
     const angle = (longitude * Math.PI) / 180;
     strokeCurve((t) => {
       const around = t * Math.PI * 2;
-      return [Math.cos(around) * Math.cos(angle), Math.sin(around), Math.cos(around) * Math.sin(angle)];
+      return [
+        Math.cos(around) * Math.cos(angle),
+        Math.sin(around),
+        Math.cos(around) * Math.sin(angle),
+      ];
     });
   }
 }
@@ -585,7 +609,14 @@ function drawPad(context: CanvasRenderingContext2D, current: Scene, palette: Pal
   if (current.padLight > 0) {
     const center = surface(0, 0);
     const radius = current.scale * 0.7;
-    const gradient = context.createRadialGradient(center.x, center.y, 0, center.x, center.y, radius);
+    const gradient = context.createRadialGradient(
+      center.x,
+      center.y,
+      0,
+      center.x,
+      center.y,
+      radius,
+    );
     gradient.addColorStop(0, palette.brand);
     gradient.addColorStop(1, "transparent");
     context.save();

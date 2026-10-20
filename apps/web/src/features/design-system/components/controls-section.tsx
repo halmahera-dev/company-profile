@@ -38,11 +38,7 @@ import { Switch } from "@halmahera/ui/components/switch";
 import { Textarea } from "@halmahera/ui/components/textarea";
 import { Toggle } from "@halmahera/ui/components/toggle";
 import { ToggleGroup, ToggleGroupItem } from "@halmahera/ui/components/toggle-group";
-import {
-  Delete02Icon,
-  Search01Icon,
-  Settings01Icon,
-} from "@hugeicons/core-free-icons";
+import { Delete02Icon, Search01Icon, Settings01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import { ShowcaseBlock, ShowcaseSection } from "./showcase-section";
@@ -79,9 +75,7 @@ export function ControlsSection() {
           description="One light primary per group. Brand rose is for confirming field actions such as Start planting."
         >
           <div className="flex flex-wrap items-center gap-3">
-            <Button>
-              Book a call
-            </Button>
+            <Button>Book a call</Button>
             <Button variant="brand">Start planting</Button>
             <Button variant="secondary">Save draft</Button>
             <Button variant="ghost">Cancel</Button>
@@ -111,9 +105,7 @@ export function ControlsSection() {
               <Button size="lg">Large</Button>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <Button variant="secondary">
-                Add field
-              </Button>
+              <Button variant="secondary">Add field</Button>
               <Button variant="outline" size="icon" aria-label="Settings">
                 <HugeiconsIcon icon={Settings01Icon} />
               </Button>

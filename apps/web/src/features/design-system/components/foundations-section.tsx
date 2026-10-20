@@ -110,10 +110,20 @@ const typeTokens = [
 const radiusSteps = [
   { token: "rounded-sm", value: "4px", use: "Inline code, tags", className: "rounded-sm" },
   { token: "rounded-md", value: "6px", use: "Menu items, sidebar rows", className: "rounded-md" },
-  { token: "rounded-2xl", value: "8px", use: "Fields, alerts, small cards", className: "rounded-2xl" },
+  {
+    token: "rounded-2xl",
+    value: "8px",
+    use: "Fields, alerts, small cards",
+    className: "rounded-2xl",
+  },
   { token: "rounded-3xl", value: "12px", use: "Popovers, menus", className: "rounded-3xl" },
   { token: "rounded-4xl", value: "12px", use: "Cards, dialogs, panels", className: "rounded-4xl" },
-  { token: "rounded-full", value: "9999px", use: "Buttons, badges, nav links", className: "rounded-full" },
+  {
+    token: "rounded-full",
+    value: "9999px",
+    use: "Buttons, badges, nav links",
+    className: "rounded-full",
+  },
 ];
 
 const elevationSteps = [
@@ -196,8 +206,8 @@ export function FoundationsSection() {
           ))}
         </div>
         <p className="max-w-prose text-sm leading-relaxed text-foreground">
-          <strong className="font-medium">Your fields, in plain words.</strong> One Field reads satellite and weather data
-          and turns it into a short plan for each plot. Open{" "}
+          <strong className="font-medium">Your fields, in plain words.</strong> One Field reads
+          satellite and weather data and turns it into a short plan for each plot. Open{" "}
           <a href="#recipes" className="font-medium text-brand-text underline underline-offset-4">
             the field card
           </a>{" "}
@@ -207,7 +217,10 @@ export function FoundationsSection() {
       </ShowcaseBlock>
 
       <div className="grid gap-10 lg:grid-cols-2">
-        <ShowcaseBlock title="Radius" description="Pills for controls, 12px for panels, small steps inside.">
+        <ShowcaseBlock
+          title="Radius"
+          description="Pills for controls, 12px for panels, small steps inside."
+        >
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             {radiusSteps.map((step) => (
               <div key={step.token} className="flex flex-col gap-2">
@@ -252,7 +265,7 @@ export function FoundationsSection() {
               </div>
             ))}
           </div>
-          <div className="size-24 rounded-4xl bg-card shadow-card pressable transition-[background-color,scale] hover:bg-surface-raised" />
+          <div className="size-24 pressable rounded-4xl bg-card shadow-card transition-[background-color,scale] hover:bg-surface-raised" />
         </div>
       </ShowcaseBlock>
     </ShowcaseSection>

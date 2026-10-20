@@ -28,12 +28,12 @@ Linear-style layout. 3D space objects with a light cyberpunk touch. Visuals are 
 
 Four tabs. The device frame changes with the tab. The screens show custom apps built with our design system, not third-party apps. Caption: "Example build".
 
-| Tab | Capability | Device | Example screen |
-| --- | --- | --- | --- |
-| Ask | Chat on your data | Phone | "Why did sales drop in Surabaya last week?" → answer with the cause and a chart |
-| Read | Document reading | Laptop | A stack of invoices → extracted fields in a table, with low-confidence fields marked |
-| Act | Automation with approval | Laptop | Restock order drafted from stock levels → "Approve" / "Edit" |
-| Alert | Early warning | Phone | "Water level at sensor 4 rising fast. Est. 40 min to threshold." → action buttons |
+| Tab   | Capability               | Device | Example screen                                                                       |
+| ----- | ------------------------ | ------ | ------------------------------------------------------------------------------------ |
+| Ask   | Chat on your data        | Phone  | "Why did sales drop in Surabaya last week?" → answer with the cause and a chart      |
+| Read  | Document reading         | Laptop | A stack of invoices → extracted fields in a table, with low-confidence fields marked |
+| Act   | Automation with approval | Laptop | Restock order drafted from stock levels → "Approve" / "Edit"                         |
+| Alert | Early warning            | Phone  | "Water level at sensor 4 rising fast. Est. 40 min to threshold." → action buttons    |
 
 Below the frame: "Your data stays in your systems. How we handle data →" (links to section 8).
 
@@ -76,11 +76,11 @@ Six cards, one per business function. Each card has one line and four bullets.
 
 Flat grid: one frame, three cells, 1px lines between them, no card backgrounds. Each cell has an isometric figure made with the anatomy skill. Each figure has one small idle detail. Static under `prefers-reduced-motion`.
 
-| Buyer | Figure | Idle detail | Line |
-| --- | --- | --- | --- |
-| Companies | Office block with a server rack visible inside | Server LEDs flash | Add AI to the systems you already run. |
-| Startups | Small rocket on a launch pad | Rocket vents steam | Build your AI product with a team that ships. |
-| Government | Civic building with an antenna or siren tower | Antenna light blinks | Public-safety AI that runs on your own servers. |
+| Buyer      | Figure                                         | Idle detail          | Line                                            |
+| ---------- | ---------------------------------------------- | -------------------- | ----------------------------------------------- |
+| Companies  | Office block with a server rack visible inside | Server LEDs flash    | Add AI to the systems you already run.          |
+| Startups   | Small rocket on a launch pad                   | Rocket vents steam   | Build your AI product with a team that ships.   |
+| Government | Civic building with an antenna or siren tower  | Antenna light blinks | Public-safety AI that runs on your own servers. |
 
 ### 5. Selected work
 
@@ -100,20 +100,20 @@ Three offers. No prices.
 
 A two-week calendar. One milestone per working day.
 
-| Day | Milestone |
-| --- | --- |
-| 1 | Kickoff. Pick one use case. |
-| 2 | Data in. Access to your sample data. |
-| 3 | Data check. Clean and map the data. |
-| 4 | First model on your data. |
-| 5 | Review with you. |
-| 8 | First clickable screen. |
-| 9 | Connect the screen to the model. |
-| 10 | Review with you. |
-| 11 | Test with real users. |
-| 12 | Fix what users found. |
-| 13 | Dry run. |
-| 14 | Demo day. You click it. |
+| Day | Milestone                            |
+| --- | ------------------------------------ |
+| 1   | Kickoff. Pick one use case.          |
+| 2   | Data in. Access to your sample data. |
+| 3   | Data check. Clean and map the data.  |
+| 4   | First model on your data.            |
+| 5   | Review with you.                     |
+| 8   | First clickable screen.              |
+| 9   | Connect the screen to the model.     |
+| 10  | Review with you.                     |
+| 11  | Test with real users.                |
+| 12  | Fix what users found.                |
+| 13  | Dry run.                             |
+| 14  | Demo day. You click it.              |
 
 ### 8. Your data stays yours
 
@@ -155,16 +155,16 @@ Nav (Work, Team, Contact), email, location, socials.
 
 Project fields:
 
-| Field | Notes |
-| --- | --- |
-| Name | |
-| Type | Live product or Hackathon |
-| Problem | One line |
-| What we built | One line |
-| Result or award | Hackathon: award + date |
-| Stack | |
-| Link | Live product URL |
-| Screenshots | 1–2 |
+| Field           | Notes                     |
+| --------------- | ------------------------- |
+| Name            |                           |
+| Type            | Live product or Hackathon |
+| Problem         | One line                  |
+| What we built   | One line                  |
+| Result or award | Hackathon: award + date   |
+| Stack           |                           |
+| Link            | Live product URL          |
+| Screenshots     | 1–2                       |
 
 ## `/team`
 

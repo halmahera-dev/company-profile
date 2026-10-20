@@ -69,22 +69,22 @@ Lunear is the "system for product development" look: a page so quiet it reads as
 
 ## Colors
 
-| Role      | Value                                                        | Notes                                                    |
-| --------- | ------------------------------------------------------------ | -------------------------------------------------------- |
-| bg        | `#08090a`                                                    | page; never pure black                                   |
-| bg-2      | `#0f1011`                                                    | every panel, card, app window                            |
-| fg        | `#f7f8f8`                                                    | headlines, active items                                  |
-| fg-muted  | `#8a8f98`                                                    | nav links, body copy, the second half of the statement   |
-| accent    | `#5e6ad2`                                                    | indigo: send button, billing toggle, @mention, Done dot  |
-| accent-fg | `#ffffff`                                                    | ink on indigo                                            |
-| border    | `color-mix(in srgb,var(--fg) var(--hair-alpha),transparent)` | every hairline, alpha is a knob (8%)                     |
-| ink       | `#08090a`                                                    | dark text on the pastel and lime quote cards             |
-| lime      | `#e4f222`                                                    | one testimonial card, full bleed                         |
-| sky / lav | `#cfe3ff` / `#ece3fd`                                        | the 170deg pastel gradient testimonial                   |
-| green     | `#4cb782`                                                    | In Review ring, diff additions, status dot               |
-| red       | `#eb5757`                                                    | Bug label, diff removals, newest changelog dot           |
-| yellow    | `#f2c94c`                                                    | In Progress half-ring, star                              |
-| pink/teal | `#f79ce0` / `#83dcdc`                                        | syntax keywords / entities                               |
+| Role      | Value                                                        | Notes                                                   |
+| --------- | ------------------------------------------------------------ | ------------------------------------------------------- |
+| bg        | `#08090a`                                                    | page; never pure black                                  |
+| bg-2      | `#0f1011`                                                    | every panel, card, app window                           |
+| fg        | `#f7f8f8`                                                    | headlines, active items                                 |
+| fg-muted  | `#8a8f98`                                                    | nav links, body copy, the second half of the statement  |
+| accent    | `#5e6ad2`                                                    | indigo: send button, billing toggle, @mention, Done dot |
+| accent-fg | `#ffffff`                                                    | ink on indigo                                           |
+| border    | `color-mix(in srgb,var(--fg) var(--hair-alpha),transparent)` | every hairline, alpha is a knob (8%)                    |
+| ink       | `#08090a`                                                    | dark text on the pastel and lime quote cards            |
+| lime      | `#e4f222`                                                    | one testimonial card, full bleed                        |
+| sky / lav | `#cfe3ff` / `#ece3fd`                                        | the 170deg pastel gradient testimonial                  |
+| green     | `#4cb782`                                                    | In Review ring, diff additions, status dot              |
+| red       | `#eb5757`                                                    | Bug label, diff removals, newest changelog dot          |
+| yellow    | `#f2c94c`                                                    | In Progress half-ring, star                             |
+| pink/teal | `#f79ce0` / `#83dcdc`                                        | syntax keywords / entities                              |
 
 Scheme: dark. Contrast rule: headlines ~19:1, muted `#8a8f98` ~6:1 on bg, tertiary grey (`--fg-3`) only for captions, IDs and timestamps.
 Color rules: colour is data, never decoration. Status rings, label dots and syntax carry the palette; sections never get coloured backgrounds except the two quote cards. No literal outside `:root`: tints are `color-mix()` off tokens (`--fg-2`, `--fg-3`, `--bg-3`, `--rule`).
@@ -171,55 +171,82 @@ Five knobs. `--glow` (0–60%) is the strength of the grey spotlight under the a
 ## Reference CSS
 
 ```css
-:root{
---bg:#08090a;
---bg-2:#0f1011;
---fg:#f7f8f8;
---fg-muted:#8a8f98;
---accent:#5e6ad2;
---accent-fg:#ffffff;
---lime:#e4f222;
---sky:#cfe3ff;
---lav:#ece3fd;
---green:#4cb782;
---red:#eb5757;
---yellow:#f2c94c;
---pink:#f79ce0;
---teal:#83dcdc;
---ink:#08090a;
---border:color-mix(in srgb,var(--fg) var(--hair-alpha),transparent);
---fg-2:color-mix(in srgb,var(--fg) 80%,var(--fg-muted));
---fg-3:color-mix(in srgb,var(--fg-muted) 62%,var(--bg));
---bg-3:color-mix(in srgb,var(--bg-2) 93%,var(--fg));
---rule:color-mix(in srgb,var(--fg) 11%,var(--bg));
---f2:color-mix(in srgb,var(--fg) 2%,transparent);
---f4:color-mix(in srgb,var(--fg) 4%,transparent);
---f6:color-mix(in srgb,var(--fg) 6%,transparent);
---peach:color-mix(in srgb,var(--yellow) 55%,var(--red));
---font-display:"Inter", "Inter Variable", "SF Pro Display", system-ui, sans-serif;
---font-body:"Inter", "Inter Variable", "SF Pro Display", system-ui, sans-serif;
---font-mono:"Geist Mono", "Berkeley Mono", ui-monospace, "SF Mono", Menlo, monospace;
---radius:8px;
---radius-sm:4px;
---radius-md:9px;
---radius-lg:12px;
---radius-pill:9999px;
---space-1:4px;
---space-8:160px;
---shadow:0 2px 32px color-mix(in srgb,var(--bg) 60%,transparent),0 0 0 1px color-mix(in srgb,var(--bg) 40%,transparent);
---ease:cubic-bezier(.25,.46,.45,.94);
---dur:160ms;
---max-width:1280px;
---section:160px;
---hair-alpha:8%;
---glow:34%;
---head-weight:510;
---head-track:-.022em;
---panel-radius:12px;
+:root {
+  --bg: #08090a;
+  --bg-2: #0f1011;
+  --fg: #f7f8f8;
+  --fg-muted: #8a8f98;
+  --accent: #5e6ad2;
+  --accent-fg: #ffffff;
+  --lime: #e4f222;
+  --sky: #cfe3ff;
+  --lav: #ece3fd;
+  --green: #4cb782;
+  --red: #eb5757;
+  --yellow: #f2c94c;
+  --pink: #f79ce0;
+  --teal: #83dcdc;
+  --ink: #08090a;
+  --border: color-mix(in srgb, var(--fg) var(--hair-alpha), transparent);
+  --fg-2: color-mix(in srgb, var(--fg) 80%, var(--fg-muted));
+  --fg-3: color-mix(in srgb, var(--fg-muted) 62%, var(--bg));
+  --bg-3: color-mix(in srgb, var(--bg-2) 93%, var(--fg));
+  --rule: color-mix(in srgb, var(--fg) 11%, var(--bg));
+  --f2: color-mix(in srgb, var(--fg) 2%, transparent);
+  --f4: color-mix(in srgb, var(--fg) 4%, transparent);
+  --f6: color-mix(in srgb, var(--fg) 6%, transparent);
+  --peach: color-mix(in srgb, var(--yellow) 55%, var(--red));
+  --font-display: "Inter", "Inter Variable", "SF Pro Display", system-ui, sans-serif;
+  --font-body: "Inter", "Inter Variable", "SF Pro Display", system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Berkeley Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --radius: 8px;
+  --radius-sm: 4px;
+  --radius-md: 9px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+  --space-1: 4px;
+  --space-8: 160px;
+  --shadow:
+    0 2px 32px color-mix(in srgb, var(--bg) 60%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--bg) 40%, transparent);
+  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --dur: 160ms;
+  --max-width: 1280px;
+  --section: 160px;
+  --hair-alpha: 8%;
+  --glow: 34%;
+  --head-weight: 510;
+  --head-track: -0.022em;
+  --panel-radius: 12px;
 }
-.btn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 13px;border-radius:var(--radius-pill);border:1px solid color-mix(in srgb,var(--fg) 92%,var(--bg));background:color-mix(in srgb,var(--fg) 92%,var(--bg));color:var(--bg);font:510 13px/1 var(--font-body)}
-.app{display:grid;grid-template-columns:240px 1fr;border:1px solid var(--border);border-radius:var(--panel-radius);background:var(--bg-2);box-shadow:var(--shadow);overflow:hidden;font-size:13px}
-.sh h2{font-size:48px;line-height:1;font-weight:var(--head-weight);letter-spacing:var(--head-track)}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 13px;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in srgb, var(--fg) 92%, var(--bg));
+  background: color-mix(in srgb, var(--fg) 92%, var(--bg));
+  color: var(--bg);
+  font: 510 13px/1 var(--font-body);
+}
+.app {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  border: 1px solid var(--border);
+  border-radius: var(--panel-radius);
+  background: var(--bg-2);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  font-size: 13px;
+}
+.sh h2 {
+  font-size: 48px;
+  line-height: 1;
+  font-weight: var(--head-weight);
+  letter-spacing: var(--head-track);
+}
 ```
 
 ## Reference markup
@@ -243,7 +270,13 @@ Five knobs. `--glow` (0–60%) is the strength of the grey spotlight under the a
       </div>
     </div>
   </div>
-  <div class="fl"><span class="mu">Features</span><ul><li>Faults</li><li>Sorties</li></ul></div>
+  <div class="fl">
+    <span class="mu">Features</span>
+    <ul>
+      <li>Faults</li>
+      <li>Sorties</li>
+    </ul>
+  </div>
 </section>
 ```
 
