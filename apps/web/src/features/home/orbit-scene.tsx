@@ -59,6 +59,13 @@ interface Scene {
   scale: number;
   dpr: number;
   palette: Palette | null;
+  atlas: Atlas | null;
+}
+
+interface Atlas {
+  key: string;
+  canvas: HTMLCanvasElement;
+  cell: number;
 }
 
 type ScreenPoint = { x: number; y: number } | null;
@@ -94,6 +101,8 @@ const HOVER_PURPLE = "oklch(64.5% 0.24 305)";
 const TURN_STIFFNESS = ((2 * Math.PI) / 0.4) ** 2;
 const TURN_DAMPING = 2 * Math.sqrt(TURN_STIFFNESS);
 const CAMERA_DISTANCE = 7;
+// Glyphs grow up to ~1.5x with perspective, so the atlas is drawn larger than the base size.
+const ATLAS_OVERSAMPLE = 1.5;
 
 export function OrbitScene({ className }: { className?: string }) {
   const wrapper = React.useRef<HTMLDivElement>(null);
@@ -113,6 +122,7 @@ export function OrbitScene({ className }: { className?: string }) {
     scale: 1,
     dpr: 1,
     palette: null,
+    atlas: null,
   });
   const inView = useInView(wrapper);
   const still = useStillness();
@@ -444,17 +454,24 @@ function drawGlyphs(
   const { dpr, glyphs } = current;
   const baseSize = GLYPH_SIZE * current.scale;
 
-  // One font for every glyph; perspective scales it through the transform.
-  context.font = `${baseSize.toFixed(1)}px ${palette.font}`;
-  context.fillStyle = palette.glyph;
+  const atlas = glyphAtlas(current, palette);
+  const cellSize = atlas.cell / (dpr * ATLAS_OVERSAMPLE);
   for (const glyph of glyphs) {
     if ((glyph.z >= 0 ? "front" : "back") !== side) continue;
-    const size = dpr * glyph.perspective;
-    context.setTransform(size, 0, 0, size, dpr * glyph.x, dpr * glyph.y);
+    const size = cellSize * glyph.perspective;
     context.globalAlpha = glyphAlpha(glyph) * (1 - glyph.heat);
-    context.fillText(glyph.character, 0, 0);
+    context.drawImage(
+      atlas.canvas,
+      CHARACTERS.indexOf(glyph.character) * atlas.cell,
+      0,
+      atlas.cell,
+      atlas.cell,
+      glyph.x - size / 2,
+      glyph.y - size / 2,
+      size,
+      size,
+    );
   }
-  context.setTransform(dpr, 0, 0, dpr, 0, 0);
 
   if (hover) {
     context.fillStyle = hover;
@@ -469,6 +486,28 @@ function drawGlyphs(
     context.shadowBlur = 0;
   }
   context.globalAlpha = 1;
+}
+
+// Firefox re-rasterizes text for every fillText at a new scale, so glyphs are drawn once and blitted.
+function glyphAtlas(current: Scene, palette: Palette) {
+  const fontSize = GLYPH_SIZE * current.scale * current.dpr * ATLAS_OVERSAMPLE;
+  const key = `${fontSize.toFixed(1)}|${palette.glyph}|${palette.font}`;
+  if (current.atlas?.key === key) return current.atlas;
+
+  const cell = Math.ceil(fontSize * 1.4);
+  const canvas = document.createElement("canvas");
+  canvas.width = cell * CHARACTERS.length;
+  canvas.height = cell;
+  const context = canvas.getContext("2d")!;
+  context.font = `${fontSize.toFixed(1)}px ${palette.font}`;
+  context.fillStyle = palette.glyph;
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  Array.from(CHARACTERS).forEach(function drawCharacter(character, index) {
+    context.fillText(character, index * cell + cell / 2, cell / 2);
+  });
+  current.atlas = { key, canvas, cell };
+  return current.atlas;
 }
 
 function glyphAlpha(glyph: Glyph) {
@@ -511,7 +550,7 @@ function drawMoon(
 }
 
 function drawCore(context: CanvasRenderingContext2D, current: Scene, palette: Palette) {
-  const { center, scale, burn, clock, calm, dpr } = current;
+  const { center, scale, burn, clock, calm } = current;
   const breath = calm ? 0 : Math.sin(clock * 1.3) * 0.015;
   const swell = calm ? 0 : burn * 0.1;
   const radius = scale * (0.3 + breath + swell);
@@ -544,14 +583,11 @@ function drawCore(context: CanvasRenderingContext2D, current: Scene, palette: Pa
   );
   surface.addColorStop(0, palette.brand);
   surface.addColorStop(1, palette.indigo);
-  context.shadowColor = palette.brand;
-  context.shadowBlur = radius * (0.5 + burn) * dpr;
   context.fillStyle = surface;
   context.beginPath();
   context.arc(center.x, center.y, radius, 0, Math.PI * 2);
   context.fill();
 
-  context.shadowBlur = 0;
   const shade = context.createRadialGradient(
     center.x - radius * 0.35,
     center.y - radius * 0.4,
