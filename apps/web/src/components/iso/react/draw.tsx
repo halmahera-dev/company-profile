@@ -106,7 +106,9 @@ interface WireProps {
   size?: number;
 }
 
-const tenth = (value: number) => Math.round(value * 10) / 10;
+function tenth(value: number) {
+  return Math.round(value * 10) / 10;
+}
 
 export function Wire({
   from,

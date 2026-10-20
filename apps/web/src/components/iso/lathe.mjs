@@ -4,25 +4,39 @@ const TAU = Math.PI * 2;
 const LIGHT_UP = 1.2;
 const BANDS = [0, 0.2, 0.42, 0.62];
 
-export const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-export const add3 = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
-export const sub3 = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
-export const mul3 = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
-export const len3 = (a) => Math.hypot(a[0], a[1], a[2]);
-export const unit3 = (a) => {
+export function dot3(a, b) {
+  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+export function add3(a, b) {
+  return [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+}
+export function sub3(a, b) {
+  return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+}
+export function mul3(a, k) {
+  return [a[0] * k, a[1] * k, a[2] * k];
+}
+export function len3(a) {
+  return Math.hypot(a[0], a[1], a[2]);
+}
+export function unit3(a) {
   const length = len3(a) || 1;
   return [a[0] / length, a[1] / length, a[2] / length];
-};
-export const cross3 = (a, b) => [
-  a[1] * b[2] - a[2] * b[1],
-  a[2] * b[0] - a[0] * b[2],
-  a[0] * b[1] - a[1] * b[0],
-];
-export const lerp3 = (a, b, t) => [
-  a[0] + (b[0] - a[0]) * t,
-  a[1] + (b[1] - a[1]) * t,
-  a[2] + (b[2] - a[2]) * t,
-];
+}
+export function cross3(a, b) {
+  return [
+    a[1] * b[2] - a[2] * b[1],
+    a[2] * b[0] - a[0] * b[2],
+    a[0] * b[1] - a[1] * b[0],
+  ];
+}
+export function lerp3(a, b, t) {
+  return [
+    a[0] + (b[0] - a[0]) * t,
+    a[1] + (b[1] - a[1]) * t,
+    a[2] + (b[2] - a[2]) * t,
+  ];
+}
 
 export function viewOf(P) {
   const { sinA, cosA, sinE, cosE } = cameraOf(P);
@@ -34,7 +48,9 @@ export function lightOf(P) {
   return unit3([-sinA, cosA, LIGHT_UP]);
 }
 
-export const scaleOf = (P) => cameraOf(P).k;
+export function scaleOf(P) {
+  return cameraOf(P).k;
+}
 
 export function bandOf(score) {
   let tone = 0;
@@ -42,7 +58,9 @@ export function bandOf(score) {
   return tone;
 }
 
-export const toneOf = (normal, P) => bandOf(dot3(unit3(normal), lightOf(P)));
+export function toneOf(normal, P) {
+  return bandOf(dot3(unit3(normal), lightOf(P)));
+}
 
 export function frameAlong(o, a) {
   const axis = unit3(a);
@@ -52,7 +70,9 @@ export function frameAlong(o, a) {
   return { o, a: axis, u, v };
 }
 
-export const frameOf = (o, a, u, v) => ({ o, a, u, v });
+export function frameOf(o, a, u, v) {
+  return { o, a, u, v };
+}
 
 export function pointOf(F, s, r, angle) {
   const c = Math.cos(angle);
@@ -64,25 +84,39 @@ export function pointOf(F, s, r, angle) {
   ];
 }
 
-export const radialOf = (F, angle) => {
+export function radialOf(F, angle) {
   const c = Math.cos(angle);
   const n = Math.sin(angle);
-  return [c * F.u[0] + n * F.v[0], c * F.u[1] + n * F.v[1], c * F.u[2] + n * F.v[2]];
-};
+  return [
+    c * F.u[0] + n * F.v[0],
+    c * F.u[1] + n * F.v[1],
+    c * F.u[2] + n * F.v[2],
+  ];
+}
 
-export const tangentOf = (F, angle) => {
+export function tangentOf(F, angle) {
   const c = Math.cos(angle);
   const n = Math.sin(angle);
-  return [-n * F.u[0] + c * F.v[0], -n * F.u[1] + c * F.v[1], -n * F.u[2] + c * F.v[2]];
-};
+  return [
+    -n * F.u[0] + c * F.v[0],
+    -n * F.u[1] + c * F.v[1],
+    -n * F.u[2] + c * F.v[2],
+  ];
+}
 
-export const angleToward = (F, direction) => Math.atan2(dot3(direction, F.v), dot3(direction, F.u));
+export function angleToward(F, direction) {
+  return Math.atan2(dot3(direction, F.v), dot3(direction, F.u));
+}
 
 function hullTagged(points) {
   const sorted = [...points].sort((a, b) => a.p[0] - b.p[0] || a.p[1] - b.p[1]);
   if (sorted.length < 3) return sorted;
-  const cross = (o, a, b) =>
-    (a.p[0] - o.p[0]) * (b.p[1] - o.p[1]) - (a.p[1] - o.p[1]) * (b.p[0] - o.p[0]);
+  function cross(o, a, b) {
+    return (
+      (a.p[0] - o.p[0]) * (b.p[1] - o.p[1]) -
+      (a.p[1] - o.p[1]) * (b.p[0] - o.p[0])
+    );
+  }
   const lower = [];
   for (const point of sorted) {
     while (
@@ -105,13 +139,19 @@ function hullTagged(points) {
   return [...lower.slice(0, -1), ...upper.slice(0, -1)];
 }
 
-export const hullOf = (points) => hullTagged(points.map((p) => ({ p }))).map(({ p }) => p);
+export function hullOf(points) {
+  return hullTagged(points.map((p) => ({ p }))).map(({ p }) => p);
+}
 
 export function runsOf(flags) {
   const count = flags.length;
-  const start = flags.findIndex((flag, index) => flag !== flags[(index + count - 1) % count]);
+  const start = flags.findIndex(
+    (flag, index) => flag !== flags[(index + count - 1) % count],
+  );
   if (start < 0)
-    return flags[0] ? [Array.from({ length: count + 1 }, (_, index) => index % count)] : [];
+    return flags[0]
+      ? [Array.from({ length: count + 1 }, (_, index) => index % count)]
+      : [];
   const runs = [];
   let run = null;
   for (let step = 0; step < count; step++) {
@@ -131,7 +171,9 @@ export function runsOf(flags) {
 function groupsOf(keys) {
   const count = keys.length;
   const out = [];
-  const start = keys.findIndex((key, index) => key !== keys[(index + count - 1) % count]);
+  const start = keys.findIndex(
+    (key, index) => key !== keys[(index + count - 1) % count],
+  );
   if (start < 0) {
     if (keys[0] !== null)
       out.push({
@@ -155,14 +197,17 @@ function groupsOf(keys) {
   return out;
 }
 
-export const stepsFor = (radius, least = 16, most = 112, scale = 0) =>
-  Math.max(
+export function stepsFor(radius, least = 16, most = 112, scale = 0) {
+  return Math.max(
     least,
     Math.min(
       most,
-      scale ? Math.ceil((TAU * radius * scale) / 3) : Math.round((radius * 1.3) / 4) * 4,
+      scale
+        ? Math.ceil((TAU * radius * scale) / 3)
+        : Math.round((radius * 1.3) / 4) * 4,
     ),
   );
+}
 
 function chains(edges) {
   const out = [];
@@ -202,15 +247,17 @@ function labelledArcs(nr, na, view, light, gr = nr, ga = na) {
       }
     }
   }
-  const wrap = (angle) => ((angle % TAU) + TAU) % TAU;
-  const sorted = [...new Set(cuts.map((angle) => Math.round(wrap(angle) * 1e9) / 1e9))].sort(
-    (a, b) => a - b,
-  );
-  const label = (angle) => {
+  function wrap(angle) {
+    return ((angle % TAU) + TAU) % TAU;
+  }
+  const sorted = [
+    ...new Set(cuts.map((angle) => Math.round(wrap(angle) * 1e9) / 1e9)),
+  ].sort((a, b) => a - b);
+  function label(angle) {
     const facing = gr * view.flat * Math.cos(angle - view.phi) + ga * view.a;
     if (facing <= 1e-9) return -1;
     return bandOf(nr * light.flat * Math.cos(angle - light.phi) + na * light.a);
-  };
+  }
   if (!sorted.length) {
     const tone = label(0);
     return tone < 0 ? [] : [{ tone, from: 0, to: TAU, full: true }];
@@ -222,7 +269,8 @@ function labelledArcs(nr, na, view, light, gr = nr, ga = na) {
   const merged = [];
   for (const arc of arcs) {
     const last = merged[merged.length - 1];
-    if (last && last.tone === arc.tone && Math.abs(last.to - arc.from) < 1e-9) last.to = arc.to;
+    if (last && last.tone === arc.tone && Math.abs(last.to - arc.from) < 1e-9)
+      last.to = arc.to;
     else merged.push({ ...arc });
   }
   if (
@@ -241,12 +289,16 @@ function hermiteSlopes(run) {
   const h = Array.from({ length: n }, (_, j) => run[j + 1][0] - run[j][0]);
   const delta = h.map((value, j) => (run[j + 1][1] - run[j][1]) / value);
   const d = new Array(n + 1).fill(0);
-  const end = (h0, h1, d0, d1) => {
+  function end(h0, h1, d0, d1) {
     let value = ((2 * h0 + h1) * d0 - h0 * d1) / (h0 + h1);
     if (Math.sign(value) !== Math.sign(d0)) value = 0;
-    else if (Math.sign(d0) !== Math.sign(d1) && Math.abs(value) > Math.abs(3 * d0)) value = 3 * d0;
+    else if (
+      Math.sign(d0) !== Math.sign(d1) &&
+      Math.abs(value) > Math.abs(3 * d0)
+    )
+      value = 3 * d0;
     return value;
-  };
+  }
   if (n === 1) d[0] = d[1] = delta[0];
   else {
     d[0] = end(h[0], h[1], delta[0], delta[1]);
@@ -276,7 +328,12 @@ export function curveRuns(meridian) {
       end++;
     const run = meridian.slice(start, end + 1);
     const n = run.length - 1;
-    if (n >= 2 && run.every((point, j) => j === 0 || Math.abs(point[0] - run[j - 1][0]) > 1e-9)) {
+    if (
+      n >= 2 &&
+      run.every(
+        (point, j) => j === 0 || Math.abs(point[0] - run[j - 1][0]) > 1e-9,
+      )
+    ) {
       const d = hermiteSlopes(run);
       for (let j = 0; j < n; j++) {
         const [s0, r0] = run[j];
@@ -284,7 +341,7 @@ export function curveRuns(meridian) {
         const hj = s1 - s0;
         const d0 = d[j];
         const d1 = d[j + 1];
-        const radius = (s) => {
+        function radius(s) {
           const t = (s - s0) / hj;
           return (
             (2 * t ** 3 - 3 * t ** 2 + 1) * r0 +
@@ -292,15 +349,15 @@ export function curveRuns(meridian) {
             (-2 * t ** 3 + 3 * t ** 2) * r1 +
             (t ** 3 - t ** 2) * hj * d1
           );
-        };
-        const slope = (s) => {
+        }
+        function slope(s) {
           const t = (s - s0) / hj;
           return (
             ((6 * t ** 2 - 6 * t) * r0 + (6 * t - 6 * t ** 2) * r1) / hj +
             (3 * t ** 2 - 4 * t + 1) * d0 +
             (3 * t ** 2 - 2 * t) * d1
           );
-        };
+        }
         segments[start + j] = { radius, slope };
       }
     }
@@ -317,7 +374,7 @@ function curved(meridian, P, segments, { error = 0.2, depth = 6 } = {}) {
     const [s0] = meridian[i];
     const [s1] = meridian[i + 1];
     if (curve) {
-      const split = (a, b, level) => {
+      function split(a, b, level) {
         const mid = (a + b) / 2;
         const chord = (curve.radius(a) + curve.radius(b)) / 2;
         if (level < depth && Math.abs(curve.radius(mid) - chord) * k > error) {
@@ -325,7 +382,7 @@ function curved(meridian, P, segments, { error = 0.2, depth = 6 } = {}) {
           out.push([mid, curve.radius(mid), 1]);
           split(mid, b, level + 1);
         }
-      };
+      }
       split(s0, s1, 0);
     }
     out.push(meridian[i + 1]);
@@ -368,7 +425,7 @@ function smoothRows(
     faces.push([ds / length, -dr / length]);
   }
   const splines = slope ? null : curveRuns(meridian);
-  const vertexNormal = (k, own) => {
+  function vertexNormal(k, own) {
     if (k <= 0 || k >= m - 1 || !meridian[k][2]) return own;
     const a = faces[k - 1];
     const b = faces[k];
@@ -376,8 +433,8 @@ function smoothRows(
     const y = a[1] + b[1];
     const length = Math.hypot(x, y) || 1;
     return [x / length, y / length];
-  };
-  const normalAt = (i, u) => {
+  }
+  function normalAt(i, u) {
     const [s0] = meridian[i];
     const [s1] = meridian[i + 1];
     const s = s0 + (s1 - s0) * u;
@@ -393,8 +450,8 @@ function smoothRows(
     const y = a[1] + (b[1] - a[1]) * u;
     const length = Math.hypot(x, y) || 1;
     return [x / length, y / length];
-  };
-  const pointAt = (i, u, angle) => {
+  }
+  function pointAt(i, u, angle) {
     const [s0, r0] = meridian[i];
     const [s1, r1] = meridian[i + 1];
     const s = s0 + (s1 - s0) * u;
@@ -402,43 +459,54 @@ function smoothRows(
       pointOf(
         F,
         s,
-        radius ? radius(s) : splines && splines[i] ? splines[i].radius(s) : r0 + (r1 - r0) * u,
+        radius
+          ? radius(s)
+          : splines && splines[i]
+            ? splines[i].radius(s)
+            : r0 + (r1 - r0) * u,
         angle,
       ),
       P,
     );
-  };
+  }
   const buckets = [[], [], [], [], []];
   const fine = TAU / Math.max(24, Math.min(192, steps * 1.5));
-  const arcPoints = (i, u, from, to) => {
+  function arcPoints(i, u, from, to) {
     const count = Math.max(1, Math.ceil((to - from) / fine));
     return Array.from({ length: count + 1 }, (_, index) =>
       pointAt(i, u, from + ((to - from) * index) / count),
     );
-  };
-  const centreOf = (arc, reference) => {
+  }
+  function centreOf(arc, reference) {
     let mid = (arc.from + arc.to) / 2 - reference;
     mid = ((mid % TAU) + TAU) % TAU;
     return mid;
-  };
-  const levelOf = (i, u) => {
+  }
+  function levelOf(i, u) {
     const [nr, na] = normalAt(i, u);
     const groups = new Map();
-    for (const arc of labelledArcs(nr, na, view, light, faces[i][0], faces[i][1])) {
+    for (const arc of labelledArcs(
+      nr,
+      na,
+      view,
+      light,
+      faces[i][0],
+      faces[i][1],
+    )) {
       if (!groups.has(arc.tone)) groups.set(arc.tone, []);
       groups.get(arc.tone).push(arc);
     }
     for (const list of groups.values())
       list.sort((x, y) => centreOf(x, light.phi) - centreOf(y, light.phi));
     return { i, u, groups };
-  };
-  const same = (x, y) => {
+  }
+  function same(x, y) {
     if (x.groups.size !== y.groups.size) return false;
     for (const [tone, list] of x.groups)
       if ((y.groups.get(tone) ?? []).length !== list.length) return false;
     return true;
-  };
-  const align = (reference, arc) => {
+  }
+  function align(reference, arc) {
     const out = { ...arc };
     const centre = (reference.from + reference.to) / 2;
     while ((out.from + out.to) / 2 - centre > Math.PI) {
@@ -450,8 +518,8 @@ function smoothRows(
       out.to += TAU;
     }
     return out;
-  };
-  const strayOf = (i, a, mid, b) => {
+  }
+  function strayOf(i, a, mid, b) {
     let worst = 0;
     for (const [tone, list] of mid.groups) {
       list.forEach((arc, index) => {
@@ -469,34 +537,47 @@ function smoothRows(
       });
     }
     return worst;
-  };
-  const sheet = (tone, levels) => {
+  }
+  function sheet(tone, levels) {
     levels[0].groups.get(tone).forEach((arc, index) => {
       const chain = [arc];
       for (let k = 1; k < levels.length; k++)
         chain.push(align(chain[k - 1], levels[k].groups.get(tone)[index]));
       const last = levels.length - 1;
-      const points = [...arcPoints(levels[0].i, levels[0].u, chain[0].from, chain[0].to)];
-      for (let k = 1; k < last; k++) points.push(pointAt(levels[k].i, levels[k].u, chain[k].to));
+      const points = [
+        ...arcPoints(levels[0].i, levels[0].u, chain[0].from, chain[0].to),
+      ];
+      for (let k = 1; k < last; k++)
+        points.push(pointAt(levels[k].i, levels[k].u, chain[k].to));
       points.push(
-        ...arcPoints(levels[last].i, levels[last].u, chain[last].from, chain[last].to).reverse(),
+        ...arcPoints(
+          levels[last].i,
+          levels[last].u,
+          chain[last].from,
+          chain[last].to,
+        ).reverse(),
       );
       for (let k = last - 1; k >= 1; k--)
         points.push(pointAt(levels[k].i, levels[k].u, chain[k].from));
       buckets[tone].push(pathOf(oriented(points), true));
     });
-  };
-  const overlap = (x, y) => Math.min(x.to, y.to) - Math.max(x.from, y.from);
-  const strip = (tone, a, b) => {
+  }
+  function overlap(x, y) {
+    return Math.min(x.to, y.to) - Math.max(x.from, y.from);
+  }
+  function strip(tone, a, b) {
     const below = a.groups.get(tone) ?? [];
-    const above = (b.groups.get(tone) ?? []).map((arc) => ({ arc, used: false }));
-    const quad = (lo, hi) => {
+    const above = (b.groups.get(tone) ?? []).map((arc) => ({
+      arc,
+      used: false,
+    }));
+    function quad(lo, hi) {
       const points = [
         ...arcPoints(a.i, a.u, lo.from, lo.to),
         ...arcPoints(b.i, b.u, hi.from, hi.to).reverse(),
       ];
       buckets[tone].push(pathOf(oriented(points), true));
-    };
+    }
     for (const arc of below) {
       let best = null;
       let score = -Infinity;
@@ -519,25 +600,29 @@ function smoothRows(
       const centre = (entry.arc.from + entry.arc.to) / 2;
       quad({ from: centre, to: centre }, entry.arc);
     }
-  };
+  }
   const k = scaleOf(P);
   let run = [];
-  const flush = () => {
-    const tones = [...new Set(run.flatMap((level) => [...level.groups.keys()]))].sort(
-      (x, y) => x - y,
-    );
+  function flush() {
+    const tones = [
+      ...new Set(run.flatMap((level) => [...level.groups.keys()])),
+    ].sort((x, y) => x - y);
     for (const tone of tones) {
-      const countOf = (level) => (level.groups.get(tone) ?? []).length;
+      function countOf(level) {
+        return (level.groups.get(tone) ?? []).length;
+      }
       let start = 0;
       for (let at = 1; at <= run.length; at++) {
-        if (at < run.length && countOf(run[at - 1]) === countOf(run[at])) continue;
-        if (at - 1 > start && countOf(run[start])) sheet(tone, run.slice(start, at));
+        if (at < run.length && countOf(run[at - 1]) === countOf(run[at]))
+          continue;
+        if (at - 1 > start && countOf(run[start]))
+          sheet(tone, run.slice(start, at));
         if (at < run.length) strip(tone, run[at - 1], run[at]);
         start = at;
       }
     }
     run = [];
-  };
+  }
   for (let i = 0; i < m - 1; i++) {
     const ds = meridian[i + 1][0] - meridian[i][0];
     if (Math.abs(ds) < 1e-9) {
@@ -545,26 +630,32 @@ function smoothRows(
       continue;
     }
     const count = Math.max(1, rows);
-    const reach = (Math.hypot(ds, meridian[i + 1][1] - meridian[i][1]) * k) / count;
+    const reach =
+      (Math.hypot(ds, meridian[i + 1][1] - meridian[i][1]) * k) / count;
     const limit = Math.max(
       1,
       Math.min(deepest, Math.ceil(Math.log2(Math.max(2, reach / fineness)))),
     );
-    const coarse = Array.from({ length: count + 1 }, (_, index) => levelOf(i, index / count));
+    const coarse = Array.from({ length: count + 1 }, (_, index) =>
+      levelOf(i, index / count),
+    );
     run.push(coarse[0]);
-    const refine = (a, b, depth) => {
+    function refine(a, b, depth) {
       const mid = levelOf(i, (a.u + b.u) / 2);
       const split =
         depth < limit &&
-        (!same(a, b) || !same(a, mid) || (depth < 6 && strayOf(i, a, mid, b) > error));
+        (!same(a, b) ||
+          !same(a, mid) ||
+          (depth < 6 && strayOf(i, a, mid, b) > error));
       if (!split) {
         run.push(b);
         return;
       }
       refine(a, mid, depth + 1);
       refine(mid, b, depth + 1);
-    };
-    for (let index = 1; index <= count; index++) refine(coarse[index - 1], coarse[index], 0);
+    }
+    for (let index = 1; index <= count; index++)
+      refine(coarse[index - 1], coarse[index], 0);
   }
   flush();
   return buckets;
@@ -590,10 +681,16 @@ function surfaceOf(side, F, P, rims, { samples = 96, slope = null } = {}) {
   if (left.length <= samples || right.length <= samples) return null;
   const s0 = side[0][0];
   const s1 = side[side.length - 1][0];
-  const angleOf = (point) =>
-    angleToward(F, sub3(point, add3(F.o, mul3(F.a, dot3(sub3(point, F.o), F.a)))));
-  const wrap = (angle) => ((angle % TAU) + TAU) % TAU;
-  const arc = (s, r, from, to, through) => {
+  function angleOf(point) {
+    return angleToward(
+      F,
+      sub3(point, add3(F.o, mul3(F.a, dot3(sub3(point, F.o), F.a)))),
+    );
+  }
+  function wrap(angle) {
+    return ((angle % TAU) + TAU) % TAU;
+  }
+  function arc(s, r, from, to, through) {
     let sweep = wrap(to - from);
     if (wrap(through - from) > sweep) sweep -= TAU;
     const count = Math.max(
@@ -604,18 +701,27 @@ function surfaceOf(side, F, P, rims, { samples = 96, slope = null } = {}) {
     return Array.from({ length: count + 1 }, (_, index) =>
       iso(pointOf(F, s, r, from + (sweep * index) / count), P),
     );
-  };
+  }
   const r0 = side[0][1];
   const r1 = side[side.length - 1][1];
   const bottom = -aV > 0 ? facing + Math.PI : facing;
   const top = aV > 0 ? facing + Math.PI : facing;
   const L = left.map((point) => iso(point, P));
   const R = right.map((point) => iso(point, P));
-  const topArc = arc(s1, r1, angleOf(left[left.length - 1]), angleOf(right[right.length - 1]), top);
+  const topArc = arc(
+    s1,
+    r1,
+    angleOf(left[left.length - 1]),
+    angleOf(right[right.length - 1]),
+    top,
+  );
   const bottomArc = arc(s0, r0, angleOf(right[0]), angleOf(left[0]), bottom);
   const keepFirst = rims === "all" || rims === "first" || rims === "ends";
   const keepLast = rims === "all" || rims === "last" || rims === "ends";
-  const fill = pathOf([...L, ...topArc, ...[...R].reverse(), ...bottomArc], true);
+  const fill = pathOf(
+    [...L, ...topArc, ...[...R].reverse(), ...bottomArc],
+    true,
+  );
   const outline = [
     pathOf(L),
     pathOf(R),
@@ -638,23 +744,36 @@ function surfaceOf(side, F, P, rims, { samples = 96, slope = null } = {}) {
       const dy = b[1] - a[1];
       const t = Math.max(
         0,
-        Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy || 1)),
+        Math.min(
+          1,
+          ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy || 1),
+        ),
       );
-      best = Math.min(best, Math.hypot(p[0] - a[0] - dx * t, p[1] - a[1] - dy * t));
+      best = Math.min(
+        best,
+        Math.hypot(p[0] - a[0] - dx * t, p[1] - a[1] - dy * t),
+      );
     }
     gap = Math.max(gap, best);
   }
   return { fill, outline, gap };
 }
 
-export const softOf = (meridian) => meridian.some((point) => Boolean(point[2]));
+export function softOf(meridian) {
+  return meridian.some((point) => Boolean(point[2]));
+}
 
 export function lathe(
   meridian,
   F,
   P,
   {
-    steps = stepsFor(Math.max(...meridian.map(([, r]) => r)), 32, 160, scaleOf(P)),
+    steps = stepsFor(
+      Math.max(...meridian.map(([, r]) => r)),
+      32,
+      160,
+      scaleOf(P),
+    ),
     fill = "auto",
     hole = null,
     bevel = 0,
@@ -675,7 +794,9 @@ export function lathe(
   const n = steps;
   const m = meridian.length;
   const rings = meridian.map(([s, r]) =>
-    Array.from({ length: n }, (_, j) => iso(pointOf(F, s, r, (j / n) * TAU), P)),
+    Array.from({ length: n }, (_, j) =>
+      iso(pointOf(F, s, r, (j / n) * TAU), P),
+    ),
   );
   const midC = [];
   const midS = [];
@@ -712,9 +833,12 @@ export function lathe(
     ? smoothRows(meridian, F, P, { steps, ...(smooth === true ? {} : smooth) })
     : null;
   if (smoothed)
-    smoothed.forEach((list, tone) => list.forEach((d) => (buckets[tone].push(d), all.push(d))));
+    smoothed.forEach((list, tone) =>
+      list.forEach((d) => (buckets[tone].push(d), all.push(d))),
+    );
   for (let i = 0; i < m - 1; i++) {
-    if (smoothed && Math.abs(meridian[i + 1][0] - meridian[i][0]) > 1e-9) continue;
+    if (smoothed && Math.abs(meridian[i + 1][0] - meridian[i][0]) > 1e-9)
+      continue;
     const keys = seen[i].map((visible, j) => (visible ? tones[i][j] : null));
     for (const { key, run } of groupsOf(keys)) {
       const a = run.map((j) => rings[i][j]);
@@ -726,15 +850,16 @@ export function lathe(
   }
   const phi = Math.atan2(vV, uV);
   const flatV = Math.hypot(uV, vV);
-  const rangeOf = (i) => {
+  function rangeOf(i) {
     const ds = meridian[i + 1][0] - meridian[i][0];
     const dr = meridian[i + 1][1] - meridian[i][1];
     if (Math.hypot(ds, dr) < 1e-9) return null;
-    if (Math.abs(ds) < 1e-9 || flatV < 1e-9) return -dr * aV > 1e-9 ? [-1, 1] : null;
+    if (Math.abs(ds) < 1e-9 || flatV < 1e-9)
+      return -dr * aV > 1e-9 ? [-1, 1] : null;
     const c = (dr * aV) / (ds * flatV);
     return ds > 0 ? [Math.max(-1, c), 1] : [-1, Math.min(1, c)];
-  };
-  const arcsOf = (ranges) => {
+  }
+  function arcsOf(ranges) {
     if (ranges.some((range) => !range)) return [];
     const lo = Math.max(...ranges.map(([x]) => x));
     const hi = Math.min(...ranges.map(([, x]) => x));
@@ -748,13 +873,16 @@ export function lathe(
       [phi + near, phi + far],
       [phi - far, phi - near],
     ];
-  };
-  const along = (s, r, [from, to]) => {
-    const count = Math.max(2, Math.ceil(((to - from) * Math.max(r, 1e-6) * scaleOf(P)) / 1.5));
+  }
+  function along(s, r, [from, to]) {
+    const count = Math.max(
+      2,
+      Math.ceil(((to - from) * Math.max(r, 1e-6) * scaleOf(P)) / 1.5),
+    );
     return Array.from({ length: count + 1 }, (_, j) =>
       iso(pointOf(F, s, r, from + ((to - from) * j) / count), P),
     );
-  };
+  }
   const creases = [];
   for (let i = 1; i < m - 1; i++) {
     if (meridian[i][2] || meridian[i][1] <= 1e-9) continue;
@@ -771,7 +899,11 @@ export function lathe(
       for (const arc of arcsOf([rangeOf(cap), rangeOf(side)])) {
         const inset = along(s, Math.max(0, r - bevel), arc);
         const edge = along(s, r, arc);
-        bevelPath += pathOf([edge[0], ...inset.slice(1, -1), edge[edge.length - 1]]);
+        bevelPath += pathOf([
+          edge[0],
+          ...inset.slice(1, -1),
+          edge[edge.length - 1],
+        ]);
       }
     }
   }
@@ -807,7 +939,9 @@ function shapeOf(meridian, P, smooth) {
     return curved(meridian, P, segments);
   }
   const curves = smooth && !smooth.slope ? curveRuns(meridian) : null;
-  return curves && curves.some(Boolean) ? curved(meridian, P, curves) : meridian;
+  return curves && curves.some(Boolean)
+    ? curved(meridian, P, curves)
+    : meridian;
 }
 
 export function outlineOf(
@@ -815,7 +949,12 @@ export function outlineOf(
   F,
   P,
   {
-    steps = stepsFor(Math.max(...meridian.map(([, r]) => r)), 32, 160, scaleOf(P)),
+    steps = stepsFor(
+      Math.max(...meridian.map(([, r]) => r)),
+      32,
+      160,
+      scaleOf(P),
+    ),
     fill = "auto",
     hole = null,
     rims = "all",
@@ -832,18 +971,26 @@ export function outlineOf(
   const side = fill === "auto" || fill === "surface" ? sideOf(shape) : null;
   const surface =
     side && !hole
-      ? surfaceOf(side, F, P, rims, { slope: smooth && smooth.slope ? smooth.slope : null })
+      ? surfaceOf(side, F, P, rims, {
+          slope: smooth && smooth.slope ? smooth.slope : null,
+        })
       : null;
   if (surface && (fill === "surface" || surface.gap > waist)) {
     fillPath = surface.fill;
     outline = surface.outline;
   } else if (fill === "hull" || fill === "auto" || fill === "surface") {
     const most = Math.max(...shape.map(([, r]) => r));
-    const around = Math.min(320, Math.max(n, Math.ceil((TAU * most * scaleOf(P)) / 1.5)));
+    const around = Math.min(
+      320,
+      Math.max(n, Math.ceil((TAU * most * scaleOf(P)) / 1.5)),
+    );
     const tagged = [];
     shape.forEach(([s, r], index) => {
       for (let j = 0; j < around; j++)
-        tagged.push({ p: iso(pointOf(F, s, r, (j / around) * TAU), P), ring: index });
+        tagged.push({
+          p: iso(pointOf(F, s, r, (j / around) * TAU), P),
+          ring: index,
+        });
     });
     const hull = hullTagged(tagged);
     const holePath = hole
@@ -884,35 +1031,58 @@ export function outlineOf(
           .join("") + holePath;
     }
   } else {
+    function shadeFill({ shades, top }) {
+      return [...shades, top].join("");
+    }
     fillPath = all
       ? all.join("")
-      : (({ shades, top }) => [...shades, top].join(""))(
-          lathe(meridian, F, P, { steps: n, fill: "auto", hole, rims, smooth, waist }),
+      : shadeFill(
+          lathe(meridian, F, P, {
+            steps: n,
+            fill: "auto",
+            hole,
+            rims,
+            smooth,
+            waist,
+          }),
         );
     outline = "";
   }
   return { fill: fillPath, outline };
 }
 
-const signedArea = (points) =>
-  points.reduce((sum, [x, y], index) => {
+function signedArea(points) {
+  return points.reduce((sum, [x, y], index) => {
     const [nx, ny] = points[(index + 1) % points.length];
     return sum + x * ny - nx * y;
   }, 0);
+}
 
-const oriented = (points) => (signedArea(points) < 0 ? [...points].reverse() : points);
+function oriented(points) {
+  return signedArea(points) < 0 ? [...points].reverse() : points;
+}
 
-export const saddleStart = (R, a, angle) =>
-  Math.sqrt(Math.max(0, R * R - a * a * Math.cos(angle) ** 2));
+export function saddleStart(R, a, angle) {
+  return Math.sqrt(Math.max(0, R * R - a * a * Math.cos(angle) ** 2));
+}
 
 export function saddleOf(F, a, start, s1, P, { steps = stepsFor(a, 24) } = {}) {
   const V = viewOf(P);
   const L = lightOf(P);
   const n = steps;
-  const angle = (j) => (j / n) * TAU;
-  const from = typeof start === "function" ? start : (t) => saddleStart(start, a, t);
-  const low = Array.from({ length: n }, (_, j) => iso(pointOf(F, from(angle(j)), a, angle(j)), P));
-  const high = Array.from({ length: n }, (_, j) => iso(pointOf(F, s1, a, angle(j)), P));
+  function angle(j) {
+    return (j / n) * TAU;
+  }
+  function fromRadius(t) {
+    return saddleStart(start, a, t);
+  }
+  const from = typeof start === "function" ? start : fromRadius;
+  const low = Array.from({ length: n }, (_, j) =>
+    iso(pointOf(F, from(angle(j)), a, angle(j)), P),
+  );
+  const high = Array.from({ length: n }, (_, j) =>
+    iso(pointOf(F, s1, a, angle(j)), P),
+  );
   const seen = [];
   const tones = [];
   for (let j = 0; j < n; j++) {
@@ -925,7 +1095,10 @@ export function saddleOf(F, a, start, s1, P, { steps = stepsFor(a, 24) } = {}) {
   const keys = seen.map((visible, j) => (visible ? tones[j] : null));
   for (const { key, run } of groupsOf(keys)) {
     const d = pathOf(
-      oriented([...run.map((j) => low[j]), ...run.map((j) => high[j]).reverse()]),
+      oriented([
+        ...run.map((j) => low[j]),
+        ...run.map((j) => high[j]).reverse(),
+      ]),
       true,
     );
     buckets[key].push(d);
@@ -947,11 +1120,14 @@ export function saddleOf(F, a, start, s1, P, { steps = stepsFor(a, 24) } = {}) {
       pathOf([low[run[run.length - 1]], high[run[run.length - 1]]]),
     );
   }
-  for (const run of capSeen ? back : front) edges.push(pathOf(run.map((j) => high[j])));
+  for (const run of capSeen ? back : front)
+    edges.push(pathOf(run.map((j) => high[j])));
   return {
     fill: fills.join(""),
     outline: edges.join(""),
-    crease: capSeen ? front.map((run) => pathOf(run.map((j) => high[j]))).join("") : "",
+    crease: capSeen
+      ? front.map((run) => pathOf(run.map((j) => high[j]))).join("")
+      : "",
     top: buckets[4].join(""),
     shades: buckets.slice(0, 4).map((list) => list.join("")),
     seamless: true,
@@ -963,11 +1139,13 @@ export function prismOf(F, polygon, s0, s1, P) {
   const L = lightOf(P);
   const ring = oriented(polygon.map(([x, y]) => [x, y]));
   const n = ring.length;
-  const at = (s, [x, y]) => [
-    F.o[0] + F.a[0] * s + F.u[0] * x + F.v[0] * y,
-    F.o[1] + F.a[1] * s + F.u[1] * x + F.v[1] * y,
-    F.o[2] + F.a[2] * s + F.u[2] * x + F.v[2] * y,
-  ];
+  function at(s, [x, y]) {
+    return [
+      F.o[0] + F.a[0] * s + F.u[0] * x + F.v[0] * y,
+      F.o[1] + F.a[1] * s + F.u[1] * x + F.v[1] * y,
+      F.o[2] + F.a[2] * s + F.u[2] * x + F.v[2] * y,
+    ];
+  }
   const low = ring.map((point) => iso(at(s0, point), P));
   const high = ring.map((point) => iso(at(s1, point), P));
   const buckets = [[], [], [], [], []];
@@ -990,21 +1168,28 @@ export function prismOf(F, polygon, s0, s1, P) {
   const capSeen = ends.map(([, , normal]) => dot3(normal, V) > 1e-6);
   ends.forEach(
     ([, points, normal], index) =>
-      capSeen[index] && buckets[bandOf(dot3(normal, L))].push(pathOf(points, true)),
+      capSeen[index] &&
+      buckets[bandOf(dot3(normal, L))].push(pathOf(points, true)),
   );
   const hull = hullOf([...low, ...high]);
   const creases = [];
   for (let j = 0; j < n; j++) {
     const prev = (j - 1 + n) % n;
     const a = [ring[j][0] - ring[prev][0], ring[j][1] - ring[prev][1]];
-    const b = [ring[(j + 1) % n][0] - ring[j][0], ring[(j + 1) % n][1] - ring[j][1]];
+    const b = [
+      ring[(j + 1) % n][0] - ring[j][0],
+      ring[(j + 1) % n][1] - ring[j][1],
+    ];
     const sharp =
-      (a[0] * b[0] + a[1] * b[1]) / (Math.hypot(a[0], a[1]) * Math.hypot(b[0], b[1]) || 1) <
+      (a[0] * b[0] + a[1] * b[1]) /
+        (Math.hypot(a[0], a[1]) * Math.hypot(b[0], b[1]) || 1) <
       Math.cos(0.35);
     if (sharp && seen[j] && seen[prev]) creases.push(pathOf([low[j], high[j]]));
     ends.forEach(
       ([, points], index) =>
-        capSeen[index] && seen[j] && creases.push(pathOf([points[j], points[(j + 1) % n]])),
+        capSeen[index] &&
+        seen[j] &&
+        creases.push(pathOf([points[j], points[(j + 1) % n]])),
     );
   }
   return {
@@ -1017,11 +1202,12 @@ export function prismOf(F, polygon, s0, s1, P) {
 }
 
 export function stadium(r0, r1, offset, steps = 32) {
-  const circle = (cx, r) =>
-    Array.from({ length: steps }, (_, index) => [
+  function circle(cx, r) {
+    return Array.from({ length: steps }, (_, index) => [
       cx + r * Math.cos((index / steps) * TAU),
       r * Math.sin((index / steps) * TAU),
     ]);
+  }
   return hullOf([...circle(0, r0), ...circle(offset, r1)]);
 }
 
@@ -1029,11 +1215,17 @@ export function sphereOf(centre, r, P, { steps = 48 } = {}) {
   const V = viewOf(P);
   const L = lightOf(P);
   const F = frameAlong(centre, V);
-  const flat = (p) => iso(p, P);
-  const rim = Array.from({ length: steps }, (_, index) => pointOf(F, 0, r, (index / steps) * TAU));
+  function flat(p) {
+    return iso(p, P);
+  }
+  const rim = Array.from({ length: steps }, (_, index) =>
+    pointOf(F, 0, r, (index / steps) * TAU),
+  );
   const outline = pathOf(rim.map(flat), true);
-  const capOf = (threshold) => {
-    const points = rim.filter((p) => dot3(sub3(p, centre), L) / r >= threshold).map(flat);
+  function capOf(threshold) {
+    const points = rim
+      .filter((p) => dot3(sub3(p, centre), L) / r >= threshold)
+      .map(flat);
     const c = dot3(L, V);
     const LF = frameAlong(add3(centre, mul3(L, r * threshold)), L);
     const radius = r * Math.sqrt(Math.max(0, 1 - threshold * threshold));
@@ -1043,13 +1235,20 @@ export function sphereOf(centre, r, P, { steps = 48 } = {}) {
     }
     if (c > threshold) points.push(flat(add3(centre, mul3(V, r))));
     return points.length > 2 ? pathOf(hullOf(points), true) : "";
-  };
+  }
   const shades = [outline, capOf(BANDS[1]), capOf(BANDS[2]), capOf(BANDS[3])];
-  return { fill: outline, outline, crease: "", top: "", shades, seamless: true };
+  return {
+    fill: outline,
+    outline,
+    crease: "",
+    top: "",
+    shades,
+    seamless: true,
+  };
 }
 
-export const disc = (s0, s1, r, F, P, options = {}) =>
-  lathe(
+export function disc(s0, s1, r, F, P, options = {}) {
+  return lathe(
     [
       [s0, 0],
       [s0, r],
@@ -1060,9 +1259,10 @@ export const disc = (s0, s1, r, F, P, options = {}) =>
     P,
     { steps: stepsFor(r, 32, 160, scaleOf(P)), ...options },
   );
+}
 
-export const ringBand = (s0, s1, rIn, rOut, F, P, options = {}) =>
-  lathe(
+export function ringBand(s0, s1, rIn, rOut, F, P, options = {}) {
+  return lathe(
     [
       [s0, rIn],
       [s0, rOut],
@@ -1073,18 +1273,25 @@ export const ringBand = (s0, s1, rIn, rOut, F, P, options = {}) =>
     P,
     { steps: stepsFor(rOut, 32, 160, scaleOf(P)), hole: null, ...options },
   );
+}
 
 export function solidOf(profile, F, P, options = {}) {
   const first = profile[0];
   const last = profile[profile.length - 1];
   const meridian = [[first[0], 0], ...profile, [last[0], 0]];
   const most = Math.max(...profile.map(([, r]) => r));
-  return lathe(meridian, F, P, { steps: stepsFor(most, 32, 160, scaleOf(P)), ...options });
+  return lathe(meridian, F, P, {
+    steps: stepsFor(most, 32, 160, scaleOf(P)),
+    ...options,
+  });
 }
 
 export function bandOfProfile(profile, F, P, options = {}) {
   const most = Math.max(...profile.map(([, r]) => r));
-  return lathe(profile, F, P, { steps: stepsFor(most, 32, 160, scaleOf(P)), ...options });
+  return lathe(profile, F, P, {
+    steps: stepsFor(most, 32, 160, scaleOf(P)),
+    ...options,
+  });
 }
 
 export function silhouettePoints(
@@ -1101,16 +1308,15 @@ export function silhouettePoints(
   const flat = Math.hypot(uV, vV) || 1e-9;
   const s0 = profile[0][0];
   const s1 = profile[profile.length - 1][0];
-  const radiusAt =
-    radius ??
-    ((s) => {
-      let index = 1;
-      while (index < profile.length - 1 && profile[index][0] < s) index++;
-      const [sa, ra] = profile[index - 1];
-      const [sb, rb] = profile[index];
-      return ra + ((rb - ra) * (s - sa)) / (sb - sa || 1);
-    });
-  const side = (sign) => {
+  function radiusFromProfile(s) {
+    let index = 1;
+    while (index < profile.length - 1 && profile[index][0] < s) index++;
+    const [sa, ra] = profile[index - 1];
+    const [sb, rb] = profile[index];
+    return ra + ((rb - ra) * (s - sa)) / (sb - sa || 1);
+  }
+  const radiusAt = radius ?? radiusFromProfile;
+  function side(sign) {
     const points = [];
     for (let step = 0; step <= samples; step++) {
       const s = s0 + ((s1 - s0) * step) / samples;
@@ -1124,14 +1330,15 @@ export function silhouettePoints(
       points.push(pointOf(F, s, radiusAt(s), facing + sign * Math.acos(c)));
     }
     return points;
-  };
+  }
   return [side(1), side(-1)];
 }
 
-export const silhouetteOf = (profile, F, P, options = {}) =>
-  silhouettePoints(profile, F, P, options)
+export function silhouetteOf(profile, F, P, options = {}) {
+  return silhouettePoints(profile, F, P, options)
     .map((points) => pathOf(points.map((point) => iso(point, P))))
     .join("");
+}
 
 export function profileCurve(profile, { slope = null, radius = null } = {}) {
   for (let index = 1; index < profile.length; index++)
@@ -1142,7 +1349,7 @@ export function profileCurve(profile, { slope = null, radius = null } = {}) {
   const segments = curveRuns(profile);
   const s0 = profile[0][0];
   const s1 = profile[profile.length - 1][0];
-  const find = (s) => {
+  function find(s) {
     let lo = 0;
     let hi = profile.length - 2;
     while (lo < hi) {
@@ -1151,27 +1358,31 @@ export function profileCurve(profile, { slope = null, radius = null } = {}) {
       else hi = mid - 1;
     }
     return lo;
-  };
-  const linear = (index, s) => {
+  }
+  function linear(index, s) {
     const [sa, ra] = profile[index];
     const [sb, rb] = profile[index + 1];
     return [ra + ((rb - ra) * (s - sa)) / (sb - sa), (rb - ra) / (sb - sa)];
+  }
+  function radiusFromSegments(s) {
+    const at = Math.max(s0, Math.min(s1, s));
+    const index = find(at);
+    return segments[index] ? segments[index].radius(at) : linear(index, at)[0];
+  }
+  const radiusAt = radius ?? radiusFromSegments;
+  function slopeFromSegments(s) {
+    const at = Math.max(s0, Math.min(s1, s));
+    const index = find(at);
+    return segments[index] ? segments[index].slope(at) : linear(index, at)[1];
+  }
+  const slopeAt = slope ?? slopeFromSegments;
+  return {
+    s0,
+    s1,
+    radius: radiusAt,
+    slope: slopeAt,
+    analytic: Boolean(slope && radius),
   };
-  const radiusAt =
-    radius ??
-    ((s) => {
-      const at = Math.max(s0, Math.min(s1, s));
-      const index = find(at);
-      return segments[index] ? segments[index].radius(at) : linear(index, at)[0];
-    });
-  const slopeAt =
-    slope ??
-    ((s) => {
-      const at = Math.max(s0, Math.min(s1, s));
-      const index = find(at);
-      return segments[index] ? segments[index].slope(at) : linear(index, at)[1];
-    });
-  return { s0, s1, radius: radiusAt, slope: slopeAt, analytic: Boolean(slope && radius) };
 }
 
 export function bandsOf(
@@ -1179,30 +1390,56 @@ export function bandsOf(
   cuts,
   F,
   P,
-  { slope = null, radius = null, steps, rows = 6, rims = "none", fill = "auto", samples = 72 } = {},
+  {
+    slope = null,
+    radius = null,
+    steps,
+    rows = 6,
+    rims = "none",
+    fill = "auto",
+    samples = 72,
+  } = {},
 ) {
   const curve = profileCurve(profile, { slope, radius });
   const { s0, s1 } = curve;
   const stops = [
     s0,
-    ...[...new Set(cuts)].filter((s) => s > s0 + 1e-6 && s < s1 - 1e-6).sort((a, b) => a - b),
+    ...[...new Set(cuts)]
+      .filter((s) => s > s0 + 1e-6 && s < s1 - 1e-6)
+      .sort((a, b) => a - b),
     s1,
   ];
-  const most = Math.max(...profile.map(([, r]) => r), ...stops.map((s) => curve.radius(s)));
+  const most = Math.max(
+    ...profile.map(([, r]) => r),
+    ...stops.map((s) => curve.radius(s)),
+  );
   const n = steps ?? stepsFor(most, 32, 160, scaleOf(P));
-  const knot = (s, soft) => (soft ? [s, curve.radius(s), 1] : [s, curve.radius(s)]);
-  const meridianOf = (a, b) => [
-    knot(a),
-    ...profile.filter(([s]) => s > a + 1e-9 && s < b - 1e-9).map(([s, , soft]) => knot(s, soft)),
-    knot(b),
-  ];
+  function knot(s, soft) {
+    return soft ? [s, curve.radius(s), 1] : [s, curve.radius(s)];
+  }
+  function meridianOf(a, b) {
+    return [
+      knot(a),
+      ...profile
+        .filter(([s]) => s > a + 1e-9 && s < b - 1e-9)
+        .map(([s, , soft]) => knot(s, soft)),
+      knot(b),
+    ];
+  }
   const shading = { slope: curve.slope, radius: curve.radius, rows };
   const bands = stops.slice(0, -1).map((a, index) => {
     const b = stops[index + 1];
     const meridian = meridianOf(a, b);
-    const paths = lathe(meridian, F, P, { steps: n, rims, fill, smooth: shading });
+    const paths = lathe(meridian, F, P, {
+      steps: n,
+      rims,
+      fill,
+      smooth: shading,
+    });
     const seam =
-      index < stops.length - 2 ? arcOf(F, b, curve.radius(b), P, { slope: curve.slope(b) }) : "";
+      index < stops.length - 2
+        ? arcOf(F, b, curve.radius(b), P, { slope: curve.slope(b) })
+        : "";
     return {
       s0: a,
       s1: b,
@@ -1212,7 +1449,7 @@ export function bandsOf(
       seam,
     };
   });
-  const sidesOf = (from = s0, to = s1, { ends = false, count = samples } = {}) => {
+  function sidesOf(from = s0, to = s1, { ends = false, count = samples } = {}) {
     const span = [Math.max(s0, from), Math.min(s1, to)];
     const dense = Array.from({ length: count + 1 }, (_, index) =>
       knot(span[0] + ((span[1] - span[0]) * index) / count, true),
@@ -1222,17 +1459,34 @@ export function bandsOf(
       slope: curve.slope,
       radius: curve.radius,
     });
-    const rim = (s) => arcOf(F, s, curve.radius(s), P, { slope: curve.slope(s) });
+    function rim(s) {
+      return arcOf(F, s, curve.radius(s), P, { slope: curve.slope(s) });
+    }
     const rimsAt =
-      ends === true ? span : ends === "first" ? [span[0]] : ends === "last" ? [span[1]] : [];
+      ends === true
+        ? span
+        : ends === "first"
+          ? [span[0]]
+          : ends === "last"
+            ? [span[1]]
+            : [];
     return {
       d:
-        points.map((list) => pathOf(list.map((point) => iso(point, P)))).join("") +
-        rimsAt.map(rim).join(""),
+        points
+          .map((list) => pathOf(list.map((point) => iso(point, P))))
+          .join("") + rimsAt.map(rim).join(""),
       points,
     };
+  }
+  return {
+    bands,
+    sidesOf,
+    radius: curve.radius,
+    slope: curve.slope,
+    steps: n,
+    s0,
+    s1,
   };
-  return { bands, sidesOf, radius: curve.radius, slope: curve.slope, steps: n, s0, s1 };
 }
 
 export function arcOf(
@@ -1240,7 +1494,15 @@ export function arcOf(
   s,
   r,
   P,
-  { slope = 0, steps = 0, least = 0.02, inward = false, from = 0, to = TAU, trim = 0.3 } = {},
+  {
+    slope = 0,
+    steps = 0,
+    least = 0.02,
+    inward = false,
+    from = 0,
+    to = TAU,
+    trim = 0.3,
+  } = {},
 ) {
   const V = viewOf(P);
   const aV = dot3(F.a, V);
@@ -1252,30 +1514,43 @@ export function arcOf(
   const full = Math.abs(to - from - TAU) < 1e-9;
   let visible;
   if (flat < 1e-9)
-    visible = (inward ? (slope * aV) / norm > least : (-slope * aV) / norm > least)
+    visible = (
+      inward ? (slope * aV) / norm > least : (-slope * aV) / norm > least
+    )
       ? [[phi, phi + TAU]]
       : [];
   else if (inward) {
     const c = (slope * aV - least * norm) / flat;
     visible =
-      c <= -1 ? [] : c >= 1 ? [[phi, phi + TAU]] : [[phi + Math.acos(c), phi + TAU - Math.acos(c)]];
+      c <= -1
+        ? []
+        : c >= 1
+          ? [[phi, phi + TAU]]
+          : [[phi + Math.acos(c), phi + TAU - Math.acos(c)]];
   } else {
     const c = (least * norm + slope * aV) / flat;
     visible =
-      c >= 1 ? [] : c <= -1 ? [[phi, phi + TAU]] : [[phi - Math.acos(c), phi + Math.acos(c)]];
+      c >= 1
+        ? []
+        : c <= -1
+          ? [[phi, phi + TAU]]
+          : [[phi - Math.acos(c), phi + Math.acos(c)]];
   }
-  const at = (t) => iso(pointOf(F, s, r, t), P);
-  const speed = (t) => {
+  function at(t) {
+    return iso(pointOf(F, s, r, t), P);
+  }
+  function speed(t) {
     const a = at(t - 1e-3);
     const b = at(t + 1e-3);
     return Math.hypot(b[0] - a[0], b[1] - a[1]) / 2e-3;
-  };
-  const count = (span) =>
-    Math.max(
+  }
+  function count(span) {
+    return Math.max(
       2,
       Math.ceil(((steps || stepsFor(r, 24, 112)) * span) / TAU),
       Math.ceil((span * r * scaleOf(P)) / 1.5),
     );
+  }
   const out = [];
   for (const [a, b] of visible) {
     if (b - a >= TAU - 1e-9 && full) {
@@ -1293,16 +1568,23 @@ export function arcOf(
       for (let turn = -2; turn <= 2; turn++) {
         const lo = Math.max(a + turn * TAU, from);
         const hi = Math.min(b + turn * TAU, to);
-        if (hi - lo > 1e-6) pieces.push([lo, hi, lo > from + 1e-9, hi < to - 1e-9]);
+        if (hi - lo > 1e-6)
+          pieces.push([lo, hi, lo > from + 1e-9, hi < to - 1e-9]);
       }
     for (const [lo, hi, limb0, limb1] of pieces) {
       const span = hi - lo;
-      const cut0 = limb0 && trim > 0 ? Math.min(span * 0.25, trim / (speed(lo) || 1)) : 0;
-      const cut1 = limb1 && trim > 0 ? Math.min(span * 0.25, trim / (speed(hi) || 1)) : 0;
+      const cut0 =
+        limb0 && trim > 0 ? Math.min(span * 0.25, trim / (speed(lo) || 1)) : 0;
+      const cut1 =
+        limb1 && trim > 0 ? Math.min(span * 0.25, trim / (speed(hi) || 1)) : 0;
       const t0 = lo + cut0;
       const t1 = hi - cut1;
       const n = count(t1 - t0);
-      out.push(pathOf(Array.from({ length: n + 1 }, (_, j) => at(t0 + ((t1 - t0) * j) / n))));
+      out.push(
+        pathOf(
+          Array.from({ length: n + 1 }, (_, j) => at(t0 + ((t1 - t0) * j) / n)),
+        ),
+      );
     }
   }
   return out.join("");
@@ -1311,7 +1593,9 @@ export function arcOf(
 export function circleOf(F, s, r, P, steps = 0) {
   const count = steps || stepsFor(r, 24, 112);
   return pathOf(
-    Array.from({ length: count }, (_, j) => iso(pointOf(F, s, r, (j / count) * TAU), P)),
+    Array.from({ length: count }, (_, j) =>
+      iso(pointOf(F, s, r, (j / count) * TAU), P),
+    ),
     true,
   );
 }
@@ -1328,15 +1612,20 @@ export function spokesOf(
   const lines = [];
   for (let index = 0; index < count; index++) {
     const t = phase + from + (index / count) * (to - from);
-    lines.push(pathOf([iso(pointOf(F, s, r0, t), P), iso(pointOf(F, s, r1, t + sweep), P)]));
+    lines.push(
+      pathOf([
+        iso(pointOf(F, s, r0, t), P),
+        iso(pointOf(F, s, r1, t + sweep), P),
+      ]),
+    );
   }
   return lines.join("");
 }
 
-export const fadeOf = (value, [lo, hi]) => {
+export function fadeOf(value, [lo, hi]) {
   const t = Math.max(0, Math.min(1, (value - lo) / (hi - lo || 1e-9)));
   return t * t * (3 - 2 * t);
-};
+}
 
 export function ribsOf(
   F,
@@ -1345,7 +1634,14 @@ export function ribsOf(
   r,
   count,
   P,
-  { phase = 0, twist = 0, least = 0.12, r1 = r, fade = null, seams = false } = {},
+  {
+    phase = 0,
+    twist = 0,
+    least = 0.12,
+    r1 = r,
+    fade = null,
+    seams = false,
+  } = {},
 ) {
   const V = viewOf(P);
   const lines = [];
@@ -1359,7 +1655,10 @@ export function ribsOf(
       radial[2] - slope * F.a[2],
     ]);
     const facing = dot3(normal, V);
-    const d = pathOf([iso(pointOf(F, s0, r, t), P), iso(pointOf(F, s1, r1, t + twist), P)]);
+    const d = pathOf([
+      iso(pointOf(F, s0, r, t), P),
+      iso(pointOf(F, s1, r1, t + twist), P),
+    ]);
     if (fade) {
       const alpha = fadeOf(facing, fade);
       if (alpha > 0.02) lines.push({ d, alpha });
@@ -1380,8 +1679,11 @@ export function ribsOf(
 
 export function rodOut(F, from, to, r, P, { stroke = 0, ...options } = {}) {
   const pad = 0.35 / scaleOf(P);
-  const ring = (s) =>
-    Array.from({ length: 48 }, (_, index) => iso(pointOf(F, s, r + pad, (index / 48) * TAU), P));
+  function ring(s) {
+    return Array.from({ length: 48 }, (_, index) =>
+      iso(pointOf(F, s, r + pad, (index / 48) * TAU), P),
+    );
+  }
   return {
     paths: disc(from - stroke, to, r, F, P, options),
     clip: pathOf(hullOf([...ring(from), ...ring(to + stroke)]), true),
@@ -1426,12 +1728,21 @@ export function dotsOf(
 export function facingOf(F, angle, P, slope = 0) {
   const radial = radialOf(F, angle);
   return dot3(
-    unit3([radial[0] - slope * F.a[0], radial[1] - slope * F.a[1], radial[2] - slope * F.a[2]]),
+    unit3([
+      radial[0] - slope * F.a[0],
+      radial[1] - slope * F.a[1],
+      radial[2] - slope * F.a[2],
+    ]),
     viewOf(P),
   );
 }
 
-export function fillet(points, radius, perArc = 7, { P = null, tube = 0, margin = 1.3 } = {}) {
+export function fillet(
+  points,
+  radius,
+  perArc = 7,
+  { P = null, tube = 0, margin = 1.3 } = {},
+) {
   if (points.length < 3) return points.map((p) => [...p]);
   const V = P && tube ? viewOf(P) : null;
   const out = [[...points[0]]];
@@ -1447,7 +1758,8 @@ export function fillet(points, radius, perArc = 7, { P = null, tube = 0, margin 
       out.push([...here]);
       continue;
     }
-    const room = Math.min(len3(sub3(here, prev)), len3(sub3(next, here))) * 0.48;
+    const room =
+      Math.min(len3(sub3(here, prev)), len3(sub3(next, here))) * 0.48;
     const facing = V ? Math.abs(dot3(unit3(cross3(into, outOf)), V)) : 1;
     const bend = V
       ? Math.max(radius, (margin * tube) / (0.7 * Math.max(0.05, facing) ** 2))
@@ -1470,7 +1782,9 @@ export function fillet(points, radius, perArc = 7, { P = null, tube = 0, margin 
 export function resample(points, spacing) {
   const lengths = [0];
   for (let index = 1; index < points.length; index++)
-    lengths.push(lengths[index - 1] + len3(sub3(points[index], points[index - 1])));
+    lengths.push(
+      lengths[index - 1] + len3(sub3(points[index], points[index - 1])),
+    );
   const total = lengths[lengths.length - 1];
   const count = Math.max(1, Math.round(total / spacing));
   const out = [];
@@ -1481,7 +1795,9 @@ export function resample(points, spacing) {
     const a = points[segment - 1];
     const b = points[segment];
     const span = lengths[segment] - lengths[segment - 1] || 1;
-    out.push(lerp3(a, b, Math.min(1, Math.max(0, (at - lengths[segment - 1]) / span))));
+    out.push(
+      lerp3(a, b, Math.min(1, Math.max(0, (at - lengths[segment - 1]) / span))),
+    );
   }
   return out;
 }
@@ -1513,10 +1829,10 @@ export function cut(points, from, to) {
   return out;
 }
 
-export const pointAlong = (points, at) => {
+export function pointAlong(points, at) {
   const piece = cut(points, at, at + 0.01);
   return piece[0] ?? points[points.length - 1];
-};
+}
 
 export function tangentAlong(points, at) {
   const total = pathLength(points);

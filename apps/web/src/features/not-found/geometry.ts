@@ -38,7 +38,9 @@ const STUD_H = 6;
 const GHOST_R = 8;
 
 const UP: Point3 = [0, 0, 1];
-const frameAt = (z: number, x = 0, y = 0) => G.frameOf([x, y, z], UP, [1, 0, 0], [0, 1, 0]);
+function frameAt(z: number, x = 0, y = 0) {
+  return G.frameOf([x, y, z], UP, [1, 0, 0], [0, 1, 0]);
+}
 
 function byDepth(points: [number, number][]) {
   return [...points].sort(function nearerLast(a, b) {

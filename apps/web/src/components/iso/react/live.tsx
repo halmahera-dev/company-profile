@@ -6,8 +6,9 @@ const STILLNESS = "(prefers-reduced-motion: reduce)";
 const MARGIN = "120px 0px";
 const LONGEST_FRAME = 1 / 30;
 
-export const asksForStillness = () =>
-  typeof window !== "undefined" && window.matchMedia(STILLNESS).matches;
+export function asksForStillness() {
+  return typeof window !== "undefined" && window.matchMedia(STILLNESS).matches;
+}
 
 export function useStillness() {
   return React.useSyncExternalStore(

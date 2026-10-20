@@ -76,10 +76,10 @@ export function depthOf([x, y, z]: Point3, projection: Projection) {
   return (x * cosA + y * sinA) * cosE + z * sinE;
 }
 
-const tenth = (value: number) => {
+function tenth(value: number) {
   const text = (Math.round(value * 10) / 10).toFixed(1).replace(/\.0$/, "");
   return text === "-0" ? "0" : text;
-};
+}
 
 export function pathOf(points: Flat[], closed = false) {
   if (!points.length) return "";
@@ -89,7 +89,9 @@ export function pathOf(points: Flat[], closed = false) {
   );
 }
 
-export const joinPaths = (paths: string[]) => paths.filter(Boolean).join("");
+export function joinPaths(paths: string[]) {
+  return paths.filter(Boolean).join("");
+}
 
 export function roundedPlan({ x, y, w, d, r }: Plan, steps = 8): Plane[] {
   const radius = Math.max(0, Math.min(r, w / 2, d / 2));
@@ -120,13 +122,16 @@ function signedArea(points: Plane[] | Flat[]) {
   return area / 2;
 }
 
-const oriented = (points: Flat[]) => (signedArea(points) < 0 ? [...points].reverse() : points);
+function oriented(points: Flat[]) {
+  return signedArea(points) < 0 ? [...points].reverse() : points;
+}
 
 function convexHull(points: Flat[]): Flat[] {
   const sorted = [...points].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
   if (sorted.length < 3) return sorted;
-  const cross = (o: Flat, a: Flat, b: Flat) =>
-    (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+  function cross(o: Flat, a: Flat, b: Flat) {
+    return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+  }
   const lower: Flat[] = [];
   for (const point of sorted) {
     while (
@@ -270,7 +275,9 @@ export function extrude(
   };
 }
 
-export const ringOf = (plan: Plan, steps = 8): Plane[] => roundedPlan(plan, steps);
+export function ringOf(plan: Plan, steps = 8): Plane[] {
+  return roundedPlan(plan, steps);
+}
 
 export function slabOf(
   plan: Plan,
@@ -303,13 +310,15 @@ export function cylinder(
   return extrude(circleRing(cx, cy, radius, steps), z, height, projection, { convex: true, bevel });
 }
 
-export const insetPlan = ({ x, y, w, d, r }: Plan, by: number): Plan => ({
-  x: x + by,
-  y: y + by,
-  w: w - by * 2,
-  d: d - by * 2,
-  r: Math.max(0, r - by),
-});
+export function insetPlan({ x, y, w, d, r }: Plan, by: number): Plan {
+  return {
+    x: x + by,
+    y: y + by,
+    w: w - by * 2,
+    d: d - by * 2,
+    r: Math.max(0, r - by),
+  };
+}
 
 export function onTop(points: Plane[], z: number, projection: Projection, closed = false) {
   return pathOf(
@@ -318,29 +327,36 @@ export function onTop(points: Plane[], z: number, projection: Projection, closed
   );
 }
 
-export const planOutline = (plan: Plan, z: number, projection: Projection, steps = 8) =>
-  onTop(ringOf(plan, steps), z, projection, true);
+export function planOutline(plan: Plan, z: number, projection: Projection, steps = 8) {
+  return onTop(ringOf(plan, steps), z, projection, true);
+}
 
-export const lineOnTop = (from: Plane, to: Plane, z: number, projection: Projection) =>
-  onTop([from, to], z, projection);
+export function lineOnTop(from: Plane, to: Plane, z: number, projection: Projection) {
+  return onTop([from, to], z, projection);
+}
 
-export const segment = (from: Point3, to: Point3, projection: Projection) =>
-  pathOf([iso(from, projection), iso(to, projection)]);
+export function segment(from: Point3, to: Point3, projection: Projection) {
+  return pathOf([iso(from, projection), iso(to, projection)]);
+}
 
-export const rise = (at: Plane, from: number, to: number, projection: Projection) =>
-  segment([at[0], at[1], from], [at[0], at[1], to], projection);
+export function rise(at: Plane, from: number, to: number, projection: Projection) {
+  return segment([at[0], at[1], from], [at[0], at[1], to], projection);
+}
 
-export const ring = (
+export function ring(
   cx: number,
   cy: number,
   radius: number,
   z: number,
   projection: Projection,
   steps = 40,
-) => onTop(circleRing(cx, cy, radius, steps), z, projection, true);
+) {
+  return onTop(circleRing(cx, cy, radius, steps), z, projection, true);
+}
 
-export const pointsAt = (points: Point3[], projection: Projection): Flat[] =>
-  points.map((point) => iso(point, projection));
+export function pointsAt(points: Point3[], projection: Projection): Flat[] {
+  return points.map((point) => iso(point, projection));
+}
 
 export function dotGrid(
   x: number,
@@ -437,8 +453,9 @@ export function ringSeam(ring: Plane[], z: number, projection: Projection) {
     .join("");
 }
 
-export const sideSeam = (plan: Plan, z: number, projection: Projection, steps = 8) =>
-  ringSeam(ringOf(plan, steps), z, projection);
+export function sideSeam(plan: Plan, z: number, projection: Projection, steps = 8) {
+  return ringSeam(ringOf(plan, steps), z, projection);
+}
 
 export function sideRing(
   center: Point3,
@@ -586,8 +603,9 @@ export function radialTicks(
   return { minor: minor.join(""), major: major.join("") };
 }
 
-export const haloOf = (plan: Plan, z: number, height: number, projection: Projection) =>
-  slabOf(plan, z, height, projection).fill;
+export function haloOf(plan: Plan, z: number, height: number, projection: Projection) {
+  return slabOf(plan, z, height, projection).fill;
+}
 
 export function axisVector(projection: Projection, [dx, dy, dz]: Point3): Flat {
   const origin = iso([0, 0, 0], projection);
@@ -595,21 +613,25 @@ export function axisVector(projection: Projection, [dx, dy, dz]: Point3): Flat {
   return [moved[0] - origin[0], moved[1] - origin[1]];
 }
 
-const fine = (value: number) => Math.round(value * 100) / 100;
+function fine(value: number) {
+  return Math.round(value * 100) / 100;
+}
 
 export function translateAlong(projection: Projection, by: Point3) {
   const [x, y] = axisVector(projection, by);
   return `translate(${fine(x)} ${fine(y)})`;
 }
 
-const thousandth = (value: number) => Math.round(value * 1000) / 1000;
+function thousandth(value: number) {
+  return Math.round(value * 1000) / 1000;
+}
 
 function axesAt(at: Plane, z: number, projection: Projection) {
   const origin = iso([at[0], at[1], z], projection);
-  const along = (point: Point3): Flat => {
+  function along(point: Point3): Flat {
     const [px, py] = iso(point, projection);
     return [px - origin[0], py - origin[1]];
-  };
+  }
   return {
     origin,
     x: along([at[0] + 1, at[1], z]),
@@ -618,8 +640,9 @@ function axesAt(at: Plane, z: number, projection: Projection) {
   };
 }
 
-const matrixOf = (u: Flat, v: Flat, origin: Flat) =>
-  `matrix(${thousandth(u[0])} ${thousandth(u[1])} ${thousandth(v[0])} ${thousandth(v[1])} ${thousandth(origin[0])} ${thousandth(origin[1])})`;
+function matrixOf(u: Flat, v: Flat, origin: Flat) {
+  return `matrix(${thousandth(u[0])} ${thousandth(u[1])} ${thousandth(v[0])} ${thousandth(v[1])} ${thousandth(origin[0])} ${thousandth(origin[1])})`;
+}
 
 export function holdStill(element: Element, [dx, dy]: Flat) {
   const text = dx || dy ? `translate(${-dx} ${-dy})` : "";
@@ -682,14 +705,20 @@ export function fitProjection(
   };
 }
 
-const escape = (text: string) =>
-  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+function escape(text: string) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
 
-const attrs = (pairs: Record<string, string | number | undefined | false>) =>
-  Object.entries(pairs)
+function attrs(pairs: Record<string, string | number | undefined | false>) {
+  return Object.entries(pairs)
     .filter(([, value]) => value !== undefined && value !== false)
     .map(([key, value]) => ` ${key}="${escape(String(value))}"`)
     .join("");
+}
 
 export interface SolidStyle {
   tone?: Tone;
@@ -798,13 +827,15 @@ export function fadeLineSvg(
   { fade = [0, 0], tone = "lo", className, stops = 6 }: FadeLineStyle = {},
 ) {
   if (points.length < 2) return "";
-  const ease = (t: number) => t * t * (3 - 2 * t);
-  const hashOf = (text: string) => {
+  function ease(t: number) {
+    return t * t * (3 - 2 * t);
+  }
+  function hashOf(text: string) {
     let hash = 2166136261;
     for (let index = 0; index < text.length; index++)
       hash = Math.imul(hash ^ text.charCodeAt(index), 16777619);
     return (hash >>> 0).toString(36);
-  };
+  }
   const lengths = [0];
   for (let index = 1; index < points.length; index++)
     lengths.push(
@@ -814,7 +845,7 @@ export function fadeLineSvg(
           points[index][1] - points[index - 1][1],
         ),
     );
-  const at = (length: number): Flat => {
+  function at(length: number): Flat {
     let index = 1;
     while (index < points.length - 1 && lengths[index] < length) index++;
     const span = lengths[index] - lengths[index - 1] || 1;
@@ -823,12 +854,14 @@ export function fadeLineSvg(
       points[index - 1][0] + (points[index][0] - points[index - 1][0]) * t,
       points[index - 1][1] + (points[index][1] - points[index - 1][1]) * t,
     ];
-  };
-  const pieceOf = (from: number, to: number): Flat[] => [
-    at(from),
-    ...points.filter((_, index) => lengths[index] > from + 1e-6 && lengths[index] < to - 1e-6),
-    at(to),
-  ];
+  }
+  function pieceOf(from: number, to: number): Flat[] {
+    return [
+      at(from),
+      ...points.filter((_, index) => lengths[index] > from + 1e-6 && lengths[index] < to - 1e-6),
+      at(to),
+    ];
+  }
   const total = lengths[lengths.length - 1];
   if (total < 1e-6) return "";
   let [start, end] = Array.isArray(fade) ? fade : [fade, fade];
@@ -838,7 +871,7 @@ export function fadeLineSvg(
     end *= share;
   }
   const paint = `var(--anatomy-${tone})`;
-  const ramp = (piece: Flat[], rising: boolean) => {
+  function ramp(piece: Flat[], rising: boolean) {
     const d = pathOf(piece);
     const [x1, y1] = piece[0];
     const [x2, y2] = piece[piece.length - 1];
@@ -850,7 +883,7 @@ export function fadeLineSvg(
     }).join("");
     const gradient = `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${tenth(x1)}" y1="${tenth(y1)}" x2="${tenth(x2)}" y2="${tenth(y2)}">${marks}</linearGradient>`;
     return `<defs>${gradient}</defs><path${attrs({ class: className ? `iso-line ${className}` : "iso-line", "data-tone": tone, "data-free": rising ? "start" : "end", d, style: `stroke:url(#${id})` })}/>`;
-  };
+  }
   const parts: string[] = [];
   if (start > 0.05) parts.push(ramp(pieceOf(0, start), true));
   if (total - end - start > 0.05)
@@ -883,8 +916,9 @@ export function wireSvg(
   }: WireStyle = {},
 ) {
   const d = pathOf([from, ...via, to]);
-  const end = ([x, y]: Flat) =>
-    `<circle class="iso-wire-end" cx="${tenth(x)}" cy="${tenth(y)}" r="${size}"/>`;
+  function end([x, y]: Flat) {
+    return `<circle class="iso-wire-end" cx="${tenth(x)}" cy="${tenth(y)}" r="${size}"/>`;
+  }
   return `<g class="iso-wire" data-tone="${tone}">${lineSvg(d, { tone, dotted, dashed, flow })}${ends === "both" || ends === "from" ? end(from) : ""}${ends === "both" || ends === "to" ? end(to) : ""}</g>`;
 }
 
@@ -984,8 +1018,9 @@ export function plateHtml({
   caption,
   body,
 }: PlateOptions) {
-  const corner = (name: string, text: string, extra = "") =>
-    `<span class="iso-plate-corner" data-corner="${name}"${extra}>${escape(text)}</span>`;
+  function corner(name: string, text: string, extra = "") {
+    return `<span class="iso-plate-corner" data-corner="${name}"${extra}>${escape(text)}</span>`;
+  }
   const legend =
     keys.length || caption
       ? `<figcaption class="iso-legend">${keys.length ? `<span class="iso-keys">${keys.map((key) => `<span class="iso-key">${swatchSvg(key.mark)}${escape(key.label)}</span>`).join("")}</span>` : ""}${caption ? `<span class="iso-caption">${escape(caption)}</span>` : ""}</figcaption>`
