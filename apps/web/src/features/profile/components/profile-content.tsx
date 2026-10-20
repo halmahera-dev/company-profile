@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import { Hero } from "@/features/home/hero";
 import { Showcase } from "@/features/home/showcase";
+import { WhatWeBuild } from "@/features/home/what-we-build";
 import { SectionHeading } from "@/features/profile/components/section-heading";
 import { SiteFooter } from "@/features/profile/components/site-footer";
 import { contactEmail, SiteHeader } from "@/features/profile/components/site-header";
@@ -25,6 +26,7 @@ export function ProfileContent() {
       <main>
         <Hero />
         <Showcase />
+        <WhatWeBuild />
         <Work />
         <Services />
         <Sprint />
