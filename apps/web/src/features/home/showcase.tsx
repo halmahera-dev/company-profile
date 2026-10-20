@@ -69,6 +69,7 @@ export function Showcase() {
   const [isPointerInside, setIsPointerInside] = useState(false);
   const [isFocusInside, setIsFocusInside] = useState(false);
   const [isInView, setIsInView] = useState(false);
+  const [isAutoplaying, setIsAutoplaying] = useState(true);
   const sectionRef = useRef<HTMLElement>(null);
 
   const isPaused = isPointerInside || isFocusInside || !isInView;
@@ -119,17 +120,24 @@ export function Showcase() {
                   key={build.label}
                   type="button"
                   aria-pressed={isActive}
-                  onClick={() => setActiveIndex(index)}
+                  onClick={function chooseBuild() {
+                    setActiveIndex(index);
+                    setIsAutoplaying(false);
+                  }}
                   className={cn(
-                    "relative pressable cursor-pointer overflow-hidden rounded-full px-4 py-1 text-sm font-medium text-muted-foreground transition hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-pressed:bg-surface-raised aria-pressed:text-foreground",
-                    "lg:col-span-2 lg:flex lg:flex-col lg:items-start lg:gap-3 lg:rounded-4xl lg:p-6 lg:text-left",
+                    "group relative pressable cursor-pointer overflow-hidden rounded-full px-4 py-1 text-sm font-medium text-muted-foreground transition hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-pressed:bg-surface-raised aria-pressed:text-foreground",
+                    "lg:col-span-2 lg:flex lg:flex-col lg:items-start lg:gap-3 lg:rounded-4xl lg:p-6 lg:pb-10 lg:text-left",
                     build.placement,
                   )}
                 >
                   <span className="lg:type-label-mono">{build.label}</span>
-                  <span className="hidden type-title lg:block">{build.capability}</span>
-                  <span className="hidden text-base font-normal lg:block">{build.body}</span>
-                  {isActive ? (
+                  <span className="hidden type-title text-foreground lg:block">
+                    {build.capability}
+                  </span>
+                  <span className="hidden text-base font-normal text-muted-foreground group-aria-pressed:text-foreground lg:block">
+                    {build.body}
+                  </span>
+                  {isActive && isAutoplaying ? (
                     <span
                       key={activeIndex}
                       aria-hidden
@@ -142,7 +150,7 @@ export function Showcase() {
             })}
           </div>
 
-          <p className="text-center text-muted-foreground lg:hidden">
+          <p className="min-h-18 text-center text-muted-foreground lg:hidden">
             <span className="font-medium text-foreground">{activeBuild.capability}.</span>{" "}
             {activeBuild.body}
           </p>
@@ -158,6 +166,10 @@ export function Showcase() {
                 className="object-cover object-right-top"
               />
             </div>
+            <div
+              aria-hidden
+              className="absolute -inset-x-6 inset-y-0 neutral-glow lg:-inset-x-20"
+            />
             <DeviceFrame device={activeBuild.device}>
               <div key={activeIndex} className="size-full fade-in">
                 <p className="sr-only">{activeBuild.screenDescription}</p>
@@ -237,10 +249,10 @@ function AskScreen() {
     <div className="flex size-full flex-col pt-8 text-xs">
       <AppBar title="Sales assistant" detail="Connected to your POS" />
       <div className="flex flex-1 flex-col gap-2 overflow-hidden p-3">
-        <p className="max-w-4/5 self-end rounded-2xl rounded-br-sm bg-primary px-3 py-2 text-primary-foreground">
+        <p className="max-w-4/5 self-end rounded-2xl rounded-br-sm bg-primary px-3 py-2 text-sm text-primary-foreground">
           Why did sales drop in Surabaya last week?
         </p>
-        <p className="max-w-5/6 rounded-2xl rounded-bl-sm bg-secondary px-3 py-2">
+        <p className="max-w-5/6 rounded-2xl rounded-bl-sm bg-secondary px-3 py-2 text-sm">
           Sales fell 18%. Most of it came from 3 stores in East Surabaya, after Kopi Susu 1L ran out
           on Tuesday.
         </p>
@@ -292,7 +304,7 @@ function ReadScreen() {
     <div className="flex size-full flex-col text-xs">
       <AppBar title="Invoice reader" detail="3 files · 1 field to check" />
       <div className="flex flex-1 gap-4 overflow-hidden p-4">
-        <div className="relative hidden w-28 shrink-0 sm:block">
+        <div className="relative hidden w-28 shrink-0 @xl:block">
           {pageOffsets.map(function renderPage(offset) {
             return (
               <div
@@ -322,12 +334,12 @@ function ReadScreen() {
               <div
                 key={field.name}
                 className={cn(
-                  "flex items-center gap-3 border-b border-border py-2",
+                  "flex items-center gap-3 border-b border-border py-1.5",
                   isLowConfidence && "-mx-2 rounded-md border-transparent bg-brand/10 px-2",
                 )}
               >
                 <span className="w-1/4 text-muted-foreground">{field.name}</span>
-                <span className="min-w-0 flex-1 truncate font-medium tabular-nums">
+                <span className="min-w-0 flex-1 truncate text-sm font-medium tabular-nums">
                   {field.value}
                 </span>
                 <span
@@ -370,7 +382,10 @@ function ActScreen() {
           </div>
           {items.map(function renderItem(item) {
             return (
-              <div key={item.name} className="flex gap-4 border-b border-border py-2 tabular-nums">
+              <div
+                key={item.name}
+                className="flex gap-4 border-b border-border py-2 text-sm tabular-nums"
+              >
                 <span className="min-w-0 flex-1 truncate font-medium">{item.name}</span>
                 <span className="w-12 text-right text-brand-text">{item.onHand}</span>
                 <span className="w-8 text-right text-muted-foreground">{item.minimum}</span>

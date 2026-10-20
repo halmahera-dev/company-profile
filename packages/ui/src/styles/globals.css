@@ -361,6 +361,16 @@
   mask-image: radial-gradient(ellipse 70% 45% at 55% 40%, black, transparent);
 }
 
+/* A static near-white glow. A plain gradient: no blur filter, no animation, one paint. */
+@utility neutral-glow {
+  background-image: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--color-white) 45%, transparent),
+    color-mix(in oklab, var(--color-white) 28%, transparent) 15%,
+    transparent
+  );
+}
+
 /* Sparse stars. Prime tile sizes keep the layers from lining up into a grid. */
 @utility star-field {
   background-image:
