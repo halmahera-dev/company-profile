@@ -30,6 +30,7 @@ This block is written and re-added by `turbo` before repository-scoped commands 
 - Pill buttons have text only. Never put arrows or icons inside them. Put arrows on quiet text links (`variant="link"`), for example "Learn more →". Icon-only buttons (`size="icon*"`) and the loading `Spinner` are allowed.
 - Motion values live in `packages/ui/src/styles/globals.css`. Use the tokens there. Do not write new cubic-bezier values in components.
 - Hover changes color only (160ms, `ease-out`). Things do not lift, grow, or bounce on hover, and nothing animates on scroll.
+  - Exception: the home hero moon turns toward the cursor (at most ±20°, default spring). It is a deliberate choice. Do not remove it to match this rule.
 - Pressable elements use the `pressable` utility (scale 0.97 on pointer-down). Release is fast: 160ms `ease-out`.
 - Elements that move or resize on screen use `ease-in-out`. Give each property its own duration when press and resize happen on the same element.
 - Popovers and menus scale from their trigger (`origin-(--transform-origin)`). Modals stay centered.

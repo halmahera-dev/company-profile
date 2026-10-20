@@ -60,6 +60,12 @@
         "shadcn/no-unknown-classes": "off",
         "shadcn/require-static-classes": "off"
       }
+    },
+    {
+      "files": ["apps/web/src/features/home/**"],
+      "rules": {
+        "shadcn/no-unknown-classes": "off"
+      }
     }
   ],
   "env": {
