@@ -194,6 +194,17 @@
   transition-timing-function: var(--ease-in-out), var(--ease-out);
 }
 
+/* A device frame that changes between phone and laptop. */
+@utility transition-device {
+  transition-property: width, height, border-radius;
+  transition-duration: 500ms;
+  transition-timing-function: var(--ease-in-out);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
 /* Headlines sit at 510 with -0.022em tracking. Never bold, never uppercase. */
 @utility type-display-xl {
   font-family: var(--font-heading);
@@ -309,6 +320,11 @@
   }
 }
 
+/* A new screen fades in when it replaces the last one. */
+@utility fade-in {
+  animation: fade-in 240ms var(--ease-out) both;
+}
+
 /* The orbit canvas shows after its first frame, not before. */
 @utility fade-in-ready {
   opacity: 0;
@@ -327,19 +343,6 @@
     [data-paused="true"] & {
       animation-play-state: paused;
     }
-  }
-}
-
-@keyframes marquee {
-  to {
-    translate: -50% 0;
-  }
-}
-
-/* Put the items in twice so the loop has no seam. */
-@utility marquee {
-  @media (prefers-reduced-motion: no-preference) {
-    animation: marquee 40s linear infinite;
   }
 }
 

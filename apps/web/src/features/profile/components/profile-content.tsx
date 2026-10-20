@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Hero } from "@/features/home/hero";
+import { Showcase } from "@/features/home/showcase";
 import { SectionHeading } from "@/features/profile/components/section-heading";
 import { SiteFooter } from "@/features/profile/components/site-footer";
 import { contactEmail, SiteHeader } from "@/features/profile/components/site-header";
@@ -23,7 +24,7 @@ export function ProfileContent() {
       <SiteHeader />
       <main>
         <Hero />
-        <Ticker />
+        <Showcase />
         <Work />
         <Services />
         <Sprint />
@@ -32,37 +33,6 @@ export function ProfileContent() {
         <Closing />
       </main>
       <SiteFooter />
-    </div>
-  );
-}
-
-function Ticker() {
-  const items = [
-    "Chatbots on your data",
-    "Smart search",
-    "Document reading",
-    "Workflow automation",
-    "Early warning systems",
-    "AI storybooks",
-  ];
-  const loop = [...items, ...items];
-
-  return (
-    <div className="dark -mx-16 -rotate-2 bg-card py-4 text-foreground shadow-card-lg">
-      <ul aria-label="What we build" className="flex w-max marquee">
-        {loop.map(function renderItem(item, index) {
-          return (
-            <li
-              key={index}
-              aria-hidden={index >= items.length}
-              className="flex items-center gap-6 pr-6 font-heading text-lg font-semibold tracking-tight whitespace-nowrap sm:text-xl"
-            >
-              {item}
-              <span aria-hidden className="size-2 rounded-full bg-brand" />
-            </li>
-          );
-        })}
-      </ul>
     </div>
   );
 }

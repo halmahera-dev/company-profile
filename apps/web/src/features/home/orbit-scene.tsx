@@ -198,7 +198,9 @@ export function OrbitScene({ className }: { className?: string }) {
           );
         } else {
           current.center = { x: width / 2, y: height / 2 };
-          current.scale = Math.min((width / 2 - 12) / extent.x, (height / 2 - 12) / extent.y);
+          // Stacked layouts zoom in, so the outer rings run off the screen edges.
+          const zoom = 1.15;
+          current.scale = Math.min((width / 2 / extent.x) * zoom, (height / 2 - 12) / extent.y);
         }
 
         const button = moonButton.current;

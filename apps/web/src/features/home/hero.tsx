@@ -9,12 +9,12 @@ export function Hero() {
   const headline = "Less orbit. More landing.";
 
   return (
-    <section className="relative">
+    <section className="relative flex flex-col lg:block">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 star-field text-muted-foreground opacity-60"
       />
-      <div className="pointer-events-none relative z-10 mx-auto flex max-w-6xl items-center px-4 pt-32 pb-8 sm:px-8 sm:pt-40 lg:min-h-176 lg:pb-24">
+      <div className="pointer-events-none relative z-10 mx-auto flex max-w-6xl items-center px-4 pt-2 pb-8 sm:px-8 lg:min-h-176 lg:pt-40 lg:pb-24">
         <div
           data-hero-text
           className="pointer-events-auto grid justify-items-start gap-6 lg:w-5/12"
@@ -55,7 +55,7 @@ export function Hero() {
           </div>
         </div>
       </div>
-      <OrbitScene className="relative aspect-square w-full lg:absolute lg:inset-0 lg:aspect-auto" />
+      <OrbitScene className="relative order-first mt-14 aspect-5/4 w-full lg:absolute lg:inset-0 lg:order-none lg:mt-0 lg:aspect-auto" />
     </section>
   );
 }

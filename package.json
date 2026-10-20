@@ -33,7 +33,11 @@
     "check-types": "turbo run check-types",
     "dev:web": "turbo run dev -F web",
     "deploy": "turbo run deploy -F web",
-    "check": "oxlint && oxfmt --write"
+    "build:cloudflare": "turbo run build:cloudflare -F web",
+    "lint": "oxlint",
+    "format:check": "oxfmt --check",
+    "check": "oxlint && oxfmt --write",
+    "prepare": "husky"
   },
   "dependencies": {
     "zod": "catalog:"
@@ -43,6 +47,8 @@
     "@halmahera/config": "workspace:*",
     "@shadcn/lint": "^0.2.0",
     "@types/node": "catalog:",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
     "oxfmt": "^0.66.0",
     "oxlint": "^1.81.0",
     "turbo": "^2.10.12",
