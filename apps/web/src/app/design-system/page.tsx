@@ -24,8 +24,8 @@ export default function DesignSystemPage() {
   return (
     <div id="top" className="min-h-svh bg-background text-foreground">
       <header className="sticky top-0 z-40 px-4 pt-4">
-        <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full border border-black/6 glass py-2 pr-2 pl-6">
-          <span className="font-heading font-extrabold tracking-tight">Halmahera DS</span>
+        <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full border glass py-2 pr-2 pl-6">
+          <span className="font-heading font-semibold tracking-tight">Halmahera DS</span>
           <div className="hidden items-center gap-4 lg:flex">
             {sectionLinks.map((link) => (
               <a
@@ -47,13 +47,13 @@ export default function DesignSystemPage() {
             Themed from DESIGN.md
           </span>
           <h1 className="type-display">
-            Warm, round, and
+            Quiet by default.
             <br />
-            <span className="text-brand">easy to trust.</span>
+            <span className="text-muted-foreground">Color is data.</span>
           </h1>
           <p className="max-w-2xl type-lead text-muted-foreground">
-            The Halmahera design system. Cream surfaces, soft floating cards, pill controls, ink
-            actions, and one emerald accent for state.
+            The Halmahera design system. Near-black surfaces, 8% hairlines, 510-weight Inter, pill
+            controls, and one rose accent for state.
           </p>
         </section>
         <FoundationsSection />

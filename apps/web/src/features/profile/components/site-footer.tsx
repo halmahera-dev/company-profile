@@ -8,13 +8,14 @@ export function SiteFooter() {
     { href: "/#services", label: "Services" },
     { href: "/#sprint", label: "The sprint" },
     { href: "/team", label: "Team" },
+    { href: "/design-system", label: "Design System" },
   ] as const;
 
   return (
     <footer className="bg-muted">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-3 sm:px-8">
         <div className="grid content-start gap-2">
-          <p className="flex items-center gap-2 font-heading text-sm font-bold">
+          <p className="flex items-center gap-2 font-heading text-sm font-semibold">
             <span aria-hidden className="size-2.5 rounded-full bg-brand" />
             Halmahera
           </p>

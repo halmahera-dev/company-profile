@@ -7,8 +7,8 @@ export const contactEmail = "support@halmahera.site";
 
 export function SiteHeader() {
   return (
-    <header className="fixed inset-x-4 top-3 z-30 mx-auto flex max-w-6xl items-center gap-1 rounded-full border border-black/6 glass py-1.5 pr-1.5 pl-4">
-      <Link href="/" className="flex items-center gap-2 font-heading text-sm font-bold">
+    <header className="fixed inset-x-4 top-3 z-30 mx-auto flex max-w-6xl items-center gap-1 rounded-full border glass py-1.5 pr-1.5 pl-4">
+      <Link href="/" className="flex items-center gap-2 font-heading text-sm font-semibold">
         <span aria-hidden className="size-2.5 rounded-full bg-brand" />
         Halmahera
       </Link>

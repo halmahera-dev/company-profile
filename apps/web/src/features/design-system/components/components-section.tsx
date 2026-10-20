@@ -224,8 +224,8 @@ export function ComponentsSection() {
       <ShowcaseSection
         id="data-display"
         title="Data display"
-        description="White cards float on cream with soft shadows. No borders."
-        className="bg-surface-sand/40"
+        description="Panels sit one step above the page with a hairline. No shadows."
+        className="bg-surface-raised/40"
       >
         <div className="grid gap-6 lg:grid-cols-3">
           <Card>
@@ -396,7 +396,7 @@ export function ComponentsSection() {
         id="overlays"
         title="Overlays"
         description="Floating layers on white with soft shadows. Each button opens what it says."
-        className="bg-surface-sand/40"
+        className="bg-surface-raised/40"
       >
         <div className="flex flex-wrap items-center gap-3">
           <Dialog>

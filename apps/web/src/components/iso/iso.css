@@ -1,21 +1,21 @@
 .iso {
   --anatomy-paper: var(--background);
-  --anatomy-face: #fffdf6;
-  --anatomy-top: #fffef9;
-  --anatomy-shade-0: #d3ccb8;
-  --anatomy-shade-1: #ded8c6;
-  --anatomy-shade-2: #e9e4d4;
-  --anatomy-shade-3: #f3efe2;
+  --anatomy-face: var(--card);
+  --anatomy-top: var(--card);
+  --anatomy-shade-0: color-mix(in srgb, var(--foreground) 19%, var(--card));
+  --anatomy-shade-1: color-mix(in srgb, var(--foreground) 13%, var(--card));
+  --anatomy-shade-2: color-mix(in srgb, var(--foreground) 8%, var(--card));
+  --anatomy-shade-3: color-mix(in srgb, var(--foreground) 4%, var(--card));
   --anatomy-lit-top: #ffffff;
-  --anatomy-lit-shade: #f0ebdc;
-  --anatomy-hi: #1f1c18;
-  --anatomy-mid: #6f685c;
-  --anatomy-lo: #a39c8d;
-  --anatomy-faint: #d2cbbb;
-  --anatomy-lit: #000000;
-  --anatomy-halo: #8a8070;
-  --anatomy-halo-opacity: 0.3;
-  --anatomy-dot: #3a3730;
+  --anatomy-lit-shade: color-mix(in srgb, var(--foreground) 6%, var(--card));
+  --anatomy-hi: var(--foreground);
+  --anatomy-mid: var(--muted-foreground);
+  --anatomy-lo: var(--faint-foreground);
+  --anatomy-faint: var(--rule);
+  --anatomy-lit: var(--foreground);
+  --anatomy-halo: var(--foreground);
+  --anatomy-halo-opacity: 0.15;
+  --anatomy-dot: var(--foreground);
   --anatomy-red: #e5484d;
   --anatomy-green: #30a46c;
   --anatomy-blue: #3e63dd;
@@ -24,22 +24,16 @@
   --anatomy-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 .dark .iso {
-  --anatomy-face: #2b2823;
-  --anatomy-top: #38342d;
-  --anatomy-shade-0: #1d1b17;
-  --anatomy-shade-1: #23201c;
-  --anatomy-shade-2: #2a2722;
-  --anatomy-shade-3: #322f29;
-  --anatomy-lit-top: #47423a;
-  --anatomy-lit-shade: #36322c;
-  --anatomy-hi: #d9d4c7;
-  --anatomy-mid: #7a7468;
-  --anatomy-lo: #4a453d;
-  --anatomy-faint: #302c26;
-  --anatomy-lit: #ffffff;
+  --anatomy-face: color-mix(in srgb, var(--foreground) 14%, var(--background));
+  --anatomy-top: color-mix(in srgb, var(--foreground) 18%, var(--background));
+  --anatomy-shade-0: color-mix(in srgb, var(--foreground) 5%, var(--background));
+  --anatomy-shade-1: color-mix(in srgb, var(--foreground) 7%, var(--background));
+  --anatomy-shade-2: color-mix(in srgb, var(--foreground) 9%, var(--background));
+  --anatomy-shade-3: color-mix(in srgb, var(--foreground) 11%, var(--background));
+  --anatomy-lit-top: color-mix(in srgb, var(--foreground) 24%, var(--background));
+  --anatomy-lit-shade: color-mix(in srgb, var(--foreground) 16%, var(--background));
   --anatomy-halo: #000000;
   --anatomy-halo-opacity: 0.55;
-  --anatomy-dot: #e6e1d4;
 }
 .iso-svg {
   display: block;

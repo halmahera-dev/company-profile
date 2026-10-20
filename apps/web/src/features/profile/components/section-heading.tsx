@@ -10,11 +10,11 @@ export function SectionHeading({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="max-w-2xl reveal-on-scroll">
+    <div className="max-w-2xl">
       <Badge variant="brand">{eyebrow}</Badge>
-      <h2 className="mt-3 type-display text-balance">{title}</h2>
+      <h2 className="mt-3 type-headline text-balance">{title}</h2>
       {children ? (
-        <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+        <p className="mt-4 type-lead text-muted-foreground">
           {children}
         </p>
       ) : null}

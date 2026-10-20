@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 
 import { Button } from "@halmahera/ui/components/button";
-import { ArrowLeft01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 
 import { OrreryFigure } from "@/features/not-found/art";
@@ -25,8 +23,7 @@ export default function NotFound() {
             It is like the planet missing from this desk model. The link may be old, or the address
             may have a typo.
           </p>
-          <Button size="lg" nativeButton={false} render={<Link href="/" />}>
-            <HugeiconsIcon icon={ArrowLeft01Icon} data-icon="inline-start" />
+          <Button nativeButton={false} render={<Link href="/" />}>
             Back to home
           </Button>
         </div>

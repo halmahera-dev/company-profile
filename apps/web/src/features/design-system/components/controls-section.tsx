@@ -39,8 +39,6 @@ import { Textarea } from "@halmahera/ui/components/textarea";
 import { Toggle } from "@halmahera/ui/components/toggle";
 import { ToggleGroup, ToggleGroupItem } from "@halmahera/ui/components/toggle-group";
 import {
-  Add01Icon,
-  ArrowRight01Icon,
   Delete02Icon,
   Search01Icon,
   Settings01Icon,
@@ -60,7 +58,7 @@ const buttonVariants = [
   "link",
 ] as const;
 
-const badgeVariants = ["default", "brand", "secondary", "outline", "destructive", "blur"] as const;
+const badgeVariants = ["default", "brand", "secondary", "outline", "destructive"] as const;
 
 const cropItems = [
   { label: "Rice (IR64)", value: "rice" },
@@ -74,16 +72,15 @@ export function ControlsSection() {
       <ShowcaseSection
         id="actions"
         title="Actions"
-        description="Pills only. The main action is ink, not emerald. Emerald marks state and small highlights."
+        description="Pills only, no icons inside. The main action is the light pill. Rose marks state and small highlights."
       >
         <ShowcaseBlock
           title="Button"
-          description="One ink primary per group. Brand emerald is for confirming field actions such as Start planting."
+          description="One light primary per group. Brand rose is for confirming field actions such as Start planting."
         >
           <div className="flex flex-wrap items-center gap-3">
             <Button>
               Book a call
-              <HugeiconsIcon icon={ArrowRight01Icon} data-icon="inline-end" />
             </Button>
             <Button variant="brand">Start planting</Button>
             <Button variant="secondary">Save draft</Button>
@@ -115,7 +112,6 @@ export function ControlsSection() {
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Button variant="secondary">
-                <HugeiconsIcon icon={Add01Icon} data-icon="inline-start" />
                 Add field
               </Button>
               <Button variant="outline" size="icon" aria-label="Settings">
@@ -168,8 +164,8 @@ export function ControlsSection() {
       <ShowcaseSection
         id="inputs"
         title="Inputs"
-        description="Soft pill fields on a warm fill. Focus shows an emerald ring."
-        className="bg-surface-sand/40"
+        description="Quiet fields with a hairline. Focus shows a rose ring."
+        className="bg-surface-raised/40"
       >
         <ShowcaseBlock title="Input states">
           <StateMatrix
