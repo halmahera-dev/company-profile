@@ -140,6 +140,7 @@ const motionTokens = [
   { token: "ease-in-out", value: "cubic-bezier(.77, 0, .175, 1)", use: "Move or resize on screen" },
   { token: "pressable", value: "scale 0.97 · 160ms", use: "Press feedback on pointer-down" },
   { token: "rise-in", value: "640ms · 12px", use: "Hero only, once, 80ms stagger" },
+  { token: "blur-in", value: "700ms · 8px blur", use: "Hero headline only, once, 60ms per word" },
 ];
 
 export function FoundationsSection() {

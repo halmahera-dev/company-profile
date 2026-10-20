@@ -161,7 +161,7 @@
   --shadow-2xl: var(--shadow-md);
 }
 
-/* The sticky header material. The only blur in the system. */
+/* The sticky header material. */
 @utility glass {
   background-color: color-mix(in srgb, var(--background) 82%, transparent);
   -webkit-backdrop-filter: blur(20px);
@@ -254,6 +254,12 @@
   }
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
 @keyframes autoplay-progress {
   from {
     scale: 0 1;
@@ -274,6 +280,42 @@
     &:nth-child(4) {
       animation-delay: 240ms;
     }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: fade-in 300ms var(--ease-out) both;
+  }
+}
+
+@keyframes blur-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    translate: 0 8px;
+  }
+}
+
+/* Only the hero headline. One time per load. */
+@utility blur-in {
+  display: inline-block;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: blur-in 700ms var(--ease-out) both;
+    animation-delay: calc(var(--word-index, 0) * 60ms);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: fade-in 300ms var(--ease-out) both;
+  }
+}
+
+/* The orbit canvas shows after its first frame, not before. */
+@utility fade-in-ready {
+  opacity: 0;
+  transition: opacity 480ms var(--ease-out);
+
+  &[data-ready] {
+    opacity: 1;
   }
 }
 
@@ -314,6 +356,110 @@
   background-image: radial-gradient(currentColor 1.2px, transparent 1.6px);
   background-size: 14px 14px;
   mask-image: radial-gradient(ellipse 70% 45% at 55% 40%, black, transparent);
+}
+
+/* Sparse stars. Prime tile sizes keep the layers from lining up into a grid. */
+@utility star-field {
+  background-image:
+    radial-gradient(circle at 18% 27%, currentColor 0.7px, transparent 1.3px),
+    radial-gradient(circle at 73% 61%, currentColor 0.6px, transparent 1.2px),
+    radial-gradient(circle at 41% 83%, currentColor 1px, transparent 1.6px),
+    radial-gradient(circle at 87% 12%, currentColor 0.5px, transparent 1.1px);
+  background-size:
+    131px 131px,
+    197px 197px,
+    283px 283px,
+    109px 109px;
+  mask-image: radial-gradient(ellipse 75% 70% at 65% 50%, black 20%, transparent);
+}
+
+/* A copy of a headline that glitches in short steps. Add glitch-mirror to flip its direction. */
+@utility glitch-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  animation: glitch-idle 7s steps(1, end) infinite;
+
+  [data-glitch] & {
+    animation: glitch-burst 900ms steps(1, end);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@utility glitch-mirror {
+  --glitch-direction: -1;
+}
+
+@keyframes glitch-idle {
+  0%,
+  95% {
+    opacity: 0;
+  }
+  95.5% {
+    opacity: 0.8;
+    clip-path: inset(20% 0 60% 0);
+    translate: calc(var(--glitch-direction, 1) * 3px) 0;
+  }
+  96.5% {
+    clip-path: inset(55% 0 30% 0);
+    translate: calc(var(--glitch-direction, 1) * -2px) 0;
+  }
+  97.5% {
+    clip-path: inset(8% 0 82% 0);
+    translate: calc(var(--glitch-direction, 1) * 4px) 0;
+  }
+  98.5%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes glitch-burst {
+  0% {
+    opacity: 1;
+    clip-path: inset(10% 0 70% 0);
+    translate: calc(var(--glitch-direction, 1) * 8px) 0;
+  }
+  10% {
+    clip-path: inset(45% 0 35% 0);
+    translate: calc(var(--glitch-direction, 1) * -6px) 0;
+  }
+  20% {
+    clip-path: inset(75% 0 5% 0);
+    translate: calc(var(--glitch-direction, 1) * 10px) 0;
+  }
+  30% {
+    clip-path: inset(0 0 85% 0);
+    translate: calc(var(--glitch-direction, 1) * -4px) 0;
+  }
+  40% {
+    clip-path: inset(30% 0 40% 0);
+    translate: calc(var(--glitch-direction, 1) * 12px) 0;
+  }
+  50% {
+    clip-path: inset(60% 0 20% 0);
+    translate: calc(var(--glitch-direction, 1) * -9px) 0;
+  }
+  60% {
+    clip-path: inset(15% 0 60% 0);
+    translate: calc(var(--glitch-direction, 1) * 5px) 0;
+  }
+  70% {
+    clip-path: inset(85% 0 0 0);
+    translate: calc(var(--glitch-direction, 1) * -7px) 0;
+  }
+  80% {
+    clip-path: inset(40% 0 50% 0);
+    translate: calc(var(--glitch-direction, 1) * 3px) 0;
+  }
+  90%,
+  100% {
+    opacity: 0;
+  }
 }
 
 @utility caption-blur {

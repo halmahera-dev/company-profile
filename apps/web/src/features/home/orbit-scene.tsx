@@ -27,9 +27,11 @@ interface Glyph {
   ring: number;
   slot: number;
   character: string;
-  cell: Vec3 | null;
-  delay: number;
   heat: number;
+  x: number;
+  y: number;
+  z: number;
+  perspective: number;
 }
 
 interface Palette {
@@ -37,6 +39,9 @@ interface Palette {
   brand: string;
   purple: string;
   line: string;
+  indigo: string;
+  coreBrand: string[];
+  coreIndigo: string[];
   additive: boolean;
   font: string;
 }
@@ -45,33 +50,41 @@ interface Scene {
   glyphs: Glyph[];
   clock: number;
   swapClock: number;
-  landing: number;
-  landed: boolean;
-  holdLeft: number;
-  crossfade: number;
-  padLight: number;
+  burnLeft: number;
+  burn: number;
+  calm: boolean;
   pointer: { x: number; y: number; glow: number; inside: boolean };
   turn: { yaw: Spring; pitch: Spring };
   center: { x: number; y: number };
   scale: number;
   dpr: number;
   palette: Palette | null;
-  ease: (t: number) => number;
 }
+
+type ScreenPoint = { x: number; y: number } | null;
 
 const CHARACTERS = "#S08Xx+=-;:. @";
 const RINGS: Ring[] = [
   { radius: 1.7, tiltX: 0.32, tiltZ: -0.28, secondsPerTurn: 60, glyphs: 56 },
   { radius: 2.25, tiltX: -0.22, tiltZ: 0.34, secondsPerTurn: -90, glyphs: 72 },
 ];
-const LANDING_RING = 0;
-const PAD_NORMAL = normalize([0.3, -0.38, 0.88]);
-const FLIGHT_SECONDS = 1.2;
-const LANDING_SECONDS = 1.6;
-const HOLD_SECONDS = 4;
-const CROSSFADE_SECONDS = 0.2;
+const WIREFRAME = buildWireframe();
+const GLYPH_SIZE = 0.075;
 const COLOR_FADE_SECONDS = 0.055;
 const SWAP_SECONDS = 0.15;
+const BURN_SECONDS = 1.2;
+const BURN_RISE_SECONDS = 0.25;
+const BURN_FALL_SECONDS = 0.8;
+const BURN_SPEEDUP = 8;
+const CORE_SECONDS_PER_TURN = 14;
+// Offset and opacity pairs that make a radial gradient fall off like a blur.
+const CORE_FALLOFF = [
+  [0, 100],
+  [0.3, 55],
+  [0.65, 15],
+  [1, 0],
+] as const;
+const CORE_INDIGO = "oklch(58.5% 0.233 277)";
 const MAX_TURN = 0.35;
 const HOVER_REACH = 90;
 const HOVER_BLUR = 8;
@@ -81,7 +94,6 @@ const HOVER_PURPLE = "oklch(64.5% 0.24 305)";
 const TURN_STIFFNESS = ((2 * Math.PI) / 0.4) ** 2;
 const TURN_DAMPING = 2 * Math.sqrt(TURN_STIFFNESS);
 const CAMERA_DISTANCE = 7;
-const PAD_HALF_SPAN = 0.32;
 
 export function OrbitScene({ className }: { className?: string }) {
   const wrapper = React.useRef<HTMLDivElement>(null);
@@ -92,18 +104,15 @@ export function OrbitScene({ className }: { className?: string }) {
     glyphs: [],
     clock: 0,
     swapClock: 0,
-    landing: 0,
-    landed: false,
-    holdLeft: 0,
-    crossfade: 0,
-    padLight: 0,
+    burnLeft: 0,
+    burn: 0,
+    calm: false,
     pointer: { x: 0, y: 0, glow: 0, inside: false },
     turn: { yaw: { at: 0, rate: 0 }, pitch: { at: 0, rate: 0 } },
     center: { x: 0, y: 0 },
     scale: 1,
     dpr: 1,
     palette: null,
-    ease: (t: number) => t,
   });
   const inView = useInView(wrapper);
   const still = useStillness();
@@ -117,28 +126,20 @@ export function OrbitScene({ className }: { className?: string }) {
 
   const kick = useLoop(function tick(dt, calm) {
     const current = scene.current;
-    const landingTarget = current.landed ? LANDING_SECONDS : 0;
-
-    if (calm) {
-      current.crossfade = approach(
-        current.crossfade,
-        current.landed ? 1 : 0,
-        dt / CROSSFADE_SECONDS,
-      );
-      current.landing = landingTarget;
-    } else {
-      current.clock += dt;
-      current.landing = approach(current.landing, landingTarget, dt);
-      current.crossfade = 0;
-      swapCharacters(current, dt);
+    current.calm = calm;
+    current.burnLeft = Math.max(0, current.burnLeft - dt);
+    const burning = current.burnLeft > 0;
+    current.burn = follow(
+      current.burn,
+      burning ? 1 : 0,
+      dt,
+      burning ? BURN_RISE_SECONDS : BURN_FALL_SECONDS,
+    );
+    if (!calm) {
+      const speed = 1 + current.burn * BURN_SPEEDUP;
+      current.clock += dt * speed;
+      swapCharacters(current, dt * speed);
     }
-
-    const touchedDown = current.landed && current.landing === LANDING_SECONDS;
-    if (touchedDown) {
-      current.holdLeft -= dt;
-      if (current.holdLeft <= 0) current.landed = false;
-    }
-    current.padLight = follow(current.padLight, touchedDown ? 1 : 0, dt, COLOR_FADE_SECONDS);
     current.pointer.glow = follow(
       current.pointer.glow,
       current.pointer.inside ? 1 : 0,
@@ -146,15 +147,13 @@ export function OrbitScene({ className }: { className?: string }) {
       COLOR_FADE_SECONDS,
     );
     const turnSettled = turnMoon(current, dt, calm);
-    warmGlyphs(current, dt);
     draw();
+    warmGlyphs(current, dt);
 
     const settling =
-      current.landed ||
-      current.padLight > 0 ||
+      current.burn > 0 ||
       current.pointer.glow > 0 ||
       current.pointer.inside ||
-      current.crossfade > 0 ||
       !turnSettled ||
       current.glyphs.some((glyph) => glyph.heat > 0);
     return !calm || settling;
@@ -171,9 +170,6 @@ export function OrbitScene({ className }: { className?: string }) {
 
       function readTheme() {
         current.palette = readPalette(probeNode!, canvasNode!);
-        current.ease = cubicBezier(
-          getComputedStyle(document.documentElement).getPropertyValue("--ease-in-out"),
-        );
         draw();
       }
 
@@ -217,6 +213,7 @@ export function OrbitScene({ className }: { className?: string }) {
 
       readTheme();
       layout();
+      canvasNode.dataset.ready = "";
       const resizeObserver = new ResizeObserver(layout);
       resizeObserver.observe(wrapperNode);
       const themeObserver = new MutationObserver(readTheme);
@@ -241,11 +238,24 @@ export function OrbitScene({ className }: { className?: string }) {
     kick();
   }
 
-  function toggleLanding() {
-    const current = scene.current;
-    current.landed = !current.landed;
-    current.holdLeft = HOLD_SECONDS;
+  function burnCore() {
+    scene.current.burnLeft = BURN_SECONDS;
     kick();
+    glitchHeadline();
+  }
+
+  function glitchHeadline() {
+    const text = wrapper.current?.parentElement?.querySelector<HTMLElement>("[data-hero-text]");
+    if (!text || still) return;
+    // Remove and reflow first, so a second click restarts the burst.
+    delete text.dataset.glitch;
+    void text.offsetWidth;
+    text.dataset.glitch = "";
+    text.addEventListener("animationend", function stopGlitch(event) {
+      if (event.animationName !== "glitch-burst") return;
+      delete text.dataset.glitch;
+      text.removeEventListener("animationend", stopGlitch);
+    });
   }
 
   return (
@@ -255,13 +265,17 @@ export function OrbitScene({ className }: { className?: string }) {
       onPointerMove={handlePointer}
       onPointerLeave={handlePointer}
     >
-      <canvas ref={canvas} aria-hidden="true" className="absolute inset-0 size-full font-mono" />
+      <canvas
+        ref={canvas}
+        aria-hidden="true"
+        className="absolute inset-0 size-full font-mono fade-in-ready"
+      />
       <span ref={probe} aria-hidden="true" className="hidden" />
       <button
         ref={moonButton}
         type="button"
-        aria-label="Land the orbit"
-        onClick={toggleLanding}
+        aria-label="Burn the core"
+        onClick={burnCore}
         className="absolute pressable cursor-pointer rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
       />
     </div>
@@ -289,32 +303,59 @@ function countGlyphs(share: number) {
 }
 
 function buildGlyphs(share: number) {
-  const landingCount = Math.round(RINGS[LANDING_RING]!.glyphs * share);
-  const columns = Math.ceil(Math.sqrt(landingCount));
-  const spacing = (PAD_HALF_SPAN * 2) / columns;
-  const across = normalize(cross([0, 1, 0], PAD_NORMAL));
-  const up = cross(PAD_NORMAL, across);
   const glyphs: Glyph[] = [];
-
   RINGS.forEach(function addRing(ring, ringIndex) {
     const slots = Math.round(ring.glyphs * share);
     for (let slot = 0; slot < slots; slot++) {
-      const offsetAcross = ((slot % columns) - (columns - 1) / 2) * spacing;
-      const offsetUp = (Math.floor(slot / columns) - (columns - 1) / 2) * spacing;
-      const cell = normalize(
-        add(PAD_NORMAL, add(scaleVec(across, offsetAcross), scaleVec(up, offsetUp))),
-      );
       glyphs.push({
         ring: ringIndex,
         slot: slot / slots,
         character: randomCharacter(),
-        cell: ringIndex === LANDING_RING ? cell : null,
-        delay: Math.random() * (LANDING_SECONDS - FLIGHT_SECONDS),
         heat: 0,
+        x: 0,
+        y: 0,
+        z: 0,
+        perspective: 1,
       });
     }
   });
   return glyphs;
+}
+
+function buildWireframe() {
+  const steps = 48;
+
+  function curve(pointAt: (t: number) => Vec3) {
+    return Array.from({ length: steps + 1 }, function curvePoint(_, step) {
+      return rotateZ(rotateX(pointAt(step / steps), -0.35), 0.3);
+    });
+  }
+
+  const curves: Vec3[][] = [];
+  for (let latitude = -60; latitude <= 60; latitude += 30) {
+    const angle = (latitude * Math.PI) / 180;
+    curves.push(
+      curve((t) => [
+        Math.cos(angle) * Math.cos(t * Math.PI * 2),
+        Math.sin(angle),
+        Math.cos(angle) * Math.sin(t * Math.PI * 2),
+      ]),
+    );
+  }
+  for (let longitude = 0; longitude < 180; longitude += 30) {
+    const angle = (longitude * Math.PI) / 180;
+    curves.push(
+      curve((t) => {
+        const around = t * Math.PI * 2;
+        return [
+          Math.cos(around) * Math.cos(angle),
+          Math.sin(around),
+          Math.cos(around) * Math.sin(angle),
+        ];
+      }),
+    );
+  }
+  return curves;
 }
 
 function turnMoon(current: Scene, dt: number, calm: boolean) {
@@ -336,46 +377,33 @@ function swapCharacters(current: Scene, dt: number) {
   current.swapClock += dt;
   while (current.swapClock >= SWAP_SECONDS) {
     current.swapClock -= SWAP_SECONDS;
-    RINGS.forEach(function swapOne(_, ringIndex) {
-      const ringGlyphs = current.glyphs.filter((glyph) => glyph.ring === ringIndex);
-      const glyph = ringGlyphs[Math.floor(Math.random() * ringGlyphs.length)];
-      if (glyph) glyph.character = randomCharacter();
-    });
+    const glyph = current.glyphs[Math.floor(Math.random() * current.glyphs.length)];
+    if (glyph) glyph.character = randomCharacter();
+  }
+}
+
+function placeGlyphs(current: Scene) {
+  for (const glyph of current.glyphs) {
+    const ring = RINGS[glyph.ring]!;
+    const angle = (glyph.slot + current.clock / ring.secondsPerTurn) * Math.PI * 2;
+    const flat: Vec3 = [ring.radius * Math.cos(angle), 0, ring.radius * Math.sin(angle)];
+    const point = rotateZ(rotateX(flat, ring.tiltX), ring.tiltZ);
+    const screen = project(current, point);
+    glyph.x = screen.x;
+    glyph.y = screen.y;
+    glyph.z = point[2];
+    glyph.perspective = screen.perspective;
   }
 }
 
 function warmGlyphs(current: Scene, dt: number) {
+  const { pointer } = current;
   for (const glyph of current.glyphs) {
-    const point = project(current, glyphPosition(current, glyph));
-    const distance = Math.hypot(point.x - current.pointer.x, point.y - current.pointer.y);
-    const target = current.pointer.inside ? Math.max(0, 1 - distance / HOVER_REACH) : 0;
+    const distance = Math.hypot(glyph.x - pointer.x, glyph.y - pointer.y);
+    const target = pointer.inside ? Math.max(0, 1 - distance / HOVER_REACH) : 0;
+    if (glyph.heat === 0 && target === 0) continue;
     glyph.heat = follow(glyph.heat, target, dt, COLOR_FADE_SECONDS);
   }
-}
-
-function orbitPosition(current: Scene, glyph: Glyph): Vec3 {
-  const ring = RINGS[glyph.ring]!;
-  const angle = (glyph.slot + current.clock / ring.secondsPerTurn) * Math.PI * 2;
-  const flat: Vec3 = [ring.radius * Math.cos(angle), 0, ring.radius * Math.sin(angle)];
-  return rotateZ(rotateX(flat, ring.tiltX), ring.tiltZ);
-}
-
-function flightProgress(current: Scene, glyph: Glyph) {
-  if (!glyph.cell) return 0;
-  const local = clamp((current.landing - glyph.delay) / FLIGHT_SECONDS);
-  return current.ease(local);
-}
-
-function glyphPosition(current: Scene, glyph: Glyph): Vec3 {
-  const progress = flightProgress(current, glyph);
-  const start = orbitPosition(current, glyph);
-  if (progress === 0 || !glyph.cell) return start;
-  const straight = add(
-    scaleVec(start, 1 - progress),
-    scaleVec(onMoon(current, glyph.cell), progress),
-  );
-  const swirl = progress * (1 - progress) * 4 * 1.4;
-  return rotateY(straight, swirl);
 }
 
 function project(current: Scene, point: Vec3) {
@@ -392,90 +420,153 @@ function drawScene(context: CanvasRenderingContext2D, current: Scene, palette: P
   context.setTransform(1, 0, 0, 1, 0, 0);
   context.clearRect(0, 0, context.canvas.width, context.canvas.height);
   context.setTransform(dpr, 0, 0, dpr, 0, 0);
+  context.textAlign = "center";
+  context.textBaseline = "middle";
 
-  const placed = current.glyphs.flatMap(function placeGlyph(glyph) {
-    const progress = flightProgress(current, glyph);
-    if (current.crossfade > 0 && glyph.cell) {
-      return [
-        {
-          glyph,
-          point: orbitPosition(current, glyph),
-          alpha: 1 - current.crossfade,
-          landedness: 0,
-        },
-        { glyph, point: onMoon(current, glyph.cell), alpha: current.crossfade, landedness: 1 },
-      ];
-    }
-    return [{ glyph, point: glyphPosition(current, glyph), alpha: 1, landedness: progress }];
-  });
+  placeGlyphs(current);
+  const hovering = current.pointer.glow > 0 || current.glyphs.some((glyph) => glyph.heat > 0);
+  const hover = hovering ? hoverPaint(context, current, palette) : null;
 
-  for (const item of placed) if (item.point[2] < 0) drawGlyph(context, current, palette, item);
-  drawMoon(context, current, palette);
-  drawPad(context, current, palette);
-  for (const item of placed) if (item.point[2] >= 0) drawGlyph(context, current, palette, item);
+  drawGlyphs(context, current, palette, hover, "back");
+  drawMoon(context, current, palette, hover);
+  drawGlyphs(context, current, palette, hover, "front");
 }
 
-function drawGlyph(
+function drawGlyphs(
   context: CanvasRenderingContext2D,
   current: Scene,
   palette: Palette,
-  item: { glyph: Glyph; point: Vec3; alpha: number; landedness: number },
+  hover: CanvasGradient | null,
+  side: "front" | "back",
 ) {
-  const { x, y, perspective } = project(current, item.point);
-  const depth = clamp((item.point[2] + 2) / 4);
-  const orbitSize = 0.075 * current.scale;
-  const landedSize = 0.045 * current.scale;
-  const size = (orbitSize + (landedSize - orbitSize) * item.landedness) * perspective;
-  const hovered = item.glyph.heat;
-  const landed = current.padLight * item.landedness;
-  const lit = Math.max(hovered, landed);
-  const alpha = item.alpha * (0.3 + 0.65 * depth);
+  const { dpr, glyphs } = current;
+  const baseSize = GLYPH_SIZE * current.scale;
 
-  context.font = `${size.toFixed(1)}px ${palette.font}`;
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.globalAlpha = alpha * (1 - lit);
+  // One font for every glyph; perspective scales it through the transform.
+  context.font = `${baseSize.toFixed(1)}px ${palette.font}`;
   context.fillStyle = palette.glyph;
-  context.fillText(item.glyph.character, x, y);
-  if (lit > 0) {
-    const glow =
-      landed >= hovered ? solidGlow(palette.brand) : hoverGlow(context, current, palette, x, y);
-    context.globalAlpha = alpha * lit;
-    context.fillStyle = glow.paint;
-    context.shadowColor = glow.shadow;
-    context.shadowBlur = HOVER_BLUR * lit;
-    context.fillText(item.glyph.character, x, y);
+  for (const glyph of glyphs) {
+    if ((glyph.z >= 0 ? "front" : "back") !== side) continue;
+    const size = dpr * glyph.perspective;
+    context.setTransform(size, 0, 0, size, dpr * glyph.x, dpr * glyph.y);
+    context.globalAlpha = glyphAlpha(glyph) * (1 - glyph.heat);
+    context.fillText(glyph.character, 0, 0);
+  }
+  context.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  if (hover) {
+    context.fillStyle = hover;
+    for (const glyph of glyphs) {
+      if (glyph.heat === 0 || (glyph.z >= 0 ? "front" : "back") !== side) continue;
+      context.font = `${(baseSize * glyph.perspective).toFixed(1)}px ${palette.font}`;
+      context.globalAlpha = glyphAlpha(glyph) * glyph.heat;
+      context.shadowColor = hoverShadow(current, palette, glyph.x, glyph.y);
+      context.shadowBlur = HOVER_BLUR * glyph.heat;
+      context.fillText(glyph.character, glyph.x, glyph.y);
+    }
     context.shadowBlur = 0;
   }
   context.globalAlpha = 1;
 }
 
-function drawMoon(context: CanvasRenderingContext2D, current: Scene, palette: Palette) {
-  context.lineWidth = 0.8;
-  drawWireframe(context, current, palette, "back", 0.2);
-  drawWireframe(context, current, palette, "front", 0.7);
-  const outline = Array.from({ length: 97 }, function outlinePoint(_, step) {
-    const angle = (step / 96) * Math.PI * 2;
-    return {
-      x: current.center.x + Math.cos(angle) * current.scale,
-      y: current.center.y + Math.sin(angle) * current.scale,
-    };
-  });
-  strokeLine(context, current, palette, outline, 0.7);
-  context.globalAlpha = 1;
+function glyphAlpha(glyph: Glyph) {
+  return 0.3 + 0.65 * clamp((glyph.z + 2) / 4);
 }
 
-function solidGlow(color: string) {
-  return { paint: color, shadow: color };
-}
-
-function hoverGlow(
+function drawMoon(
   context: CanvasRenderingContext2D,
   current: Scene,
   palette: Palette,
-  x: number,
-  y: number,
+  hover: CanvasGradient | null,
 ) {
+  const { center, scale, pointer } = current;
+  const nearMoon = Math.hypot(pointer.x - center.x, pointer.y - center.y) < scale + HOVER_REACH;
+  const moonHover = nearMoon ? hover : null;
+  const curves = WIREFRAME.map(function projectCurve(curve) {
+    return curve.map(function projectPoint(point) {
+      const turned = onMoon(current, point);
+      return { ...project(current, turned), front: turned[2] >= 0 };
+    });
+  });
+
+  function strokeSide(front: boolean, alpha: number) {
+    for (const curve of curves) {
+      const points = curve.map((point) => (point.front === front ? point : null));
+      strokeLine(context, current, palette, moonHover, points, alpha);
+    }
+  }
+
+  context.lineWidth = 0.8;
+  strokeSide(false, 0.2);
+  drawCore(context, current, palette);
+  strokeSide(true, 0.7);
+  const outline = Array.from({ length: 97 }, function outlinePoint(_, step) {
+    const angle = (step / 96) * Math.PI * 2;
+    return { x: center.x + Math.cos(angle) * scale, y: center.y + Math.sin(angle) * scale };
+  });
+  strokeLine(context, current, palette, moonHover, outline, 0.7);
+  context.globalAlpha = 1;
+}
+
+function drawCore(context: CanvasRenderingContext2D, current: Scene, palette: Palette) {
+  const { center, scale, burn, clock, calm, dpr } = current;
+  const breath = calm ? 0 : Math.sin(clock * 1.3) * 0.015;
+  const swell = calm ? 0 : burn * 0.1;
+  const radius = scale * (0.3 + breath + swell);
+  const angle = (clock / CORE_SECONDS_PER_TURN) * Math.PI * 2;
+  const towardBrand = { x: -Math.cos(angle) * radius, y: -Math.sin(angle) * radius };
+
+  context.save();
+  context.globalCompositeOperation = palette.additive ? "lighter" : "source-over";
+  context.globalAlpha = Math.min(1, (palette.additive ? 0.4 : 0.3) + burn * 0.5);
+  const haloRadius = radius * 2.4;
+  [palette.coreBrand, palette.coreIndigo].forEach(function drawHalo(stops, index) {
+    const side = index === 0 ? 0.5 : -0.5;
+    const x = center.x + towardBrand.x * side;
+    const y = center.y + towardBrand.y * side;
+    const halo = context.createRadialGradient(x, y, 0, x, y, haloRadius);
+    CORE_FALLOFF.forEach(function addStop([offset], stopIndex) {
+      halo.addColorStop(offset, stops[stopIndex]!);
+    });
+    context.fillStyle = halo;
+    context.fillRect(x - haloRadius, y - haloRadius, haloRadius * 2, haloRadius * 2);
+  });
+
+  context.globalCompositeOperation = "source-over";
+  context.globalAlpha = 1;
+  const surface = context.createLinearGradient(
+    center.x + towardBrand.x,
+    center.y + towardBrand.y,
+    center.x - towardBrand.x,
+    center.y - towardBrand.y,
+  );
+  surface.addColorStop(0, palette.brand);
+  surface.addColorStop(1, palette.indigo);
+  context.shadowColor = palette.brand;
+  context.shadowBlur = radius * (0.5 + burn) * dpr;
+  context.fillStyle = surface;
+  context.beginPath();
+  context.arc(center.x, center.y, radius, 0, Math.PI * 2);
+  context.fill();
+
+  context.shadowBlur = 0;
+  const shade = context.createRadialGradient(
+    center.x - radius * 0.35,
+    center.y - radius * 0.4,
+    0,
+    center.x,
+    center.y,
+    radius,
+  );
+  shade.addColorStop(0, `rgba(255, 255, 255, ${0.35 + burn * 0.25})`);
+  shade.addColorStop(0.55, "rgba(255, 255, 255, 0)");
+  shade.addColorStop(1, "rgba(0, 0, 0, 0.25)");
+  context.fillStyle = shade;
+  context.fill();
+  context.restore();
+}
+
+function hoverPaint(context: CanvasRenderingContext2D, current: Scene, palette: Palette) {
   const { pointer } = current;
   const paint = context.createLinearGradient(
     pointer.x - HOVER_REACH,
@@ -485,16 +576,20 @@ function hoverGlow(
   );
   paint.addColorStop(0, palette.brand);
   paint.addColorStop(1, palette.purple);
-  const along = (x - pointer.x + (y - pointer.y)) / (4 * HOVER_REACH) + 0.5;
-  return { paint, shadow: along < 0.5 ? palette.brand : palette.purple };
+  return paint;
 }
 
-type ScreenPoint = { x: number; y: number } | null;
+function hoverShadow(current: Scene, palette: Palette, x: number, y: number) {
+  const { pointer } = current;
+  const along = (x - pointer.x + (y - pointer.y)) / (4 * HOVER_REACH) + 0.5;
+  return along < 0.5 ? palette.brand : palette.purple;
+}
 
 function strokeLine(
   context: CanvasRenderingContext2D,
   current: Scene,
   palette: Palette,
+  hover: CanvasGradient | null,
   points: ScreenPoint[],
   alpha: number,
 ) {
@@ -509,8 +604,9 @@ function strokeLine(
   context.stroke();
 
   const { pointer } = current;
-  if (pointer.glow <= 0) return;
+  if (!hover || pointer.glow <= 0) return;
   context.save();
+  context.strokeStyle = hover;
   context.shadowBlur = HOVER_BLUR;
   points.forEach(function glowSegment(point, index) {
     const previous = points[index - 1];
@@ -519,9 +615,7 @@ function strokeLine(
     const distance = Math.hypot(middle.x - pointer.x, middle.y - pointer.y);
     const heat = pointer.glow * (1 - distance / HOVER_REACH);
     if (heat <= 0) return;
-    const glow = hoverGlow(context, current, palette, middle.x, middle.y);
-    context.strokeStyle = glow.paint;
-    context.shadowColor = glow.shadow;
+    context.shadowColor = hoverShadow(current, palette, middle.x, middle.y);
     context.globalAlpha = Math.min(1, alpha + 0.3) * heat;
     context.beginPath();
     context.moveTo(previous.x, previous.y);
@@ -531,149 +625,31 @@ function strokeLine(
   context.restore();
 }
 
-function drawWireframe(
-  context: CanvasRenderingContext2D,
-  current: Scene,
-  palette: Palette,
-  side: "front" | "back",
-  alpha: number,
-) {
-  const steps = 48;
-
-  function tilt(point: Vec3): Vec3 {
-    return rotateZ(rotateX(point, -0.35), 0.3);
-  }
-
-  function strokeCurve(pointAt: (t: number) => Vec3) {
-    const points = Array.from({ length: steps + 1 }, function curvePoint(_, step): ScreenPoint {
-      const point = onMoon(current, tilt(pointAt(step / steps)));
-      const facing = point[2] >= 0 ? "front" : "back";
-      return facing === side ? project(current, point) : null;
-    });
-    strokeLine(context, current, palette, points, alpha);
-  }
-
-  for (let latitude = -60; latitude <= 60; latitude += 30) {
-    const angle = (latitude * Math.PI) / 180;
-    strokeCurve((t) => [
-      Math.cos(angle) * Math.cos(t * Math.PI * 2),
-      Math.sin(angle),
-      Math.cos(angle) * Math.sin(t * Math.PI * 2),
-    ]);
-  }
-  for (let longitude = 0; longitude < 180; longitude += 30) {
-    const angle = (longitude * Math.PI) / 180;
-    strokeCurve((t) => {
-      const around = t * Math.PI * 2;
-      return [
-        Math.cos(around) * Math.cos(angle),
-        Math.sin(around),
-        Math.cos(around) * Math.sin(angle),
-      ];
-    });
-  }
-}
-
-function drawPad(context: CanvasRenderingContext2D, current: Scene, palette: Palette) {
-  const across = normalize(cross([0, 1, 0], PAD_NORMAL));
-  const up = cross(PAD_NORMAL, across);
-  const half = PAD_HALF_SPAN;
-  const lines = 6;
-
-  function surface(a: number, b: number) {
-    const point = normalize(add(PAD_NORMAL, add(scaleVec(across, a), scaleVec(up, b))));
-    return project(current, onMoon(current, point));
-  }
-
-  function strokeGrid() {
-    context.beginPath();
-    for (let line = 0; line <= lines; line++) {
-      const offset = -half + (line / lines) * half * 2;
-      for (const vertical of [true, false]) {
-        for (let step = 0; step <= 8; step++) {
-          const along = -half + (step / 8) * half * 2;
-          const { x, y } = vertical ? surface(offset, along) : surface(along, offset);
-          if (step === 0) context.moveTo(x, y);
-          else context.lineTo(x, y);
-        }
-      }
-    }
-    context.stroke();
-  }
-
-  context.lineWidth = 0.8;
-  context.globalAlpha = 0.6;
-  context.strokeStyle = palette.line;
-  strokeGrid();
-
-  if (current.padLight > 0) {
-    const center = surface(0, 0);
-    const radius = current.scale * 0.7;
-    const gradient = context.createRadialGradient(
-      center.x,
-      center.y,
-      0,
-      center.x,
-      center.y,
-      radius,
-    );
-    gradient.addColorStop(0, palette.brand);
-    gradient.addColorStop(1, "transparent");
-    context.save();
-    context.globalCompositeOperation = palette.additive ? "lighter" : "source-over";
-    context.globalAlpha = current.padLight * (palette.additive ? 0.35 : 0.15);
-    context.fillStyle = gradient;
-    context.fillRect(center.x - radius, center.y - radius, radius * 2, radius * 2);
-    context.restore();
-
-    context.globalAlpha = current.padLight;
-    context.strokeStyle = palette.brand;
-    strokeGrid();
-  }
-  context.globalAlpha = 1;
-}
-
 function readPalette(probe: HTMLElement, canvas: HTMLCanvasElement): Palette {
-  function color(name: string) {
-    probe.style.color = `var(${name})`;
+  function color(value: string) {
+    probe.style.color = value;
     return getComputedStyle(probe).color;
   }
+  function falloff(value: string) {
+    return CORE_FALLOFF.map(function stopColor([, opacity]) {
+      return color(`color-mix(in oklab, ${value} ${opacity}%, transparent)`);
+    });
+  }
   return {
-    glyph: color("--muted-foreground"),
-    brand: color("--brand"),
+    glyph: color("var(--muted-foreground)"),
+    brand: color("var(--brand)"),
     purple: HOVER_PURPLE,
-    line: color("--anatomy-lo"),
+    line: color("var(--anatomy-lo)"),
+    indigo: color(CORE_INDIGO),
+    coreBrand: falloff("var(--brand)"),
+    coreIndigo: falloff(CORE_INDIGO),
     additive: document.documentElement.classList.contains("dark"),
     font: getComputedStyle(canvas).fontFamily,
   };
 }
 
-function cubicBezier(token: string) {
-  const [x1 = 0, y1 = 0, x2 = 1, y2 = 1] = (token.match(/-?[\d.]+/g) ?? []).map(Number);
-  function curve(t: number, a: number, b: number) {
-    const inverse = 1 - t;
-    return 3 * a * inverse * inverse * t + 3 * b * inverse * t * t + t * t * t;
-  }
-  return function ease(progress: number) {
-    if (progress <= 0 || progress >= 1) return progress;
-    let low = 0;
-    let high = 1;
-    for (let step = 0; step < 24; step++) {
-      const middle = (low + high) / 2;
-      if (curve(middle, x1, x2) < progress) low = middle;
-      else high = middle;
-    }
-    return curve((low + high) / 2, y1, y2);
-  };
-}
-
 function randomCharacter() {
   return CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)]!;
-}
-
-function approach(current: number, target: number, step: number) {
-  if (current < target) return Math.min(current + step, target);
-  return Math.max(current - step, target);
 }
 
 function clampSigned(value: number) {
@@ -682,23 +658,6 @@ function clampSigned(value: number) {
 
 function clamp(value: number) {
   return Math.min(Math.max(value, 0), 1);
-}
-
-function add(a: Vec3, b: Vec3): Vec3 {
-  return [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
-}
-
-function scaleVec(a: Vec3, amount: number): Vec3 {
-  return [a[0] * amount, a[1] * amount, a[2] * amount];
-}
-
-function cross(a: Vec3, b: Vec3): Vec3 {
-  return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-}
-
-function normalize(a: Vec3): Vec3 {
-  const length = Math.hypot(a[0], a[1], a[2]);
-  return scaleVec(a, 1 / length);
 }
 
 function rotateX(point: Vec3, angle: number): Vec3 {

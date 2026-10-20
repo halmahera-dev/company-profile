@@ -34,7 +34,7 @@ This block is written and re-added by `turbo` before repository-scoped commands 
 - Pressable elements use the `pressable` utility (scale 0.97 on pointer-down). Release is fast: 160ms `ease-out`.
 - Elements that move or resize on screen use `ease-in-out`. Give each property its own duration when press and resize happen on the same element.
 - Popovers and menus scale from their trigger (`origin-(--transform-origin)`). Modals stay centered.
-- Blur (`glass`) is for the sticky header only.
+- Blur (`glass`) is for the sticky header only. Exception: the home hero headline blurs in one time on load (`blur-in`).
 - Prefer native behavior before JS physics. Phone carousels use CSS scroll-snap, which already gives momentum and edge resistance.
 - When a gesture needs JS physics, use a `motion` spring: `{ type: "spring", bounce: 0, duration: 0.4 }` by default, and `bounce: 0.2` only after a flick or throw. Start from the current on-screen value and pass the release velocity.
 - Respect `prefers-reduced-motion`: replace movement with a short fade, and keep color changes.
