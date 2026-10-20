@@ -188,6 +188,13 @@
   }
 }
 
+/* Resize and press on one element. Each property gets its own duration and curve. */
+@utility transition-resize-press {
+  transition-property: flex-grow, scale;
+  transition-duration: 500ms, 160ms;
+  transition-timing-function: var(--ease-in-out), var(--ease-out);
+}
+
 /* Headlines sit at 510 with -0.022em tracking. Never bold, never uppercase. */
 @utility type-display-xl {
   font-family: var(--font-heading);
