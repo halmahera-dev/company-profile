@@ -5,9 +5,8 @@ import { contactEmail } from "@/features/profile/components/site-header";
 export function SiteFooter() {
   const links = [
     { href: "/#work", label: "Work" },
-    { href: "/#services", label: "Services" },
-    { href: "/#sprint", label: "The sprint" },
     { href: "/team", label: "Team" },
+    { href: "/#contact", label: "Contact" },
     { href: "/mark", label: "Mark" },
     { href: "/design-system", label: "Design System" },
   ] as const;
@@ -21,7 +20,7 @@ export function SiteFooter() {
             Halmahera
           </p>
           <p className="text-sm text-muted-foreground">
-            Five builders in Indonesia. A working prototype in two weeks.
+            A small AI team from Indonesia. A clickable demo in 14 days.
           </p>
         </div>
 
@@ -49,6 +48,13 @@ export function SiteFooter() {
             {contactEmail}
           </a>
           <p className="text-sm text-muted-foreground">Indonesia</p>
+          <p className="mt-4 text-xs font-semibold text-muted-foreground">Social</p>
+          <a
+            href="https://github.com/halmahera-dev"
+            className="w-fit text-sm transition-colors duration-150 ease-out hover:text-brand-text"
+          >
+            GitHub
+          </a>
         </div>
       </div>
       <div className="mx-auto max-w-6xl px-4 pb-8 sm:px-8">
