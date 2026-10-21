@@ -41,7 +41,7 @@ Open [http://localhost:3001](http://localhost:3001).
 
 Run `bun run check` before you commit.
 
-The pre-commit hook runs `bunx lint-staged`. The repo has no lint-staged config, so the hook skips every file.
+The pre-commit hook runs `bunx lint-staged`. On staged JavaScript and TypeScript it writes formatting and runs Oxlint. On staged JSON, CSS, HTML, Markdown, and YAML it writes formatting.
 
 ## Layout
 
