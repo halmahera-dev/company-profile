@@ -17,20 +17,16 @@ export function SiteHeader() {
         <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/#work" />}>
           Work
         </Button>
-        <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/#services" />}>
-          Services
-        </Button>
         <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/team" />}>
           Team
         </Button>
+        <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/#contact" />}>
+          Contact
+        </Button>
       </nav>
       <div className="mr-1 ml-auto shrink-0 sm:ml-0">
-        <Button
-          variant="outline"
-          nativeButton={false}
-          render={<a href={`mailto:${contactEmail}`} />}
-        >
-          Email us
+        <Button nativeButton={false} render={<Link href="/#contact" />}>
+          Book a call
         </Button>
       </div>
       <ModeToggle />
