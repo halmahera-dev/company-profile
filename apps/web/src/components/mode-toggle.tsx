@@ -29,9 +29,9 @@ export function ModeToggle() {
         <span className="sr-only">Toggle theme</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>Excel white</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>Slack dark</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>Follow device</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("light")}>Day</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>Night</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
