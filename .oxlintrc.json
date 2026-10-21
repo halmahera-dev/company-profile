@@ -51,7 +51,11 @@
       }
     },
     {
-      "files": ["apps/web/src/features/design-system/**", "apps/web/src/features/not-found/**"],
+      "files": [
+        "apps/web/src/features/design-system/**",
+        "apps/web/src/features/not-found/**",
+        "apps/web/src/features/mark/**"
+      ],
       "rules": {
         "shadcn/no-restyle": "off",
         "shadcn/no-raw-colors": "off",

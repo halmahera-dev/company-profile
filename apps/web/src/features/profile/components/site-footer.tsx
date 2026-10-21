@@ -8,6 +8,7 @@ export function SiteFooter() {
     { href: "/#services", label: "Services" },
     { href: "/#sprint", label: "The sprint" },
     { href: "/team", label: "Team" },
+    { href: "/mark", label: "Mark" },
     { href: "/design-system", label: "Design System" },
   ] as const;
 
