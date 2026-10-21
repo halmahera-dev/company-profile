@@ -21,8 +21,9 @@ export function WhatWeBuildScroller({
   const [canScrollNext, setCanScrollNext] = useState(true);
 
   useEffect(function watchScrollEdges() {
-    const list = listRef.current;
-    if (!list) return;
+    const maybeList = listRef.current;
+    if (!maybeList) return;
+    const list: HTMLUListElement = maybeList;
 
     function syncEdges() {
       const max = list.scrollWidth - list.clientWidth;
