@@ -5,10 +5,7 @@ import { cn } from "@halmahera/ui/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
-import { useEffect, useRef, useState } from "react";
-
-import { GlowBorder } from "@/features/home/glow-border";
-import { SectionHeading } from "@/features/profile/components/section-heading";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 import planetImage from "../../../public/planet.webp";
 
@@ -16,51 +13,51 @@ type Device = "phone" | "laptop";
 
 const builds: {
   label: string;
+  phrase: string;
   capability: string;
   body: string;
   device: Device;
   screenDescription: string;
-  placement: string;
   Screen: () => React.ReactNode;
 }[] = [
   {
     label: "Ask",
+    phrase: "answers questions",
     capability: "Chat on your data",
     body: "Ask why a number changed. The assistant finds the cause and shows the chart.",
     device: "phone",
     screenDescription:
       "A phone chat. The question “Why did sales drop in Surabaya last week?” gets an answer with the cause and a daily sales chart.",
-    placement: "lg:col-start-1 lg:row-start-1 lg:self-end",
     Screen: AskScreen,
   },
   {
     label: "Read",
+    phrase: "reads documents",
     capability: "Document reading",
     body: "Drop in invoices or forms. It pulls out the fields and marks the ones to check.",
     device: "laptop",
     screenDescription:
       "A laptop screen. A stack of invoices becomes a table of fields. One low-confidence field is marked to check.",
-    placement: "lg:col-start-1 lg:row-start-2 lg:self-start",
     Screen: ReadScreen,
   },
   {
     label: "Act",
+    phrase: "drafts the work",
     capability: "Automation with approval",
     body: "It drafts the work, like a restock order. Nothing goes out until you approve it.",
     device: "laptop",
     screenDescription:
       "A laptop screen. A restock order drafted from stock levels, with Edit and Approve buttons.",
-    placement: "lg:col-start-6 lg:row-start-1 lg:self-end",
     Screen: ActScreen,
   },
   {
     label: "Alert",
+    phrase: "warns you early",
     capability: "Early warning",
     body: "It watches sensors and data, and warns your team before a problem grows.",
     device: "phone",
     screenDescription:
       "A phone alert. Water level at sensor 4 is rising fast, 40 minutes to the threshold, with buttons to alert the field team.",
-    placement: "lg:col-start-6 lg:row-start-2 lg:self-start",
     Screen: AlertScreen,
   },
 ];
@@ -103,71 +100,61 @@ export function Showcase() {
       }}
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-8">
-        <SectionHeading title="AI your team uses every day.">
-          Four things we build most. Pick one to see an example screen.
-        </SectionHeading>
-
-        <div className="mt-12 flex flex-col gap-6 lg:grid lg:grid-cols-7 lg:grid-rows-2 lg:gap-y-2 lg:rounded-4xl lg:p-6 lg:shadow-card">
-          <div
-            role="group"
-            aria-label="Choose an example"
-            data-paused={isPaused}
-            className="inline-flex self-center rounded-full bg-secondary p-1 lg:contents"
-          >
-            {builds.map(function renderChoice(build, index) {
-              const isActive = index === activeIndex;
-              return (
-                <GlowBorder
-                  key={build.label}
-                  isActive={isActive}
-                  className={cn("rounded-full lg:col-span-2 lg:rounded-4xl", build.placement)}
+        <h2 data-paused={isPaused} className="max-w-4xl type-headline text-balance">
+          We build AI that{" "}
+          {builds.map(function renderPhrase(build, index) {
+            const isActive = index === activeIndex;
+            const isLast = index === builds.length - 1;
+            return (
+              <Fragment key={build.label}>
+                {isLast ? "and " : null}
+                <button
+                  type="button"
+                  aria-pressed={isActive}
+                  onClick={function choosePhrase() {
+                    setActiveIndex(index);
+                    setIsAutoplaying(false);
+                  }}
+                  className={cn(
+                    "cursor-pointer text-left transition-colors focus-visible:outline-2 focus-visible:outline-ring",
+                    isActive ? "text-foreground" : "text-foreground/35 hover:text-foreground",
+                  )}
                 >
-                  <button
-                    type="button"
-                    aria-pressed={isActive}
-                    onClick={function chooseBuild() {
-                      setActiveIndex(index);
-                      setIsAutoplaying(false);
-                    }}
-                    className={cn(
-                      "group relative size-full pressable cursor-pointer overflow-hidden rounded-full px-4 py-1 text-sm font-medium text-muted-foreground transition hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-pressed:bg-surface-raised aria-pressed:text-foreground",
-                      "lg:flex lg:flex-col lg:items-start lg:gap-3 lg:rounded-4xl lg:p-6 lg:pb-10 lg:text-left",
-                    )}
-                  >
-                    <span className="lg:type-label-mono">{build.label}</span>
-                    <span className="hidden type-title text-foreground lg:block">
-                      {build.capability}
-                    </span>
-                    <span className="hidden text-base font-normal text-muted-foreground group-aria-pressed:text-foreground lg:block">
-                      {build.body}
-                    </span>
-                    {isActive && isAutoplaying ? (
+                  <span className="relative whitespace-nowrap">
+                    {build.phrase}
+                    {isActive ? (
                       <span
                         key={activeIndex}
                         aria-hidden
-                        onAnimationEnd={showNextBuild}
-                        className="absolute inset-x-3 bottom-0.5 h-0.5 origin-left autoplay-progress rounded-full bg-brand lg:inset-x-6 lg:bottom-4"
+                        onAnimationEnd={isAutoplaying ? showNextBuild : undefined}
+                        className={cn(
+                          "absolute inset-x-0 bottom-1 h-0.5 origin-left rounded-full bg-brand",
+                          isAutoplaying && "autoplay-progress",
+                        )}
                       />
                     ) : null}
-                  </button>
-                </GlowBorder>
-              );
-            })}
+                  </span>
+                  <span className="text-foreground">{isLast ? "." : ","}</span>
+                </button>{" "}
+              </Fragment>
+            );
+          })}
+        </h2>
+
+        <div className="mt-12 grid gap-8 lg:grid-cols-3 lg:items-center">
+          <div className="grid gap-2">
+            <p className="type-label-mono text-muted-foreground">{activeBuild.capability}</p>
+            <p className="type-lead text-muted-foreground">{activeBuild.body}</p>
           </div>
 
-          <p className="min-h-18 text-center text-muted-foreground lg:hidden">
-            <span className="font-medium text-foreground">{activeBuild.capability}.</span>{" "}
-            {activeBuild.body}
-          </p>
-
-          <div className="@container relative order-first flex h-136 flex-col items-center justify-center lg:order-none lg:col-span-3 lg:col-start-3 lg:row-span-2 lg:row-start-1">
+          <div className="@container relative flex h-136 flex-col items-center justify-center lg:col-span-2">
             <div className="absolute inset-x-0 inset-y-10 overflow-hidden rounded-3xl bg-background">
               <Image
                 src={planetImage}
                 alt=""
                 fill
                 placeholder="blur"
-                sizes="(min-width: 1024px) 32rem, 100vw"
+                sizes="(min-width: 1024px) 48rem, 100vw"
                 className="object-cover object-right-top"
               />
             </div>

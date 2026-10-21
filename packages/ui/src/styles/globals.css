@@ -412,6 +412,30 @@
 }
 
 /* Sparse stars. Prime tile sizes keep the layers from lining up into a grid. */
+/* A card row that runs edge to edge. The first card lines up with the 72rem page column. */
+@utility card-row-inset {
+  --row-inset: 1rem;
+  padding-inline: max(var(--row-inset), calc((100% - 72rem) / 2 + var(--row-inset)));
+  scroll-padding-inline: max(var(--row-inset), calc((100% - 72rem) / 2 + var(--row-inset)));
+
+  @media (min-width: 40rem) {
+    --row-inset: 2rem;
+  }
+}
+
+/* One, two, or three cards fit the row. The 1.5rem gap is subtracted first. */
+@utility card-row-item {
+  flex-basis: 100%;
+
+  @media (min-width: 48rem) {
+    flex-basis: calc((100% - 1.5rem) / 2);
+  }
+
+  @media (min-width: 64rem) {
+    flex-basis: calc((100% - 3rem) / 3);
+  }
+}
+
 @utility star-field {
   background-image:
     radial-gradient(circle at 18% 27%, currentColor 0.7px, transparent 1.3px),

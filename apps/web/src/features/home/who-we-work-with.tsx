@@ -56,12 +56,12 @@ export function WhoWeWorkWith() {
                 <div className={cn("min-w-0", textFirst && "lg:order-2")}>
                   <buyer.Figure />
                 </div>
-                <div className="max-w-md">
-                  <p className="text-sm font-medium text-muted-foreground">{buyer.name}</p>
-                  <p className="mt-3 text-2xl leading-tight font-medium tracking-tight text-balance sm:text-3xl">
+                <div className="max-w-lg">
+                  <p className="text-base font-medium text-muted-foreground">{buyer.name}</p>
+                  <p className="mt-3 text-3xl leading-tight font-medium tracking-tight text-balance sm:text-4xl">
                     {buyer.line}
                   </p>
-                  <p className="mt-5 text-base leading-relaxed text-pretty text-muted-foreground">
+                  <p className="mt-5 text-lg leading-relaxed text-pretty text-muted-foreground">
                     {buyer.problem}{" "}
                     <strong className="font-semibold text-foreground">{buyer.lead}</strong>{" "}
                     {buyer.solution} {buyer.result}
