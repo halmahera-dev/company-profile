@@ -7,6 +7,7 @@ import {
   SensorMastFigure,
   ServiceBellFigure,
 } from "@/features/home/what-we-build-figures";
+import { WhatWeBuildScroller } from "@/features/home/what-we-build-scroller";
 import { SectionHeading } from "@/features/profile/components/section-heading";
 
 const functions = [
@@ -81,31 +82,35 @@ const functions = [
 export function WhatWeBuild() {
   return (
     <section id="what-we-build" className="scroll-mt-24 py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl px-4 sm:px-8">
-        <SectionHeading title="One team for every part of the business.">
-          Six business functions. Each one starts with a problem you already have.
-        </SectionHeading>
-        <ul className="mt-12 grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
-          {functions.map((item) => {
-            return (
-              <li key={item.name} className="flex list-disc">
-                <GlowBorder className="flex w-full flex-col gap-4 rounded-4xl bg-card p-6 shadow-card">
-                  <item.Figure />
-                  <p className="text-sm font-medium text-muted-foreground">{item.name}</p>
-                  <p className="text-2xl leading-tight font-medium tracking-tight text-balance">
-                    {item.line}
-                  </p>
-                  <ul className="mt-auto grid gap-2 pt-4 text-muted-foreground">
-                    {item.bullets.map(function renderBullet(bullet) {
-                      return <li key={bullet}>{bullet}</li>;
-                    })}
-                  </ul>
-                </GlowBorder>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <WhatWeBuildScroller
+        heading={
+          <SectionHeading title="One team for every part of the business.">
+            Six business functions. Each one starts with a problem you already have.
+          </SectionHeading>
+        }
+      >
+        {functions.map((item) => {
+          return (
+            <li
+              key={item.name}
+              className="flex min-w-0 shrink-0 grow-0 card-row-item snap-start list-disc"
+            >
+              <GlowBorder className="flex w-full flex-col gap-4 rounded-4xl bg-card p-6 shadow-card">
+                <item.Figure />
+                <p className="text-sm font-medium text-muted-foreground">{item.name}</p>
+                <p className="text-2xl leading-tight font-medium tracking-tight text-balance">
+                  {item.line}
+                </p>
+                <ul className="mt-auto grid gap-2 pt-4 text-muted-foreground">
+                  {item.bullets.map(function renderBullet(bullet) {
+                    return <li key={bullet}>{bullet}</li>;
+                  })}
+                </ul>
+              </GlowBorder>
+            </li>
+          );
+        })}
+      </WhatWeBuildScroller>
     </section>
   );
 }
