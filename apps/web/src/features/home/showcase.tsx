@@ -117,7 +117,7 @@ export function Showcase() {
                   }}
                   className={cn(
                     "cursor-pointer text-left transition-colors focus-visible:outline-2 focus-visible:outline-ring",
-                    isActive ? "text-foreground" : "text-foreground/35 hover:text-foreground",
+                    isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   <span className="relative whitespace-nowrap">
