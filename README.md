@@ -1,106 +1,126 @@
 # halmahera
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines Next.js, Self, and more.
+Company site for an AI product team in Indonesia. The live site is [halmahera.site](https://halmahera.site).
 
-## Features
+The app is Next.js 16 on Bun, with React 19, Tailwind 4, and a shared UI package. It deploys to Cloudflare Workers through OpenNext.
 
-- **TypeScript** - For type safety and improved developer experience
-- **Next.js** - Full-stack React framework
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **Shared UI package** - shadcn/ui primitives live in `packages/ui`
-- **Oxlint** - Oxlint + Oxfmt (linting & formatting)
-- **Turborepo** - Optimized monorepo build system
+## Pages
 
-## Getting Started
+| Route            | File                                      |
+| ---------------- | ----------------------------------------- |
+| `/`              | `apps/web/src/app/page.tsx`               |
+| `/team`          | `apps/web/src/app/team/page.tsx`          |
+| `/design-system` | `apps/web/src/app/design-system/page.tsx` |
 
-First, install the dependencies:
+The design-system page sets `robots` to `noindex`.
+
+## Setup
+
+You need [Bun](https://bun.sh) 1.3.10 (`packageManager` in the root `package.json`).
 
 ```bash
 bun install
-```
-
-Then, run the development server:
-
-```bash
 bun run dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the fullstack application.
+Open [http://localhost:3001](http://localhost:3001).
 
-## UI Customization
+## Scripts
 
-React web apps in this stack share shadcn/ui primitives through `packages/ui`.
+| Command                    | What it does                                                      |
+| -------------------------- | ----------------------------------------------------------------- |
+| `bun run dev`              | Start every package dev task. Today that is the site on port 3001 |
+| `bun run dev:web`          | Start the web package on port 3001                                |
+| `bun run build`            | Next.js production build                                          |
+| `bun run build:cloudflare` | OpenNext build for the Worker                                     |
+| `bun run deploy`           | OpenNext build, then `opennextjs-cloudflare deploy`               |
+| `bun run check-types`      | Typecheck every package                                           |
+| `bun run lint`             | Run Oxlint                                                        |
+| `bun run format:check`     | Report format issues and leave files unchanged                    |
+| `bun run check`            | Run Oxlint, then write formatting with Oxfmt                      |
 
-- Change design tokens and global styles in `packages/ui/src/styles/globals.css`
-- Update shared primitives in `packages/ui/src/components/*`
-- Adjust shadcn aliases or style config in `packages/ui/components.json` and `apps/web/components.json`
+Run `bun run check` before you commit.
 
-### Add more shared components
+The pre-commit hook runs `bunx lint-staged`. The repo has no lint-staged config, so the hook skips every file.
 
-Run this from the project root to add more primitives to the shared UI package:
+## Layout
+
+```
+halmahera/
+├── apps/
+│   └── web/          # Next.js site
+├── packages/
+│   ├── ui/           # Shared components and styles
+│   └── config/       # Shared TypeScript config
+├── docs/             # Site outline and hero spec
+└── patches/          # OpenNext 1.20.10 patch
+```
+
+| Path                                 | Purpose                                                                        |
+| ------------------------------------ | ------------------------------------------------------------------------------ |
+| `apps/web/next.config.ts`            | Next config. Imports the env schema. Turns on the React Compiler               |
+| `apps/web/src/env.ts`                | Env schema. Validates `NODE_ENV` only                                          |
+| `apps/web/wrangler.jsonc`            | Worker config. The Worker name is `halmahera-web`                              |
+| `packages/ui/src/styles/globals.css` | Design tokens and global styles                                                |
+| `packages/ui/components.json`        | shadcn config for shared components. Style is `base-luma`. Icons are Hugeicons |
+| `packages/config/tsconfig.base.json` | Shared TypeScript config                                                       |
+| `design.md`                          | Design language. Update it in the same change as the tokens                    |
+
+## UI
+
+Change tokens in `packages/ui/src/styles/globals.css`. Shared primitives live in `packages/ui/src/components/*`. App-only components live in `apps/web`.
+
+Add a shared primitive from the repo root:
 
 ```bash
 npx shadcn@latest add accordion dialog popover sheet table -c packages/ui
 ```
 
-Import shared components like this:
-
 ```tsx
 import { Button } from "@halmahera/ui/components/button";
 ```
 
-### Add app-specific blocks
+For a block that belongs to the site only, run the shadcn CLI from `apps/web`.
 
-If you want to add app-specific blocks instead of shared primitives, run the shadcn CLI from `apps/web`.
+## Environment
 
-## Environment Configuration
+`apps/web/src/env.ts` uses [t3-env](https://env.t3.gg). Put local values in `apps/web/.env`. `apps/web/.gitignore` ignores `.env*` and allows `.env.example`. The repo has no example file yet.
 
-Environment variables are validated with [t3-env](https://env.t3.gg). Keep values in ignored `.env` files or your deployment platform, and commit only `.env.example`.
+Add secrets under `server` and `NEXT_PUBLIC_*` values under `client`. List every client key in `experimental__runtimeEnv`. Import `env` from `@/env`. `next.config.ts` imports the schema, so `next dev` and builds fail when a required variable is missing.
 
-The web app's schema is `apps/web/src/env.ts`. Add secrets under `server` and `NEXT_PUBLIC_*` values under `client`, then list every client key in `experimental__runtimeEnv`. Import `env` from `@/env` in application code. `next.config.ts` imports the schema, so `next dev` and builds fail when a variable is missing. Next inlines client values at build time, so they must be set wherever the build runs, including `bun run deploy`.
+Next inlines client values at build time. Set them on the machine that runs `bun run deploy`.
 
-In the deployed Worker, OpenNext copies string Worker vars onto `process.env`, so the same `env` object works there. Cloudflare bindings such as `IMAGES` are runtime objects, not env vars. Read them with `getCloudflareContext().env` from `@opennextjs/cloudflare`.
+On the Worker, OpenNext copies string vars onto `process.env`. Bindings such as `IMAGES` are objects. Read them with `getCloudflareContext().env` from `@opennextjs/cloudflare`.
 
-## Deployment
+## Deploy
 
-Web deploys to Cloudflare Workers with [OpenNext](https://opennext.js.org/cloudflare). The Worker config is `apps/web/wrangler.jsonc`.
+Web deploys to Cloudflare Workers with [OpenNext](https://opennext.js.org/cloudflare).
 
-- Dev: `bun run dev`
-- Deploy: `bun run deploy`. It builds with OpenNext, then runs `wrangler deploy`.
-- Auth: run `bunx wrangler login` locally. CI uses `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
+- Local auth: `bunx wrangler login`
+- CI auth: `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`
+- Deploy: `bun run deploy`
 
-### Temporary OpenNext patch
+## OpenNext patch
 
-Next.js 16.4 writes `.next/server/preview-props.json`. `@opennextjs/cloudflare` 1.20.10 does not copy it into the Worker, so every server-rendered page returns error 1101. `patches/@opennextjs%2Fcloudflare@1.20.10.patch` adds `preview-props` to the file list. It is wired up by `patchedDependencies` in the root `package.json`.
+**Symptom.** Every server-rendered page on the Worker returns error 1101.
 
-Remove the patch when [opennextjs-cloudflare#1356](https://github.com/opennextjs/opennextjs-cloudflare/pull/1356) is released:
+**Cause.** Next.js 16.4 writes `.next/server/preview-props.json`. `@opennextjs/cloudflare` 1.20.10 leaves that file out of the Worker.
 
-1. Check that a release newer than 1.20.10 includes the fix. Read its changelog.
-2. Bump `@opennextjs/cloudflare` in `apps/web/package.json`.
-3. Delete the `patchedDependencies` entry in `package.json` and the file in `patches/`.
-4. Run `bun install`.
-5. Run `bunx opennextjs-cloudflare build` in `apps/web`, then `bunx wrangler dev`. The home page must return 200.
+**What this repo does.** `patches/@opennextjs%2Fcloudflare@1.20.10.patch` adds `preview-props` to the copy list. `patchedDependencies` in the root `package.json` applies it. The lockfile installs 1.20.10. Bun applies the patch only to that exact version.
 
-Bun only applies the patch to the exact version 1.20.10. A bump without step 3 leaves a stale entry.
+`@opennextjs/cloudflare` 1.20.12 includes the same fix. To drop the local patch:
 
-## Git Hooks and Formatting
+1. Bump `@opennextjs/cloudflare` in `apps/web/package.json` to 1.20.12 or newer.
+2. Delete the `patchedDependencies` entry in the root `package.json` and the file in `patches/`.
+3. Run `bun install`.
+4. In `apps/web`, run `bunx opennextjs-cloudflare build`, then `bunx wrangler dev`. The home page must return 200.
 
-- Run checks: `bun run check`
+A version bump that skips step 2 leaves a stale `patchedDependencies` entry.
 
-## Project Structure
+## Related docs
 
-```
-halmahera/
-├── apps/
-│   └── web/         # Fullstack application (Next.js)
-├── packages/
-│   ├── ui/          # Shared shadcn/ui components and styles
-```
+- [docs/site-outline.md](docs/site-outline.md)
+- [docs/hero-spec.md](docs/hero-spec.md)
+- [design.md](design.md)
 
-## Available Scripts
-
-- `bun run dev`: Start all applications in development mode
-- `bun run build`: Build all applications
-- `bun run dev:web`: Start only the web application
-- `bun run check-types`: Check TypeScript types across all apps
-- `bun run check`: Run Oxlint and Oxfmt
+Last reviewed: 21 October 2026.
