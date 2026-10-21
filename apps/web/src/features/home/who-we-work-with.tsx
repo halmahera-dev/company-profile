@@ -1,5 +1,6 @@
 import { cn } from "@halmahera/ui/lib/utils";
 
+import { Reveal } from "@/components/reveal";
 import {
   CivicBuildingFigure,
   OfficeBlockFigure,
@@ -49,7 +50,8 @@ export function WhoWeWorkWith() {
           {buyers.map(function renderBuyer(buyer, index) {
             const textFirst = index % 2 === 1;
             return (
-              <li
+              <Reveal
+                as="li"
                 key={buyer.name}
                 className="grid items-center gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-20"
               >
@@ -67,7 +69,7 @@ export function WhoWeWorkWith() {
                     {buyer.solution} {buyer.result}
                   </p>
                 </div>
-              </li>
+              </Reveal>
             );
           })}
         </ul>

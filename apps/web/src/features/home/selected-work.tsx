@@ -1,6 +1,7 @@
 import { Badge } from "@halmahera/ui/components/badge";
 import { cn } from "@halmahera/ui/lib/utils";
 
+import { Reveal } from "@/components/reveal";
 import { SectionHeading } from "@/features/profile/components/section-heading";
 import { awards } from "@/features/profile/team";
 
@@ -18,7 +19,10 @@ export function SelectedWork() {
           Things we shipped, and the juries that tried them.
         </SectionHeading>
 
-        <article className="mt-12 grid gap-8 rounded-4xl bg-card p-3 shadow-card lg:grid-cols-5 lg:items-center lg:gap-10 lg:pr-10">
+        <Reveal
+          as="article"
+          className="mt-12 grid gap-8 rounded-4xl bg-card p-3 shadow-card lg:grid-cols-5 lg:items-center lg:gap-10 lg:pr-10"
+        >
           <AlertMapScreen />
           <div className="grid content-start gap-5 px-3 pb-4 lg:col-span-2 lg:p-0">
             <p className="type-label-mono text-muted-foreground">Featured · Disaster detection</p>
@@ -39,9 +43,10 @@ export function SelectedWork() {
               </div>
             </dl>
           </div>
-        </article>
+        </Reveal>
 
-        <ol
+        <Reveal
+          as="ol"
           aria-label="Hackathon wins"
           className="mt-6 grid divide-y rounded-4xl shadow-card sm:grid-cols-3 sm:divide-x sm:divide-y-0"
         >
@@ -60,7 +65,7 @@ export function SelectedWork() {
               </li>
             );
           })}
-        </ol>
+        </Reveal>
       </div>
     </section>
   );

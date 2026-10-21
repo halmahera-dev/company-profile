@@ -320,6 +320,40 @@
   }
 }
 
+/* Section headings. Hidden below the fold, then blur in once when they enter view. */
+@utility blur-in-view {
+  &[data-reveal="pending"] {
+    opacity: 0;
+  }
+
+  &[data-reveal="shown"] {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: blur-in 700ms var(--ease-out) both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: fade-in 300ms var(--ease-out) both;
+    }
+  }
+}
+
+/* Content blocks. Hidden below the fold, then rise in once when they enter view. No blur. */
+@utility rise-in-view {
+  &[data-reveal="pending"] {
+    opacity: 0;
+  }
+
+  &[data-reveal="shown"] {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: rise-in 640ms var(--ease-out) var(--reveal-delay, 0ms) both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: fade-in 300ms var(--ease-out) var(--reveal-delay, 0ms) both;
+    }
+  }
+}
+
 /* A new screen fades in when it replaces the last one. */
 @utility fade-in {
   animation: fade-in 240ms var(--ease-out) both;
