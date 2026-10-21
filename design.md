@@ -10,7 +10,7 @@ This file maps the Halmahera design language to shadcn/ui tokens. The values mat
 - **One rose accent.** Rose marks state, focus, and small highlights. The main action is a light pill.
 - **Pills for controls, 12px for panels.** Buttons, badges, and nav links are pills. Cards, dialogs, and panels are 12px.
 - **Flat panels.** A panel sits one step above the page and gets a hairline. Only floating layers cast a shadow.
-- **Still motion.** Hover changes color only (160ms). Nothing lifts, grows, or bounces. Nothing animates on scroll.
+- **Still motion.** Hover changes color only (160ms). Nothing lifts, grows, or bounces. Nothing animates on scroll, except section headings (each blurs in once when it enters view) and selected content blocks (each rises in once, no blur).
 - **Plain type.** Inter at 510 for headings and UI. Geist Mono for IDs and dates. Headings are never bold and never uppercase.
 
 ## 2. Color
@@ -140,7 +140,7 @@ Depth is a surface step plus a hairline. Flat panels do not cast a drop shadow.
 | `shadow-lg`    | Floating windows and menus                         |
 
 - **Glass:** `packages/ui/src/styles/globals.css`. Background at 82%, `blur(20px)`. It turns solid for `prefers-reduced-transparency` and `prefers-contrast: more`. High contrast adds a 1px foreground outline. The sticky header adds `border`. Buttons never get glass.
-- **Blur exception:** the home hero headline uses `blur-in` once on load. No other blur.
+- **Blur exception:** the home hero headline uses `blur-in` once on load. Section headings use `blur-in-view` once when they enter view. No other blur.
 - **Floating layers** (popovers, menus, dialogs): `shadow-lg`. Popovers and menus scale from their trigger (`origin-(--transform-origin)`). Modals stay centered.
 - **Bands:** a section can sit on `bg-surface-raised/40`. A sunken group uses `rounded-4xl bg-surface-raised shadow-inset`.
 
@@ -225,19 +225,21 @@ Floating layers. Each one opens from a secondary button.
 
 Motion values live in `packages/ui/src/styles/globals.css`. Do not write new cubic-bezier values in components.
 
-| Token         | Value                              | Use                                     |
-| ------------- | ---------------------------------- | --------------------------------------- |
-| duration      | 160ms                              | Every color fade (the default)          |
-| `ease-out`    | `cubic-bezier(.25, .46, .45, .94)` | Color fades and enter/exit              |
-| `ease-in-out` | `cubic-bezier(.77, 0, .175, 1)`    | Elements that move or resize on screen  |
-| `pressable`   | scale 0.97 · 160ms                 | Press feedback on pointer-down          |
-| `rise-in`     | 640ms · 12px                       | Hero only, once, 80ms stagger           |
-| `blur-in`     | 700ms · 8px blur                   | Hero headline only, once, 60ms per word |
+| Token          | Value                              | Use                                                                      |
+| -------------- | ---------------------------------- | ------------------------------------------------------------------------ |
+| duration       | 160ms                              | Every color fade (the default)                                           |
+| `ease-out`     | `cubic-bezier(.25, .46, .45, .94)` | Color fades and enter/exit                                               |
+| `ease-in-out`  | `cubic-bezier(.77, 0, .175, 1)`    | Elements that move or resize on screen                                   |
+| `pressable`    | scale 0.97 · 160ms                 | Press feedback on pointer-down                                           |
+| `rise-in`      | 640ms · 12px                       | Hero only, once, 80ms stagger                                            |
+| `blur-in`      | 700ms · 8px blur                   | Hero headline only, once, 60ms per word                                  |
+| `blur-in-view` | 700ms · 8px blur                   | Section headings, once, when they enter view                             |
+| `rise-in-view` | 640ms · 12px rise, no blur         | Content blocks, once, when they enter view; the 12px rise uses `rise-in` |
 
 Rules:
 
 - Hover changes color only. Things do not lift, grow, or bounce on hover.
-- Nothing animates on scroll.
+- Nothing animates on scroll, except section headings (`blur-in-view`, once) and selected content blocks (`rise-in-view`, once).
 - When press and resize happen on the same element, give each property its own duration (`transition-resize-press`: 500ms `ease-in-out` for size, 160ms `ease-out` for scale).
 - When a gesture needs JS physics, use a motion spring: `{ type: "spring", bounce: 0, duration: 0.4 }`. Use `bounce: 0.2` only after a flick or throw. Start from the current on-screen value and pass the release velocity.
 - Exception: the home hero moon turns toward the cursor, at most ±20°, with the default spring.
@@ -269,4 +271,4 @@ Build these from tokens and components only.
 - Don't put arrows or icons inside pill buttons.
 - Don't use heavy borders or drop shadows on flat panels.
 - Don't use bold or uppercase headings.
-- Don't animate on hover or on scroll.
+- Don't animate on hover or on scroll (section headings blur in once, see Motion).

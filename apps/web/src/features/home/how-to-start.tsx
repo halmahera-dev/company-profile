@@ -2,6 +2,7 @@ import { Badge } from "@halmahera/ui/components/badge";
 import { Button } from "@halmahera/ui/components/button";
 import Link from "next/link";
 
+import { Reveal } from "@/components/reveal";
 import { SectionHeading } from "@/features/profile/components/section-heading";
 
 const offers = [
@@ -35,7 +36,10 @@ export function HowToStart() {
           want launched.
         </SectionHeading>
 
-        <ul className="mt-12 grid divide-y rounded-4xl shadow-card md:grid-cols-3 md:divide-x md:divide-y-0">
+        <Reveal
+          as="ul"
+          className="mt-12 grid divide-y rounded-4xl shadow-card md:grid-cols-3 md:divide-x md:divide-y-0"
+        >
           {offers.map(function renderOffer(offer) {
             return (
               <li key={offer.name} className="flex flex-col gap-4 p-6 sm:p-8">
@@ -56,7 +60,7 @@ export function HowToStart() {
               </li>
             );
           })}
-        </ul>
+        </Reveal>
       </div>
     </section>
   );

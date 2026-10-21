@@ -29,12 +29,12 @@ This block is written and re-added by `turbo` before repository-scoped commands 
 
 - Pill buttons have text only. Never put arrows or icons inside them. Put arrows on quiet text links (`variant="link"`), for example "Learn more →". Icon-only buttons (`size="icon*"`) and the loading `Spinner` are allowed.
 - Motion values live in `packages/ui/src/styles/globals.css`. Use the tokens there. Do not write new cubic-bezier values in components.
-- Hover changes color only (160ms, `ease-out`). Things do not lift, grow, or bounce on hover, and nothing animates on scroll.
+- Hover changes color only (160ms, `ease-out`). Things do not lift, grow, or bounce on hover, and nothing animates on scroll. Exception: section headings blur in once when they enter view (`blur-in-view`), and selected content blocks rise in once (`rise-in-view`, no blur).
   - Exception: the home hero moon turns toward the cursor (at most ±20°, default spring). It is a deliberate choice. Do not remove it to match this rule.
 - Pressable elements use the `pressable` utility (scale 0.97 on pointer-down). Release is fast: 160ms `ease-out`.
 - Elements that move or resize on screen use `ease-in-out`. Give each property its own duration when press and resize happen on the same element.
 - Popovers and menus scale from their trigger (`origin-(--transform-origin)`). Modals stay centered.
-- Blur (`glass`) is for the sticky header only. Exception: the home hero headline blurs in one time on load (`blur-in`).
+- Blur (`glass`) is for the sticky header only. Exceptions: the home hero headline blurs in one time on load (`blur-in`), and section headings blur in one time when they enter view (`blur-in-view`).
 - Prefer native behavior before JS physics. Phone carousels use CSS scroll-snap, which already gives momentum and edge resistance.
 - When a gesture needs JS physics, use a `motion` spring: `{ type: "spring", bounce: 0, duration: 0.4 }` by default, and `bounce: 0.2` only after a flick or throw. Start from the current on-screen value and pass the release velocity.
 - Respect `prefers-reduced-motion`: replace movement with a short fade, and keep color changes.

@@ -7,6 +7,8 @@ import Link from "next/link";
 import * as React from "react";
 import { Fragment, useEffect, useRef, useState } from "react";
 
+import { BlurInHeading } from "@/components/blur-in-heading";
+
 import planetImage from "../../../public/planet.webp";
 
 type Device = "phone" | "laptop";
@@ -100,7 +102,7 @@ export function Showcase() {
       }}
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-8">
-        <h2 data-paused={isPaused} className="max-w-4xl type-headline text-balance">
+        <BlurInHeading data-paused={isPaused} className="max-w-4xl type-headline text-balance">
           We build AI that{" "}
           {builds.map(function renderPhrase(build, index) {
             const isActive = index === activeIndex;
@@ -139,7 +141,7 @@ export function Showcase() {
               </Fragment>
             );
           })}
-        </h2>
+        </BlurInHeading>
 
         <div className="mt-12 grid gap-8 lg:grid-cols-3 lg:items-center">
           <div className="grid gap-2">
