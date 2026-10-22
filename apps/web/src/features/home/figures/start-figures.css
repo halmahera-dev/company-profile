@@ -1,0 +1,274 @@
+@property --p {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+/* Base rules are the still pose. Motion is added only when the user allows it. */
+.hts-docked {
+  opacity: 1;
+}
+
+.hts-token {
+  opacity: 0;
+}
+
+.hts-plume,
+.hts-flash,
+.hts-beacon {
+  opacity: 0;
+}
+
+.hts-lamp,
+.hts-pod {
+  opacity: 1;
+}
+
+.hts-cell,
+.hts-screen {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hts-dock {
+    animation: hts-dock 9s infinite;
+  }
+
+  .hts-docked {
+    animation: hts-docked 9s var(--ease-out) infinite;
+  }
+
+  .hts-sprint {
+    animation: hts-sprint 10s linear infinite;
+  }
+
+  .hts-cell {
+    opacity: clamp(0, calc((var(--p) - var(--at)) * 24), 1);
+  }
+
+  .hts-token {
+    opacity: clamp(0, calc((1 - var(--p)) * 40), 1);
+    translate: calc(var(--p) * var(--run-x)) calc(var(--p) * var(--run-y));
+  }
+
+  .hts-screen {
+    opacity: clamp(0, calc((var(--p) - 0.96) * 25), 1);
+  }
+
+  .hts-carry {
+    animation: hts-carry 12s var(--ease-in-out) infinite;
+  }
+
+  .hts-pod {
+    animation: hts-pod 12s var(--ease-out) infinite;
+  }
+
+  .hts-plume {
+    animation: hts-plume 12s var(--ease-out) infinite;
+  }
+
+  .hts-lamp {
+    animation: hts-lamp 12s var(--ease-out) infinite;
+  }
+
+  .hts-flash {
+    animation: hts-flash 12s var(--ease-out) infinite;
+  }
+
+  .hts-flash-1 {
+    animation-delay: 0.18s;
+  }
+
+  .hts-flash-2 {
+    animation-delay: 0.36s;
+  }
+
+  .hts-beacon {
+    animation: hts-beacon 12s var(--ease-out) infinite;
+  }
+
+  .hts-press {
+    animation: hts-press 12s var(--ease-in-out) infinite;
+  }
+}
+
+@keyframes hts-dock {
+  0% {
+    translate: var(--dock-lift);
+    opacity: 0;
+    animation-timing-function: var(--ease-out);
+  }
+  10% {
+    translate: var(--dock-lift);
+    opacity: 1;
+    animation-timing-function: var(--ease-in-out);
+  }
+  30%,
+  78% {
+    translate: 0 0;
+    opacity: 1;
+    animation-timing-function: var(--ease-in-out);
+  }
+  92% {
+    translate: var(--dock-lift);
+    opacity: 1;
+    animation-timing-function: var(--ease-out);
+  }
+  100% {
+    translate: var(--dock-lift);
+    opacity: 0;
+  }
+}
+
+@keyframes hts-docked {
+  0%,
+  30% {
+    opacity: 0;
+  }
+  36%,
+  78% {
+    opacity: 1;
+  }
+  86%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hts-sprint {
+  0% {
+    --p: 0;
+    opacity: 0;
+  }
+  6% {
+    --p: 0;
+    opacity: 1;
+  }
+  62%,
+  90% {
+    --p: 1;
+    opacity: 1;
+  }
+  96% {
+    --p: 1;
+    opacity: 0;
+  }
+  100% {
+    --p: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes hts-carry {
+  0%,
+  8% {
+    translate: 0 0;
+  }
+  26%,
+  50% {
+    translate: var(--to-build);
+  }
+  68%,
+  86% {
+    translate: var(--to-launch);
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+@keyframes hts-pod {
+  0% {
+    translate: 0 0;
+    opacity: 0;
+  }
+  6%,
+  72% {
+    translate: 0 0;
+    opacity: 1;
+    animation-timing-function: var(--ease-in-out);
+  }
+  84% {
+    translate: var(--lift);
+    opacity: 0;
+  }
+  85%,
+  100% {
+    translate: 0 0;
+    opacity: 0;
+  }
+}
+
+@keyframes hts-plume {
+  0%,
+  72% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 1;
+  }
+  84%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hts-lamp {
+  0%,
+  12% {
+    opacity: 1;
+  }
+  18%,
+  94% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hts-flash {
+  0%,
+  32% {
+    opacity: 0;
+  }
+  36%,
+  44% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hts-beacon {
+  0%,
+  66% {
+    opacity: 0;
+  }
+  70%,
+  86% {
+    opacity: 1;
+  }
+  90%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hts-press {
+  0%,
+  32% {
+    translate: 0 0;
+    animation-timing-function: var(--ease-in-out);
+  }
+  36% {
+    translate: var(--press);
+    animation-timing-function: var(--ease-out);
+  }
+  42%,
+  100% {
+    translate: 0 0;
+  }
+}
