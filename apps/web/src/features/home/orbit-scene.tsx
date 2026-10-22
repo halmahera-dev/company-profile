@@ -213,6 +213,8 @@ export function OrbitScene({ className }: { className?: string }) {
           current.scale = Math.min((width / 2 / extent.x) * zoom, (height / 2 - 12) / extent.y);
         }
 
+        current.scale = Math.max(0, current.scale);
+
         const button = moonButton.current;
         if (button) {
           button.style.left = `${current.center.x - current.scale}px`;
