@@ -15,7 +15,7 @@ import {
 } from "@/components/iso/iso-kit";
 import * as G from "@/components/iso/lathe.mjs";
 import { Dots, IsoFigure, Line, Solid } from "@/components/iso/react/draw";
-import "@/features/home/what-we-build-figures.css";
+import "@/features/home/figures/what-we-build-figures.css";
 import "@/features/home/figures/start-figures.css";
 
 const WIDTH = 280;
@@ -68,6 +68,53 @@ export function faceBox(
       return iso(point, P);
     }),
     true,
+  );
+}
+
+export function pathThrough(points: Point3[]) {
+  const flat = points.map(function project(point) {
+    return iso(point, P);
+  });
+  const lengths = [0];
+  for (let index = 1; index < flat.length; index++) {
+    const step = Math.hypot(
+      flat[index][0] - flat[index - 1][0],
+      flat[index][1] - flat[index - 1][1],
+    );
+    lengths.push(lengths[index - 1] + step);
+  }
+  const total = lengths[lengths.length - 1];
+  return {
+    d: pathOf(flat),
+    fractions: lengths.map(function fractionOf(length) {
+      return length / total;
+    }),
+  };
+}
+
+export function Flyer({
+  home,
+  path,
+  className,
+  style,
+  children,
+}: {
+  home: Point3;
+  path: string;
+  className: string;
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+}) {
+  const [x, y] = iso(home, P);
+  return (
+    <g
+      className={className}
+      style={{ ...style, "--path": `path("${path}")` } as React.CSSProperties}
+    >
+      <g className={`${className}-turn`}>
+        <g transform={`translate(${-x} ${-y})`}>{children}</g>
+      </g>
+    </g>
   );
 }
 

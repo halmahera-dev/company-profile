@@ -3,9 +3,9 @@ import { Button } from "@halmahera/ui/components/button";
 import Link from "next/link";
 
 import { Reveal } from "@/components/reveal";
-import { AiModuleFigure } from "@/features/home/figures/ai-module-figure";
+import { HopFigure } from "@/features/home/figures/hop-figure";
 import { LaunchFigure } from "@/features/home/figures/launch-figure";
-import { SprintFigure } from "@/features/home/figures/sprint-figure";
+import { OrreryFigure } from "@/features/home/figures/orrery-figure";
 import { SectionHeading } from "@/features/profile/components/section-heading";
 
 const offers = [
@@ -13,13 +13,13 @@ const offers = [
     name: "Add AI to your product",
     body: "Chat, search, document reading, or automation, wired into your app and your data.",
     terms: "Your stack · your data",
-    Figure: AiModuleFigure,
+    Figure: OrreryFigure,
   },
   {
     name: "Prototype Sprint",
     body: "One use case, from your data to a screen you can click. Fixed scope, 2 weeks.",
     terms: "Fixed scope · 2 weeks",
-    Figure: SprintFigure,
+    Figure: HopFigure,
     isFeatured: true,
   },
   {

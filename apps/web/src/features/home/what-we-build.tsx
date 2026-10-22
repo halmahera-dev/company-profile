@@ -1,4 +1,3 @@
-import { GlowBorder } from "@/features/home/glow-border";
 import {
   AbacusFigure,
   ConveyorFigure,
@@ -6,7 +5,8 @@ import {
   DocumentTrayFigure,
   SensorMastFigure,
   ServiceBellFigure,
-} from "@/features/home/what-we-build-figures";
+} from "@/features/home/figures/what-we-build-figures";
+import { GlowBorder } from "@/features/home/glow-border";
 import { WhatWeBuildScroller } from "@/features/home/what-we-build-scroller";
 import { SectionHeading } from "@/features/profile/components/section-heading";
 

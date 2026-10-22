@@ -5,7 +5,7 @@ import {
   CivicBuildingFigure,
   OfficeBlockFigure,
   RocketPadFigure,
-} from "@/features/home/who-we-work-with-figures";
+} from "@/features/home/figures/who-we-work-with-figures";
 import { SectionHeading } from "@/features/profile/components/section-heading";
 
 const buyers = [

@@ -18,7 +18,7 @@ import {
 } from "@/components/iso/iso-kit";
 import * as G from "@/components/iso/lathe.mjs";
 import { Dots, IsoFigure, Line, Solid } from "@/components/iso/react/draw";
-import "@/features/home/what-we-build-figures.css";
+import "@/features/home/figures/what-we-build-figures.css";
 
 const WIDTH = 280;
 const HEIGHT = 170;

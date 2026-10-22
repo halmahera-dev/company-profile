@@ -5,37 +5,64 @@
 }
 
 /* Base rules are the still pose. Motion is added only when the user allows it. */
-.hts-docked {
-  opacity: 1;
+.hts-front,
+.hts-behind {
+  offset-path: var(--path);
+  offset-rotate: 0deg;
+  offset-distance: calc(var(--approach) + (100% - var(--approach)) * 0.125);
 }
 
-.hts-token {
+.hts-behind {
   opacity: 0;
 }
 
-.hts-plume,
-.hts-flash,
-.hts-beacon {
-  opacity: 0;
+.hts-planet-lit {
+  opacity: 0.55;
 }
 
-.hts-lamp,
-.hts-pod {
-  opacity: 1;
+.hts-flyer {
+  offset-path: var(--path);
+  offset-rotate: 0deg;
+  offset-distance: calc(var(--p) * 100%);
 }
 
 .hts-cell,
-.hts-screen {
+.hts-screen,
+.hts-beacon,
+.hts-lamp {
   opacity: 1;
 }
 
+.hts-ready,
+.hts-plume {
+  opacity: 0;
+}
+
+.hts-rocket {
+  offset-path: var(--path);
+  offset-rotate: 0deg;
+  offset-distance: calc(var(--p) * 100%);
+}
+
+.hts-rocket-turn {
+  rotate: calc(sin(var(--p) * 180deg) * 70deg);
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .hts-dock {
-    animation: hts-dock 9s infinite;
+  .hts-front {
+    animation:
+      hts-orbit 12s linear infinite,
+      hts-front 12s linear infinite;
   }
 
-  .hts-docked {
-    animation: hts-docked 9s var(--ease-out) infinite;
+  .hts-behind {
+    animation:
+      hts-orbit 12s linear infinite,
+      hts-behind 12s linear infinite;
+  }
+
+  .hts-planet-lit {
+    animation: hts-planet-lit 12s var(--ease-out) infinite;
   }
 
   .hts-sprint {
@@ -46,90 +73,104 @@
     opacity: clamp(0, calc((var(--p) - var(--at)) * 24), 1);
   }
 
-  .hts-token {
-    opacity: clamp(0, calc((1 - var(--p)) * 40), 1);
-    translate: calc(var(--p) * var(--run-x)) calc(var(--p) * var(--run-y));
-  }
-
   .hts-screen {
     opacity: clamp(0, calc((var(--p) - 0.96) * 25), 1);
   }
 
-  .hts-carry {
-    animation: hts-carry 12s var(--ease-in-out) infinite;
+  .hts-flight {
+    animation: hts-flight 14s var(--ease-in-out) infinite;
   }
 
-  .hts-pod {
-    animation: hts-pod 12s var(--ease-out) infinite;
-  }
-
-  .hts-plume {
-    animation: hts-plume 12s var(--ease-out) infinite;
+  .hts-rocket {
+    animation: hts-rocket 14s linear infinite;
   }
 
   .hts-lamp {
-    animation: hts-lamp 12s var(--ease-out) infinite;
+    animation: hts-lamp 14s var(--ease-out) infinite;
   }
 
-  .hts-flash {
-    animation: hts-flash 12s var(--ease-out) infinite;
+  .hts-clamp {
+    animation: hts-clamp 14s var(--ease-in-out) infinite;
   }
 
-  .hts-flash-1 {
-    animation-delay: 0.18s;
+  .hts-ready {
+    animation: hts-ready 14s var(--ease-out) infinite;
   }
 
-  .hts-flash-2 {
-    animation-delay: 0.36s;
+  .hts-plume {
+    animation: hts-plume 14s var(--ease-out) infinite;
   }
 
   .hts-beacon {
-    animation: hts-beacon 12s var(--ease-out) infinite;
-  }
-
-  .hts-press {
-    animation: hts-press 12s var(--ease-in-out) infinite;
+    animation: hts-beacon 14s var(--ease-out) infinite;
   }
 }
 
-@keyframes hts-dock {
+@keyframes hts-orbit {
   0% {
-    translate: var(--dock-lift);
-    opacity: 0;
-    animation-timing-function: var(--ease-out);
+    offset-distance: 0%;
   }
-  10% {
-    translate: var(--dock-lift);
-    opacity: 1;
-    animation-timing-function: var(--ease-in-out);
-  }
-  30%,
-  78% {
-    translate: 0 0;
-    opacity: 1;
-    animation-timing-function: var(--ease-in-out);
-  }
-  92% {
-    translate: var(--dock-lift);
-    opacity: 1;
-    animation-timing-function: var(--ease-out);
+  20% {
+    offset-distance: var(--approach);
   }
   100% {
-    translate: var(--dock-lift);
+    offset-distance: 100%;
+  }
+}
+
+@keyframes hts-front {
+  0% {
+    opacity: 0;
+  }
+  4%,
+  39.9% {
+    opacity: 1;
+  }
+  40%,
+  59.9% {
+    opacity: 0;
+  }
+  60%,
+  79.9% {
+    opacity: 1;
+  }
+  80%,
+  100% {
     opacity: 0;
   }
 }
 
-@keyframes hts-docked {
+@keyframes hts-behind {
   0%,
-  30% {
+  39.9% {
     opacity: 0;
   }
-  36%,
-  78% {
+  40%,
+  59.9% {
     opacity: 1;
   }
-  86%,
+  60%,
+  79.9% {
+    opacity: 0;
+  }
+  80%,
+  94% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hts-planet-lit {
+  0%,
+  16% {
+    opacity: 0;
+  }
+  30%,
+  92% {
+    opacity: 0.55;
+  }
   100% {
     opacity: 0;
   }
@@ -159,55 +200,30 @@
   }
 }
 
-@keyframes hts-carry {
+@keyframes hts-flight {
   0%,
-  8% {
-    translate: 0 0;
+  36% {
+    --p: 0;
   }
-  26%,
-  50% {
-    translate: var(--to-build);
-  }
-  68%,
-  86% {
-    translate: var(--to-launch);
+  80%,
+  98% {
+    --p: 1;
   }
   100% {
-    translate: 0 0;
+    --p: 0;
   }
 }
 
-@keyframes hts-pod {
-  0% {
-    translate: 0 0;
-    opacity: 0;
-  }
-  6%,
-  72% {
-    translate: 0 0;
-    opacity: 1;
-    animation-timing-function: var(--ease-in-out);
-  }
-  84% {
-    translate: var(--lift);
-    opacity: 0;
-  }
-  85%,
-  100% {
-    translate: 0 0;
-    opacity: 0;
-  }
-}
-
-@keyframes hts-plume {
+@keyframes hts-rocket {
   0%,
-  72% {
+  10% {
     opacity: 0;
   }
-  75% {
+  18%,
+  90% {
     opacity: 1;
   }
-  84%,
+  96%,
   100% {
     opacity: 0;
   }
@@ -227,16 +243,45 @@
   }
 }
 
-@keyframes hts-flash {
+@keyframes hts-clamp {
   0%,
-  32% {
+  12% {
+    translate: 0 0;
+  }
+  20%,
+  30% {
+    translate: var(--clamp);
+  }
+  38%,
+  100% {
+    translate: 0 0;
+  }
+}
+
+@keyframes hts-ready {
+  0%,
+  30% {
     opacity: 0;
   }
-  36%,
-  44% {
+  34%,
+  46% {
     opacity: 1;
   }
-  50%,
+  52%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hts-plume {
+  0%,
+  35% {
+    opacity: 0;
+  }
+  39% {
+    opacity: 1;
+  }
+  48%,
   100% {
     opacity: 0;
   }
@@ -244,31 +289,15 @@
 
 @keyframes hts-beacon {
   0%,
-  66% {
+  78% {
     opacity: 0;
   }
-  70%,
-  86% {
+  83%,
+  94% {
     opacity: 1;
   }
-  90%,
+  98%,
   100% {
     opacity: 0;
-  }
-}
-
-@keyframes hts-press {
-  0%,
-  32% {
-    translate: 0 0;
-    animation-timing-function: var(--ease-in-out);
-  }
-  36% {
-    translate: var(--press);
-    animation-timing-function: var(--ease-out);
-  }
-  42%,
-  100% {
-    translate: 0 0;
   }
 }
