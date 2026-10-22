@@ -20,7 +20,7 @@ This block is written and re-added by `turbo` before repository-scoped commands 
 - Write expressive, readable code in React and backend code. Prefer clear names and explicit control flow over shorthand expressions.
 - DRY in data-fetching and shared components. Not in one-off pages.
 - No unnecessary files. Only create helpers/utils if used in 2+ places.
-- Prefer regular functions over arrow functions. Use arrow functions only when passed as an argument.
+- Prefer regular functions over arrow functions. Use arrow functions only when passed as an argument or the functions are defined inside a component.
 - Keep comments short and limited to intent that clear code cannot express.
 - Keep values in the narrowest scope that uses them. Promote a value to a module constant only when it is shared, configurable, or a stable domain concept.
 - Do not add `Co-authored-by` trailers to commit messages.
