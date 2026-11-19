@@ -12,7 +12,7 @@ export function SiteFooter() {
   ] as const;
 
   return (
-    <footer className="dark bg-background text-foreground">
+    <footer className="bg-background text-foreground">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-3 sm:px-8">
         <div className="grid content-start gap-2">
           <p className="flex items-center gap-2 font-heading text-sm font-medium">

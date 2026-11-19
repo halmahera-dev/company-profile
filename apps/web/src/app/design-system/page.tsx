@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 
+import { Toaster } from "@halmahera/ui/components/sonner";
 import Link from "next/link";
 
 import { ModeToggle } from "@/components/mode-toggle";
-import { ComponentsSection } from "@/features/design-system/components/components-section";
-import { ControlsSection } from "@/features/design-system/components/controls-section";
 import { FoundationsSection } from "@/features/design-system/components/foundations-section";
-import { RecipesSection } from "@/features/design-system/components/recipes-section";
+import { LazyDesignSystemSections } from "@/features/design-system/components/lazy-sections";
 
 export const metadata: Metadata = {
   title: "Design System",
@@ -61,10 +60,9 @@ export default function DesignSystemPage() {
           </p>
         </section>
         <FoundationsSection />
-        <ControlsSection />
-        <ComponentsSection />
-        <RecipesSection />
+        <LazyDesignSystemSections />
       </main>
+      <Toaster richColors />
     </div>
   );
 }

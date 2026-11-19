@@ -14,7 +14,7 @@ export function FinalCta() {
       />
       <div
         aria-hidden
-        className="cta-horizon pointer-events-none absolute left-1/2 -z-10 aspect-square -translate-x-1/2 rounded-full bg-card"
+        className="cta-horizon pointer-events-none absolute left-1/2 -z-10 aspect-square -translate-x-1/2 rounded-full bg-background"
       />
       <div className="mx-auto grid max-w-6xl justify-items-center px-4 pt-24 pb-64 text-center sm:px-8 sm:pt-32 sm:pb-80">
         <BlurInHeading className="type-display-xl text-balance">Ready to start?</BlurInHeading>
