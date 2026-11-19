@@ -2,22 +2,23 @@ import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cn } from "@halmahera/ui/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 
+// Soft sheen: a faint white-to-clear gradient over a solid color. Hover fades the color, press scales.
+const sheen = "bg-[linear-gradient(180deg,rgb(255_255_255/0.14),transparent)]";
+
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 pressable items-center justify-center rounded-full text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,scale] outline-none select-none focus-visible:ring-3 focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-50 aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 pressable items-center justify-center rounded-full text-sm font-medium whitespace-nowrap transition-[color,background-color,border-color,box-shadow,scale] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] outline-none select-none focus-visible:ring-3 focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-50 aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-foreground",
-        brand: "bg-brand text-brand-foreground hover:bg-brand/90",
+        default: `${sheen} bg-primary text-primary-foreground hover:bg-foreground`,
+        brand: `${sheen} bg-brand text-brand-foreground hover:bg-brand/90`,
         neutral: "bg-foreground text-background hover:bg-foreground/85",
         outline:
           "border border-border bg-transparent hover:bg-accent aria-expanded:bg-accent aria-expanded:text-foreground",
-        secondary:
-          "border border-border bg-secondary text-secondary-foreground hover:border-input aria-expanded:border-input",
+        secondary: `${sheen} bg-secondary text-secondary-foreground shadow-[inset_0_0_0_1px_var(--border)] hover:shadow-[inset_0_0_0_1px_var(--input)] aria-expanded:shadow-[inset_0_0_0_1px_var(--input)]`,
         ghost:
           "text-muted-foreground hover:bg-accent hover:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground",
-        destructive:
-          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
+        destructive: `${sheen} bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/40`,
         link: "text-muted-foreground hover:text-foreground",
       },
       size: {

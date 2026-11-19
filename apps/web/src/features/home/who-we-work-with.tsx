@@ -65,7 +65,7 @@ export function WhoWeWorkWith() {
                   </p>
                   <p className="mt-5 text-lg leading-relaxed text-pretty text-muted-foreground">
                     {buyer.problem}{" "}
-                    <strong className="font-semibold text-foreground">{buyer.lead}</strong>{" "}
+                    <strong className="font-medium text-foreground">{buyer.lead}</strong>{" "}
                     {buyer.solution} {buyer.result}
                   </p>
                 </div>

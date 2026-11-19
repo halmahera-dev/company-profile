@@ -27,7 +27,7 @@ This block is written and re-added by `turbo` before repository-scoped commands 
 
 ## Design Rules
 
-- Pill buttons have text only. Never put arrows or icons inside them. Put arrows on quiet text links (`variant="link"`), for example "Learn more →". Icon-only buttons (`size="icon*"`) and the loading `Spinner` are allowed.
+- Pill buttons have text only. Never put arrows or icons inside them. Quiet text links (`variant="link"`) use plain words only, for example "Learn more". Do not use `→`, `•`, or `·` in UI copy. Icon-only buttons (`size="icon*"`) and the loading `Spinner` are allowed.
 - Motion values live in `packages/ui/src/styles/globals.css`. Use the tokens there. Do not write new cubic-bezier values in components.
 - Hover changes color only (160ms, `ease-out`). Things do not lift, grow, or bounce on hover, and nothing animates on scroll. Exception: section headings blur in once when they enter view (`blur-in-view`), and selected content blocks rise in once (`rise-in-view`, no blur).
   - Exception: the home hero moon turns toward the cursor (at most ±20°, default spring). It is a deliberate choice. Do not remove it to match this rule.

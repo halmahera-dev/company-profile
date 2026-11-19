@@ -33,24 +33,18 @@ export function Hero() {
                 </React.Fragment>
               );
             })}
-            <span aria-hidden="true" className="glitch-layer text-brand">
-              {headline}
-            </span>
-            <span aria-hidden="true" className="glitch-layer text-chart-2 glitch-mirror">
-              {headline}
-            </span>
           </h1>
           <p className="max-w-md rise-in type-lead text-muted-foreground">
             A small AI team in Indonesia that{" "}
-            <span className="font-bold text-foreground">makes bold ideas work</span>. Start fresh or
-            build on what you have.
+            <span className="font-medium text-foreground">makes bold ideas work</span>. Start fresh
+            or build on what you have.
           </p>
           <div className="mt-2 flex rise-in flex-wrap items-center gap-6">
             <Button nativeButton={false} render={<a href={`mailto:${contactEmail}`} />}>
               Book a call
             </Button>
             <Button variant="link" nativeButton={false} render={<Link href="#work" />}>
-              See our work →
+              See our work
             </Button>
           </div>
         </div>

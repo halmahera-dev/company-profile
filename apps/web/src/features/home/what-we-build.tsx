@@ -95,7 +95,7 @@ export function WhatWeBuild() {
               key={item.name}
               className="flex min-w-0 shrink-0 grow-0 card-row-item snap-start list-disc"
             >
-              <GlowBorder className="flex w-full flex-col gap-4 rounded-4xl bg-card p-6 shadow-card">
+              <GlowBorder className="flex w-full flex-col gap-4 rounded-4xl bg-card surface-lit p-6 shadow-card">
                 <item.Figure />
                 <p className="text-sm font-medium text-muted-foreground">{item.name}</p>
                 <p className="text-2xl leading-tight font-medium tracking-tight text-balance">

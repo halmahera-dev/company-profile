@@ -82,7 +82,7 @@ export function RecipesSection() {
         <div className="grid gap-6 md:grid-cols-2">
           <GuidelineExample
             kind="Do"
-            rule="Use the light pill for the main action. Rose marks state."
+            rule="Use the ink pill for the main action. Rose marks state."
           >
             <Button>Save plan</Button>
             <Badge variant="brand">Saved</Badge>
@@ -92,9 +92,9 @@ export function RecipesSection() {
             <Button variant="brand">Cancel</Button>
             <Button variant="brand">Export</Button>
           </GuidelineExample>
-          <GuidelineExample kind="Do" rule="Put arrows on quiet text links next to the button.">
+          <GuidelineExample kind="Do" rule="Quiet text links use plain words only.">
             <Button>Book a call</Button>
-            <Button variant="link">Learn more →</Button>
+            <Button variant="link">Learn more</Button>
           </GuidelineExample>
           <GuidelineExample kind="Don't" rule="Put arrows or icons inside pill buttons.">
             <Button>
@@ -122,12 +122,10 @@ export function RecipesSection() {
           description="Glass bar with a hairline edge, ghost links, and an ink CTA."
         >
           <nav className="flex items-center justify-between gap-4 rounded-full border glass px-4 py-3 sm:px-8">
-            <span className="font-heading text-lg font-semibold tracking-tight">One Field</span>
+            <span className="font-heading text-lg font-medium tracking-tight">One Field</span>
             <div className="hidden items-center gap-1 md:flex">
               <Button variant="ghost">Fields</Button>
-              <Button variant="ghost" className="bg-brand text-brand-foreground hover:bg-brand/90">
-                Plan
-              </Button>
+              <Button variant="ghost">Plan</Button>
               <Button variant="ghost">Briefing</Button>
             </div>
             <Button>Get started</Button>

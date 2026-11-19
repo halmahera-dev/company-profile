@@ -20,12 +20,15 @@
   );
 }
 
-/* Linear. Light mode is derived from the dark source scheme. */
+/* Dark is the source scheme. Light is warm cream paper. Rose is the only accent. */
 :root {
-  --background: #f7f8f8;
-  --card: #fdfdfd;
-  --foreground: #08090a;
-  --muted-foreground: #62666d;
+  color-scheme: light;
+  --background: #f2f1ed;
+  --edge-light: rgb(255 255 255 / 0.9);
+  --edge-shade: rgb(38 37 30 / 0.06);
+  --card: #f7f7f4;
+  --foreground: #26251e;
+  --muted-foreground: #6b675d;
   --brand: oklch(64.5% 0.246 16.439);
   --brand-foreground: #ffffff;
   --brand-text: oklch(51.4% 0.222 16.935);
@@ -35,14 +38,17 @@
   --chart-3: #d4a72c;
   --chart-4: #3d9a6c;
   --chart-5: #3fa7a7;
-  --shadow-ambient: rgb(8 9 10 / 0.08);
-  --shadow-outline: rgb(8 9 10 / 0.04);
+  --shadow-ambient: rgb(38 37 30 / 0.1);
+  --shadow-outline: rgb(38 37 30 / 0.05);
   --hair-alpha: 8%;
   --radius: 0.5rem;
 }
 
 .dark {
+  color-scheme: dark;
   --background: #08090a;
+  --edge-light: rgb(255 255 255 / 0.07);
+  --edge-shade: rgb(0 0 0 / 0.4);
   --card: #0f1011;
   --foreground: #f7f8f8;
   --muted-foreground: #8a8f98;
@@ -129,10 +135,10 @@
   --color-brand-text: var(--brand-text);
   --color-surface-raised: var(--surface-raised);
   --color-faint-foreground: var(--faint-foreground);
-  /* Flat cards get a hairline, never a drop shadow. */
+  /* Flat cards get a hairline, never a drop shadow. The lit top comes from surface-lit. */
   --shadow-card: 0 0 0 1px var(--border);
   --shadow-card-lg: var(--shadow-lg);
-  --shadow-inset: inset 0 0 0 1px var(--border);
+  --shadow-inset: inset 0 0 0 1px var(--border), inset 0 1px 2px var(--edge-shade);
   --radius-sm: 4px; /* inline code, model tags */
   --radius-md: 6px; /* menu items, sidebar rows */
   --radius-lg: 6px; /* tooltips, kbd */
@@ -161,6 +167,15 @@
   --shadow-2xl: var(--shadow-md);
 }
 
+/* Soft top-lit wash on flat panels. Pair with bg-card and shadow-card. */
+@utility surface-lit {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--edge-light) 40%, transparent),
+    transparent 50%
+  );
+}
+
 /* The sticky header material. */
 @utility glass {
   background-color: color-mix(in srgb, var(--background) 82%, transparent);
@@ -187,6 +202,15 @@
   }
 }
 
+/* A side panel that opens and closes by size. Reduced motion jumps straight to the end. */
+@utility transition-panel-resize {
+  @media (prefers-reduced-motion: no-preference) {
+    transition-property: width, height;
+    transition-duration: 300ms;
+    transition-timing-function: var(--ease-in-out);
+  }
+}
+
 /* Resize and press on one element. Each property gets its own duration and curve. */
 @utility transition-resize-press {
   transition-property: flex-grow, scale;
@@ -205,7 +229,6 @@
   }
 }
 
-/* Headlines sit at 510 with -0.022em tracking. Never bold, never uppercase. */
 @utility type-display-xl {
   font-family: var(--font-heading);
   font-size: clamp(3rem, 5vw + 1.5rem, 4.5rem);
@@ -224,7 +247,7 @@
 
 @utility type-headline {
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 3vw + 1rem, 3rem);
+  font-size: clamp(2.25rem, 3.4vw + 1rem, 3.5rem);
   font-weight: 510;
   line-height: 1;
   letter-spacing: -0.022em;
@@ -357,6 +380,50 @@
 /* A new screen fades in when it replaces the last one. */
 @utility fade-in {
   animation: fade-in 240ms var(--ease-out) both;
+}
+
+@keyframes swap-in {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+
+/* Content that replaces other content in place. It does not move, so the swap stays calm. */
+@utility swap-in {
+  animation: swap-in 180ms var(--ease-out) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: fade-in 160ms var(--ease-out) both;
+  }
+}
+
+/* A <details> opens and closes smoothly. Browsers without ::details-content keep the instant toggle. */
+@utility details-reveal {
+  interpolate-size: allow-keywords;
+
+  &::details-content {
+    height: 0;
+    opacity: 0;
+    overflow: clip;
+    transition:
+      height 200ms var(--ease-in-out),
+      opacity 200ms var(--ease-out),
+      content-visibility 200ms allow-discrete;
+  }
+
+  &[open]::details-content {
+    height: auto;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::details-content {
+      transition:
+        opacity 160ms var(--ease-out),
+        content-visibility 160ms allow-discrete;
+    }
+  }
 }
 
 /* The orbit canvas shows after its first frame, not before. */

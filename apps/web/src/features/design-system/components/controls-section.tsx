@@ -72,7 +72,7 @@ export function ControlsSection() {
       >
         <ShowcaseBlock
           title="Button"
-          description="One light primary per group. Brand rose is for confirming field actions such as Start planting."
+          description="One ink primary per group. Brand rose is for confirming field actions such as Start planting."
         >
           <div className="flex flex-wrap items-center gap-3">
             <Button>Book a call</Button>

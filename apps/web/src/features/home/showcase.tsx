@@ -178,7 +178,7 @@ export function Showcase() {
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-1 text-sm text-muted-foreground">
           <span>Your data stays in your systems.</span>
           <Button variant="link" nativeButton={false} render={<Link href="#data" />}>
-            How we handle data →
+            How we handle data
           </Button>
         </div>
       </div>

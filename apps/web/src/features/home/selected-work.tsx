@@ -21,7 +21,7 @@ export function SelectedWork() {
 
         <Reveal
           as="article"
-          className="mt-12 grid gap-8 rounded-4xl bg-card p-3 shadow-card lg:grid-cols-5 lg:items-center lg:gap-10 lg:pr-10"
+          className="mt-12 grid gap-8 rounded-4xl bg-card surface-lit p-3 shadow-card lg:grid-cols-5 lg:items-center lg:gap-10 lg:pr-10"
         >
           <AlertMapScreen />
           <div className="grid content-start gap-5 px-3 pb-4 lg:col-span-2 lg:p-0">

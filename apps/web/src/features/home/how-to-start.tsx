@@ -56,7 +56,7 @@ export function HowToStart() {
                   <p className="type-label-mono text-muted-foreground">{offer.terms}</p>
                   {offer.isFeatured ? (
                     <Button variant="link" nativeButton={false} render={<Link href="#sprint" />}>
-                      See the 14 days →
+                      See the 14 days
                     </Button>
                   ) : null}
                 </div>
