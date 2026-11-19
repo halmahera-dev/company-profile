@@ -94,7 +94,7 @@ const CORE_FALLOFF = [
 const CORE_INDIGO = "oklch(58.5% 0.233 277)";
 const MAX_TURN = 0.35;
 const HOVER_REACH = 90;
-const HOVER_BLUR = 8;
+const HOVER_GLOW_WIDTH = 4;
 // Same lightness as --brand, so the hover gradient reads as one light.
 const HOVER_PURPLE = "oklch(64.5% 0.24 305)";
 // motion's default spring, { bounce: 0, duration: 0.4 }, as stiffness and damping.
@@ -103,6 +103,8 @@ const TURN_DAMPING = 2 * Math.sqrt(TURN_STIFFNESS);
 const CAMERA_DISTANCE = 7;
 // Glyphs grow up to ~1.5x with perspective, so the atlas is drawn larger than the base size.
 const ATLAS_OVERSAMPLE = 1.5;
+const ATLAS_ROW = { base: 0, brand: 1, purple: 2 } as const;
+type AtlasRow = (typeof ATLAS_ROW)[keyof typeof ATLAS_ROW];
 
 export function OrbitScene({ className }: { className?: string }) {
   const wrapper = React.useRef<HTMLDivElement>(null);
@@ -441,31 +443,29 @@ function drawScene(context: CanvasRenderingContext2D, current: Scene, palette: P
   const hovering = current.pointer.glow > 0 || current.glyphs.some((glyph) => glyph.heat > 0);
   const hover = hovering ? hoverPaint(context, current, palette) : null;
 
-  drawGlyphs(context, current, palette, hover, "back");
+  drawGlyphs(context, current, palette, "back");
   drawMoon(context, current, palette, hover);
-  drawGlyphs(context, current, palette, hover, "front");
+  drawGlyphs(context, current, palette, "front");
 }
 
 function drawGlyphs(
   context: CanvasRenderingContext2D,
   current: Scene,
   palette: Palette,
-  hover: CanvasGradient | null,
   side: "front" | "back",
 ) {
   const { dpr, glyphs } = current;
-  const baseSize = GLYPH_SIZE * current.scale;
-
   const atlas = glyphAtlas(current, palette);
   const cellSize = atlas.cell / (dpr * ATLAS_OVERSAMPLE);
-  for (const glyph of glyphs) {
-    if ((glyph.z >= 0 ? "front" : "back") !== side) continue;
+
+  function blit(glyph: Glyph, row: AtlasRow, opacity: number) {
+    if (opacity <= 0) return;
     const size = cellSize * glyph.perspective;
-    context.globalAlpha = glyphAlpha(glyph) * (1 - glyph.heat);
+    context.globalAlpha = opacity;
     context.drawImage(
       atlas.canvas,
       CHARACTERS.indexOf(glyph.character) * atlas.cell,
-      0,
+      row * atlas.cell,
       atlas.cell,
       atlas.cell,
       glyph.x - size / 2,
@@ -475,38 +475,39 @@ function drawGlyphs(
     );
   }
 
-  if (hover) {
-    context.fillStyle = hover;
-    for (const glyph of glyphs) {
-      if (glyph.heat === 0 || (glyph.z >= 0 ? "front" : "back") !== side) continue;
-      context.font = `${(baseSize * glyph.perspective).toFixed(1)}px ${palette.font}`;
-      context.globalAlpha = glyphAlpha(glyph) * glyph.heat;
-      context.shadowColor = hoverShadow(current, palette, glyph.x, glyph.y);
-      context.shadowBlur = HOVER_BLUR * glyph.heat;
-      context.fillText(glyph.character, glyph.x, glyph.y);
-    }
-    context.shadowBlur = 0;
+  for (const glyph of glyphs) {
+    if ((glyph.z >= 0 ? "front" : "back") !== side) continue;
+    const alpha = glyphAlpha(glyph);
+    blit(glyph, ATLAS_ROW.base, alpha * (1 - glyph.heat));
+    if (glyph.heat === 0) continue;
+    const toPurple = hoverBlend(current, glyph.x, glyph.y);
+    blit(glyph, ATLAS_ROW.brand, alpha * glyph.heat * (1 - toPurple));
+    blit(glyph, ATLAS_ROW.purple, alpha * glyph.heat * toPurple);
   }
   context.globalAlpha = 1;
 }
 
 // Firefox re-rasterizes text for every fillText at a new scale, so glyphs are drawn once and blitted.
+// Safari and Firefox are slow with shadowBlur, so the scene never uses it.
 function glyphAtlas(current: Scene, palette: Palette) {
   const fontSize = GLYPH_SIZE * current.scale * current.dpr * ATLAS_OVERSAMPLE;
-  const key = `${fontSize.toFixed(1)}|${palette.glyph}|${palette.font}`;
+  const key = `${fontSize.toFixed(1)}|${palette.glyph}|${palette.brand}|${palette.font}`;
   if (current.atlas?.key === key) return current.atlas;
 
   const cell = Math.ceil(fontSize * 1.4);
   const canvas = document.createElement("canvas");
   canvas.width = cell * CHARACTERS.length;
-  canvas.height = cell;
+  canvas.height = cell * 3;
   const context = canvas.getContext("2d")!;
   context.font = `${fontSize.toFixed(1)}px ${palette.font}`;
-  context.fillStyle = palette.glyph;
   context.textAlign = "center";
   context.textBaseline = "middle";
-  Array.from(CHARACTERS).forEach(function drawCharacter(character, index) {
-    context.fillText(character, index * cell + cell / 2, cell / 2);
+  const colors = [palette.glyph, palette.brand, palette.purple];
+  colors.forEach(function drawRow(color, row) {
+    context.fillStyle = color;
+    Array.from(CHARACTERS).forEach(function drawCharacter(character, index) {
+      context.fillText(character, index * cell + cell / 2, row * cell + cell / 2);
+    });
   });
   current.atlas = { key, canvas, cell };
   return current.atlas;
@@ -619,10 +620,9 @@ function hoverPaint(context: CanvasRenderingContext2D, current: Scene, palette: 
   return paint;
 }
 
-function hoverShadow(current: Scene, palette: Palette, x: number, y: number) {
+function hoverBlend(current: Scene, x: number, y: number) {
   const { pointer } = current;
-  const along = (x - pointer.x + (y - pointer.y)) / (4 * HOVER_REACH) + 0.5;
-  return along < 0.5 ? palette.brand : palette.purple;
+  return clamp((x - pointer.x + (y - pointer.y)) / (4 * HOVER_REACH) + 0.5);
 }
 
 function strokeLine(
@@ -647,7 +647,6 @@ function strokeLine(
   if (!hover || pointer.glow <= 0) return;
   context.save();
   context.strokeStyle = hover;
-  context.shadowBlur = HOVER_BLUR;
   points.forEach(function glowSegment(point, index) {
     const previous = points[index - 1];
     if (!point || !previous) return;
@@ -655,11 +654,15 @@ function strokeLine(
     const distance = Math.hypot(middle.x - pointer.x, middle.y - pointer.y);
     const heat = pointer.glow * (1 - distance / HOVER_REACH);
     if (heat <= 0) return;
-    context.shadowColor = hoverShadow(current, palette, middle.x, middle.y);
-    context.globalAlpha = Math.min(1, alpha + 0.3) * heat;
     context.beginPath();
     context.moveTo(previous.x, previous.y);
     context.lineTo(point.x, point.y);
+    // A wide faint stroke stands in for shadowBlur, which costs ~40ms a frame per segment batch.
+    context.lineWidth = HOVER_GLOW_WIDTH;
+    context.globalAlpha = 0.25 * heat;
+    context.stroke();
+    context.lineWidth = 0.8;
+    context.globalAlpha = Math.min(1, alpha + 0.3) * heat;
     context.stroke();
   });
   context.restore();
